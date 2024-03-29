@@ -23,6 +23,7 @@ import cloud.pablos.overload.data.item.ItemViewModel
 import cloud.pablos.overload.ui.tabs.configurations.handleIntent
 import cloud.pablos.overload.ui.theme.OverloadTheme
 import com.google.accompanist.adaptive.calculateDisplayFeatures
+import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 
 class MainActivity : ComponentActivity() {
     private val db by lazy {
@@ -49,6 +50,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val backup = RoomBackup(this@MainActivity)
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         val screenLayoutSize =
@@ -70,6 +73,7 @@ class MainActivity : ComponentActivity() {
                     displayFeatures = displayFeatures,
                     state = state,
                     onEvent = onEvent,
+                    backup = backup,
                 )
             }
         }

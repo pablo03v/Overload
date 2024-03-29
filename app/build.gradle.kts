@@ -89,6 +89,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.roomdatabasebackup)
+
     implementation(libs.acra.mail)
     implementation(libs.acra.toast)
 

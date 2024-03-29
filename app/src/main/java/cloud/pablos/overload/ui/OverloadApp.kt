@@ -45,6 +45,7 @@ import cloud.pablos.overload.ui.navigation.OverloadTopLevelDestination
 import cloud.pablos.overload.ui.screens.day.DayScreen
 import cloud.pablos.overload.ui.tabs.calendar.CalendarTab
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab
+import cloud.pablos.overload.ui.tabs.configurations.backup
 import cloud.pablos.overload.ui.tabs.home.HomeTab
 import cloud.pablos.overload.ui.utils.DevicePosture
 import cloud.pablos.overload.ui.utils.OverloadContentType
@@ -55,6 +56,7 @@ import cloud.pablos.overload.ui.utils.isSeparating
 import cloud.pablos.overload.ui.views.AdjustEndDialog
 import cloud.pablos.overload.ui.views.ForgotToStopDialog
 import cloud.pablos.overload.ui.views.SpreadAcrossDaysDialog
+import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -64,6 +66,7 @@ fun OverloadApp(
     displayFeatures: List<DisplayFeature>,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    backup: RoomBackup,
 ) {
     val navigationType: OverloadNavigationType
     val contentType: OverloadContentType
@@ -136,6 +139,7 @@ fun OverloadApp(
         navigationContentPosition = navigationContentPosition,
         state = state,
         onEvent = onEvent,
+        backup = backup,
     )
 }
 
@@ -147,6 +151,7 @@ private fun OverloadNavigationWrapper(
     navigationContentPosition: OverloadNavigationContentPosition,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    backup: RoomBackup,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -176,6 +181,7 @@ private fun OverloadNavigationWrapper(
                 },
                 state = state,
                 onEvent = onEvent,
+                backup = backup,
             )
         }
 
@@ -211,6 +217,7 @@ private fun OverloadNavigationWrapper(
                     },
                     state = state,
                     onEvent = onEvent,
+                    backup = backup,
                 )
             }
         }
@@ -230,6 +237,7 @@ fun OverloadAppContent(
     onDrawerClicked: () -> Unit = {},
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    backup: RoomBackup,
 ) {
     var forgotDialogState by remember { mutableStateOf(false) }
     LaunchedEffect(state.isForgotToStopDialogShown) {
@@ -269,6 +277,7 @@ fun OverloadAppContent(
                 navController = navController,
                 state = state,
                 onEvent = onEvent,
+                backup = backup,
                 modifier =
                     Modifier
                         .weight(1f)
@@ -328,6 +337,7 @@ private fun OverloadNavHost(
     modifier: Modifier = Modifier,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    backup: RoomBackup,
 ) {
     NavHost(
         modifier = modifier,
@@ -359,6 +369,7 @@ private fun OverloadNavHost(
             ConfigurationsTab(
                 state = state,
                 onEvent = onEvent,
+                backup = backup,
             )
         }
     }

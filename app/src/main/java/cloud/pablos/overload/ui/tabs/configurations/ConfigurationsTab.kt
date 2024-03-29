@@ -1,10 +1,13 @@
 package cloud.pablos.overload.ui.tabs.configurations
 
+import android.app.Activity
 import android.content.ContentResolver
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.preference.PreferenceManager
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
@@ -43,7 +46,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
@@ -53,19 +55,20 @@ import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemDatabase
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.data.item.backupItemsToCsv
+import cloud.pablos.overload.ui.MainActivity
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
 import cloud.pablos.overload.ui.views.TextView
+import de.raphaelebner.roomdatabasebackup.core.RoomBackup
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 @Composable
 fun ConfigurationsTab(
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    backup: RoomBackup,
 ) {
     val context = LocalContext.current
     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -86,7 +89,6 @@ fun ConfigurationsTab(
             mutableStateOf(sharedPreferences.getBoolean(acraSysLogsEnabledKey, true))
         }
 
-    val importDialogState = remember { mutableStateOf(false) }
     val workGoalDialogState = remember { mutableStateOf(false) }
     val pauseGoalDialogState = remember { mutableStateOf(false) }
 
@@ -243,7 +245,7 @@ fun ConfigurationsTab(
                     modifier =
                         Modifier
                             .clickable {
-                                backup(state, context)
+                                backup(context, backup)
                             }
                             .clearAndSetSemantics {
                                 contentDescription = itemLabel
@@ -278,7 +280,7 @@ fun ConfigurationsTab(
                     modifier =
                         Modifier
                             .clickable {
-                                importDialogState.value = true
+                                import(context, backup)
                             }
                             .clearAndSetSemantics {
                                 contentDescription = itemLabel
@@ -375,9 +377,6 @@ fun ConfigurationsTab(
                 }
             }
         }
-        if (importDialogState.value) {
-            ConfigurationsTabImportDialog(onClose = { importDialogState.value = false })
-        }
 
         if (workGoalDialogState.value) {
             ConfigurationsTabGoalDialog(
@@ -396,36 +395,57 @@ fun ConfigurationsTab(
 }
 
 fun backup(
-    state: ItemState,
     context: Context,
+    backup: RoomBackup,
 ) {
-    try {
-        val exportedData = backupItemsToCsv(state)
-        val cachePath = File(context.cacheDir, "backup.csv")
-
-        cachePath.writeText(exportedData)
-
-        val contentUri =
-            FileProvider.getUriForFile(
-                context,
-                context.getString(R.string.app_fileprovider),
-                cachePath,
-            )
-
-        val sendIntent: Intent =
-            Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, contentUri)
-                type = "text/comma-separated-values"
+    backup
+        .database(ItemDatabase.getInstance(context))
+        .enableLogDebug(true)
+        .backupIsEncrypted(true)
+        .customEncryptPassword("YOUR_SECRET_PASSWORD")
+        .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
+        .maxFileCount(5)
+        .apply {
+            onCompleteListener { success, message, exitCode ->
+                Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
+                if (success) {
+                    val intent = Intent(context.applicationContext, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    context.startActivity(intent)
+                    if (context is Activity) {
+                        context.finish()
+                    }
+                }
             }
+        }
+        .backup()
+}
 
-        val shareIntent = Intent.createChooser(sendIntent, null)
-        context.startActivity(shareIntent)
-    } catch (e: Exception) {
-        Toast.makeText(context, context.getString(R.string.backup_failed), Toast.LENGTH_SHORT)
-            .show()
-        e.printStackTrace()
-    }
+fun import(
+    context: Context,
+    backup: RoomBackup,
+) {
+    backup
+        .database(ItemDatabase.getInstance(context))
+        .enableLogDebug(true)
+        .backupIsEncrypted(true)
+        .customEncryptPassword("YOUR_SECRET_PASSWORD")
+        .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
+        .maxFileCount(5)
+        .apply {
+            onCompleteListener { success, message, exitCode ->
+                Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
+                if (success) {
+                    val intent = Intent(context.applicationContext, MainActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    context.startActivity(intent)
+                    if (context is Activity) {
+                        context.finish()
+                    }
+                }
+            }
+        }
+        .restore()
 }
 
 fun handleIntent(
@@ -503,7 +523,7 @@ private fun importCsvData(
 
         withContext(Dispatchers.Main) {
             if (allImportsSucceeded) {
-                showImportSuccessToast(context)
+                restartApp(context)
             } else {
                 showImportFailedToast(context)
             }
@@ -590,4 +610,13 @@ class OlSharedPreferences(context: Context) {
     fun getWorkGoal(): Int = sharedPreferences.getInt("workGoal", 0)
 
     fun getPauseGoal(): Int = sharedPreferences.getInt("pauseGoal", 0)
+}
+
+fun restartApp(context: Context) {
+    val intent = Intent(context.applicationContext, MainActivity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+    context.startActivity(intent)
+    if (context is Activity) {
+        context.finish()
+    }
 }
