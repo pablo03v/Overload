@@ -29,11 +29,13 @@ Feedback and suggestions are more than welcome! Please reach out by creating an 
 
 
 ## Installation
-
-[<img src="https://i.imgur.com/PMktVrZ.png"
+[<img src="https://github.com/pabloscloud/Overload/assets/93644977/4f38fb5e-afe1-4473-a9b9-81293fb41270"
+      alt='Get it on Obtainium'
+      height="60">](http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22cloud.pablos.overload%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fpabloscloud%2FOverload%22%2C%22author%22%3A%22github.com%22%2C%22name%22%3A%22Overload%22%7D)
+[<img src="https://github.com/pabloscloud/Overload/assets/93644977/29308442-e470-4e30-a999-49d884b83b0d"
       alt='Get it on GitHub'
       height="60">](https://github.com/pabloscloud/Overload/releases/latest)
-[<img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+[<img src="https://github.com/pabloscloud/Overload/assets/93644977/1e47fdfa-a1cc-4754-a9db-050a124d53b8"
       alt='Get it on Google Play'
       height="60">](https://play.google.com/store/apps/details?id=cloud.pablos.overload)
 
