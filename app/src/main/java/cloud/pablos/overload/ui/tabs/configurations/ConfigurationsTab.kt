@@ -409,12 +409,7 @@ fun backup(
             onCompleteListener { success, message, exitCode ->
                 Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
                 if (success) {
-                    val intent = Intent(context.applicationContext, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    context.startActivity(intent)
-                    if (context is Activity) {
-                        context.finish()
-                    }
+                    restartApp(context)
                 }
             }
         }
@@ -436,12 +431,7 @@ fun import(
             onCompleteListener { success, message, exitCode ->
                 Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
                 if (success) {
-                    val intent = Intent(context.applicationContext, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    context.startActivity(intent)
-                    if (context is Activity) {
-                        context.finish()
-                    }
+                    restartApp(context)
                 }
             }
         }
