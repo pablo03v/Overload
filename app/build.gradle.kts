@@ -89,14 +89,13 @@ android {
 }
 
 dependencies {
-    implementation(libs.roomdatabasebackup)
-
     implementation(libs.acra.mail)
     implementation(libs.acra.toast)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     kapt(libs.androidx.room.compiler)
+    implementation(libs.roomdatabasebackup)
 
     implementation(libs.gson)
 

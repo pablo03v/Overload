@@ -403,13 +403,15 @@ fun backup(
         .enableLogDebug(true)
         .backupIsEncrypted(true)
         .customEncryptPassword("YOUR_SECRET_PASSWORD")
-        .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
-        .maxFileCount(5)
+        .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
         .apply {
             onCompleteListener { success, message, exitCode ->
                 Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
                 if (success) {
                     restartApp(context)
+                } else {
+                    Toast.makeText(context, context.getString(R.string.backup_failed), Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
         }
@@ -425,13 +427,15 @@ fun import(
         .enableLogDebug(true)
         .backupIsEncrypted(true)
         .customEncryptPassword("YOUR_SECRET_PASSWORD")
-        .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_INTERNAL)
-        .maxFileCount(5)
+        .backupLocation(RoomBackup.BACKUP_FILE_LOCATION_CUSTOM_DIALOG)
         .apply {
             onCompleteListener { success, message, exitCode ->
                 Log.d(TAG, "success: $success, message: $message, exitCode: $exitCode")
                 if (success) {
+                    showImportSuccessToast(context)
                     restartApp(context)
+                } else {
+                    showImportFailedToast(context)
                 }
             }
         }
