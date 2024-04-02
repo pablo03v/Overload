@@ -55,11 +55,11 @@ fun DayScreen(
             pageCount = { daysCount },
         )
 
-    LaunchedEffect(pagerState.settledPage) {
+    LaunchedEffect(pagerState.currentPage) {
         onEvent(
             ItemEvent.SetSelectedDayCalendar(
                 LocalDate.now()
-                    .minusDays((daysCount - pagerState.settledPage - 1).toLong())
+                    .minusDays((daysCount - pagerState.currentPage - 1).toLong())
                     .toString(),
             ),
         )
