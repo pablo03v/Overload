@@ -11,7 +11,7 @@
   -->
 <resources>
 
-    <style name="Theme.Overload" parent="android:Theme.Material.Light.NoActionBar">
+    <style name="Theme.Overload" parent="Theme.Material3.DynamicColors.DayNight">
         <item name="android:navigationBarColor">
             @android:color/transparent
         </item>
