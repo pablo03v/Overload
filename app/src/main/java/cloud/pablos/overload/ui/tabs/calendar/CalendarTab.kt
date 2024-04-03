@@ -24,6 +24,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -51,48 +52,13 @@ fun CalendarTab(
     onEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {
-    val selectedDay = getLocalDate(state.selectedDayCalendar)
     val selectedYear by remember { mutableIntStateOf(state.selectedYearCalendar) }
-    /* val scope = rememberCoroutineScope()
-    val sheetState = rememberBottomSheetScaffoldState()
-    var sheetOffset by remember { mutableFloatStateOf(0f) }
-    var expandSheet by remember { mutableStateOf(false) } */
-
-    val firstYear =
-        if (state.items.isEmpty()) {
-            LocalDate.now().year
-        } else {
-            state.items.minByOrNull { it.startTime }
-                ?.let { parseToLocalDateTime(it.startTime).year }
-                ?: LocalDate.now().year
-        }
-
-    val firstDay = LocalDate.of(firstYear, 1, 1)
-    val lastDay = LocalDate.now()
-    val daysCount = ChronoUnit.DAYS.between(firstDay, lastDay).toInt() + 1
-
-    val pagerState =
-        rememberPagerState(
-            initialPage = daysCount,
-            initialPageOffsetFraction = 0f,
-            pageCount = { daysCount },
-        )
 
     LaunchedEffect(selectedYear) {
         if (state.selectedYearCalendar != LocalDate.now().year) {
             onEvent(ItemEvent.SetSelectedYearCalendar(LocalDate.now().year))
         }
     }
-
-    /*LaunchedEffect(state.isSelectedHome) {
-        if (expandSheet) {
-            scope.launch { sheetState.bottomSheetState.expand() }
-            pagerState.scrollToPage(ChronoUnit.DAYS.between(firstDay, selectedDay).toInt())
-            onEvent(ItemEvent.SetIsSelectedHome(isSelected = false))
-        } else {
-            expandSheet = true
-        }
-    }*/
 
     Scaffold(
         topBar = {
@@ -129,7 +95,32 @@ fun CalendarTab(
                         Box(
                             modifier = Modifier.weight(1f),
                         ) {
+                            val selectedDay = getLocalDate(state.selectedDayCalendar)
+
+                            val firstYear =
+                                if (state.items.isEmpty()) {
+                                    LocalDate.now().year
+                                } else {
+                                    state.items.minByOrNull { it.startTime }
+                                        ?.let { parseToLocalDateTime(it.startTime).year }
+                                        ?: LocalDate.now().year
+                                }
+
+                            val firstDay = LocalDate.of(firstYear, 1, 1)
+                            val lastDay = LocalDate.now()
+                            val daysCount = ChronoUnit.DAYS.between(firstDay, lastDay).toInt() + 1
+
+                            var scrollToPage = true
+
+                            val pagerState =
+                                rememberPagerState(
+                                    initialPage = daysCount,
+                                    initialPageOffsetFraction = 0f,
+                                    pageCount = { daysCount },
+                                )
+
                             LaunchedEffect(pagerState.currentPage) {
+                                scrollToPage = false
                                 onEvent(
                                     ItemEvent.SetSelectedDayCalendar(
                                         LocalDate.now()
@@ -140,6 +131,17 @@ fun CalendarTab(
 
                                 if (selectedYear != selectedDay.year) {
                                     onEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
+                                }
+                            }
+
+                            LaunchedEffect(state.selectedDayCalendar) {
+                                if (scrollToPage) {
+                                    val highlightedDay = LocalDate.now().minusDays((daysCount - pagerState.currentPage - 1).toLong())
+                                    if (getLocalDate(state.selectedDayCalendar) != highlightedDay) {
+                                        pagerState.scrollToPage(ChronoUnit.DAYS.between(firstDay, selectedDay).toInt())
+                                    }
+                                } else {
+                                    scrollToPage = true
                                 }
                             }
 
@@ -179,38 +181,6 @@ fun CalendarTab(
                             year = state.selectedYearCalendar,
                             onNavigate = onNavigate,
                         )
-
-                        /*BottomSheetScaffold(
-                            scaffoldState = sheetState,
-                            sheetContent = {
-                                HorizontalPager(
-                                    state = pagerState,
-                                ) {
-                                    DayView(
-                                        state = state,
-                                        onEvent = onEvent,
-                                        date = selectedDay,
-                                        isEditable = false,
-                                    )
-                                }
-                            },
-                        ) { innerPadding ->
-                            YearView(
-                                state = state,
-                                onEvent = onEvent,
-                                year = state.selectedYearCalendar,
-                                bottomPadding = innerPadding.calculateBottomPadding(),
-                                onNavigate = onNavigate,
-                            )
-
-                            Modifier.pointerInput(Unit) {
-                                detectVerticalDragGestures { _, dragAmount ->
-                                    val maxOffset = 64.dp.toPx()
-
-                                    sheetOffset = (sheetOffset + dragAmount).coerceIn(0f, maxOffset)
-                                }
-                            }
-                        }*/
                     }
                 }
             }
