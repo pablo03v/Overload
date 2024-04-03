@@ -37,11 +37,12 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun YearView(
+    date: LocalDate,
     year: Int,
-    // state: ItemState,
     onEvent: (ItemEvent) -> Unit,
     bottomPadding: Dp = 0.dp,
     onNavigate: () -> Unit = {},
+    highlightSelectedDay: Boolean = false,
 ) {
     val currentYear = LocalDate.now().year
     val months =
@@ -79,7 +80,7 @@ fun YearView(
                             if (isLastWeekInLastMonth) bottomPadding else 0.dp,
                         ),
                     ) {
-                        WeekRow(firstDayOfMonth, weekOfMonth, onEvent, onNavigate)
+                        WeekRow(firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, onEvent, onNavigate)
                     }
                 }
             }
@@ -104,6 +105,8 @@ fun MonthNameHeader(month: Month) {
 fun WeekRow(
     firstDayOfMonth: LocalDate,
     weekOfMonth: Int,
+    date: LocalDate,
+    highlightSelectedDay: Boolean = false,
     onEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {
@@ -142,6 +145,8 @@ fun WeekRow(
                 getColorOfDay(
                     date = iterationDate,
                     firstDayOfMonth = firstDayOfMonth,
+                    selected = date == iterationDate,
+                    highlightSelectedDay = highlightSelectedDay,
                 )
             val number = iterationDate.dayOfMonth.toString()
             val clickable = iterationDate <= today
@@ -220,6 +225,8 @@ fun EmptyDayCell() {
 fun getColorOfDay(
     date: LocalDate,
     firstDayOfMonth: LocalDate,
+    selected: Boolean,
+    highlightSelectedDay: Boolean = false,
 ): Pair<Color, Color> {
     val month = firstDayOfMonth.month
     val today = LocalDate.now()
@@ -232,14 +239,24 @@ fun getColorOfDay(
         }
 
     val borderColor =
-        if (
-            // date == getLocalDate(state.selectedDayCalendar) &&
-            // date.month == month
-            date == LocalDate.now()
-        ) {
-            MaterialTheme.colorScheme.primary
-        } else {
-            Color.Transparent
+        when (highlightSelectedDay) {
+            true -> {
+                if (selected) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    Color.Transparent
+                }
+            }
+
+            false -> {
+                if (
+                    date == LocalDate.now()
+                ) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    Color.Transparent
+                }
+            }
         }
 
     return Pair(backgroundColor, borderColor)

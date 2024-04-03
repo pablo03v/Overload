@@ -86,8 +86,10 @@ fun CalendarTab(
 
                                 YearView(
                                     onEvent = onEvent,
+                                    date = getLocalDate(state.selectedDayCalendar),
                                     year = state.selectedYearCalendar,
                                     bottomPadding = 0.dp,
+                                    highlightSelectedDay = true,
                                 )
                             }
                         }
@@ -178,6 +180,7 @@ fun CalendarTab(
 
                         YearView(
                             onEvent = onEvent,
+                            date = getLocalDate(state.selectedDayCalendar),
                             year = state.selectedYearCalendar,
                             onNavigate = onNavigate,
                         )
