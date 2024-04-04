@@ -95,7 +95,6 @@ fun DayScreen(
                     page = page,
                     state = state,
                     onEvent = onEvent,
-                    isEditable = true,
                 )
             }
         }

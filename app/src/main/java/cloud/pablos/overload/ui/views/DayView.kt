@@ -49,7 +49,6 @@ fun DayView(
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
     date: LocalDate,
-    isEditable: Boolean,
 ) {
     val items = getItemsOfDay(date, state)
 
@@ -111,7 +110,6 @@ fun DayView(
                             Modifier
                                 .padding(10.dp, 10.dp, 10.dp)
                                 .combinedClickable(
-                                    enabled = isEditable,
                                     onLongClick = {
                                         deletePauseDialogState.value = true
                                     },
@@ -157,7 +155,6 @@ fun DayView(
                                 if (isLastItem) 80.dp else 10.dp,
                             )
                             .combinedClickable(
-                                enabled = isEditable,
                                 onLongClick = {
                                     onEvent(ItemEvent.SetIsDeletingHome(true))
                                     onEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))

@@ -45,7 +45,6 @@ fun DayScreenDayView(
     page: Int,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
-    isEditable: Boolean,
 ) {
     val date =
         LocalDate.now()
@@ -111,7 +110,6 @@ fun DayScreenDayView(
                             Modifier
                                 .padding(10.dp, 10.dp, 10.dp)
                                 .combinedClickable(
-                                    enabled = isEditable,
                                     onLongClick = {
                                         deletePauseDialogState.value = true
                                     },
@@ -157,7 +155,6 @@ fun DayScreenDayView(
                                 if (isLastItem) 80.dp else 10.dp,
                             )
                             .combinedClickable(
-                                enabled = isEditable,
                                 onLongClick = {
                                     onEvent(ItemEvent.SetIsDeletingHome(true))
                                     onEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))

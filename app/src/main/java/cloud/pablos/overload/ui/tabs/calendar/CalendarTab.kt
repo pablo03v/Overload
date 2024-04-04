@@ -162,7 +162,6 @@ fun CalendarTab(
                                         state = state,
                                         onEvent = onEvent,
                                         date = selectedDay,
-                                        isEditable = false,
                                     )
                                 }
                             }

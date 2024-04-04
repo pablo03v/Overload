@@ -337,7 +337,10 @@ fun OverloadTopAppBar(
                 }
 
                 OverloadRoute.CALENDAR -> {
-                    TopBarState.Calendar
+                    when (state.isDeletingHome) {
+                        true -> TopBarState.Deleting
+                        false -> TopBarState.Calendar
+                    }
                 }
 
                 OverloadRoute.CONFIGURATIONS -> {
