@@ -35,7 +35,7 @@ import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
 import cloud.pablos.overload.ui.tabs.home.getFormattedDate
 import cloud.pablos.overload.ui.utils.OverloadContentType
-import cloud.pablos.overload.ui.views.DayView
+import cloud.pablos.overload.ui.views.DayScreenDayView
 import cloud.pablos.overload.ui.views.TextView
 import cloud.pablos.overload.ui.views.YearView
 import cloud.pablos.overload.ui.views.getLocalDate
@@ -149,19 +149,23 @@ fun CalendarTab(
 
                             HorizontalPager(
                                 state = pagerState,
-                            ) {
+                            ) { page ->
                                 Column {
                                     Surface(
                                         tonalElevation = NavigationBarDefaults.Elevation,
                                         color = MaterialTheme.colorScheme.background,
                                     ) {
-                                        DateHeader(selectedDay)
+                                        DateHeader(
+                                            daysCount = daysCount,
+                                            page = page,
+                                        )
                                     }
 
-                                    DayView(
+                                    DayScreenDayView(
+                                        daysCount = daysCount,
+                                        page = page,
                                         state = state,
                                         onEvent = onEvent,
-                                        date = selectedDay,
                                     )
                                 }
                             }
@@ -226,7 +230,14 @@ fun DayOfWeekHeaderCell(text: String) {
 }
 
 @Composable
-fun DateHeader(date: LocalDate) {
+fun DateHeader(
+    daysCount: Int,
+    page: Int,
+) {
+    val date =
+        LocalDate.now()
+            .minusDays((daysCount - page - 1).toLong())
+
     val text = getFormattedDate(date, true)
     Box(
         modifier =
