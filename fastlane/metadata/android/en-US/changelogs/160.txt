@@ -1,0 +1,6 @@
+- you can now swipe between days in the calendar tab on phones
+- updates app icon
+- updates splash screen theme
+- fixes multiple swiping issues on tablets
+- adds delete forever button on tablets
+- updates translations

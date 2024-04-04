@@ -4,7 +4,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
@@ -21,7 +20,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,9 +27,9 @@ import cloud.pablos.overload.R
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.startOrStopPause
+import cloud.pablos.overload.ui.tabs.home.HomeTabDeleteFAB
 import cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog
-import cloud.pablos.overload.ui.views.extractDate
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
+import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
@@ -43,10 +41,7 @@ fun OverloadNavigationFabSmall(
 ) {
     val date = LocalDate.now()
 
-    val itemsForToday = state.items.filter { item ->
-        val startTime = parseToLocalDateTime(item.startTime)
-        extractDate(startTime) == date
-    }
+    val itemsForToday = getItemsOfDay(date, state)
 
     val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
 
@@ -66,7 +61,8 @@ fun OverloadNavigationFabSmall(
                     delay(viewConfiguration.longPressTimeoutMillis)
                     isLongClick = true
 
-                    onEvent(ItemEvent.SetIsFabOpen(isFabOpen = true))
+                    onEvent(ItemEvent.SetIsFabOpen(true))
+                    onEvent(ItemEvent.SetIsDeletingHome(false))
                 }
                 is PressInteraction.Release -> {
                 }
@@ -85,7 +81,7 @@ fun OverloadNavigationFabSmall(
             true -> {
                 FloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(isFabOpen = false))
+                        onEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -98,7 +94,7 @@ fun OverloadNavigationFabSmall(
 
                 SmallFloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(isFabOpen = false))
+                        onEvent(ItemEvent.SetIsFabOpen(false))
                         manualDialogState.value = true
                     },
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -111,31 +107,38 @@ fun OverloadNavigationFabSmall(
                 }
             }
             false -> {
-                FloatingActionButton(
-                    onClick = {
-                        if (isLongClick.not()) {
-                            startOrStopPause(state, onEvent)
+                when (state.isDeletingHome) {
+                    true -> {
+                        HomeTabDeleteFAB(state, onEvent)
+                    }
+
+                    false -> {
+                        FloatingActionButton(
+                            onClick = {
+                                if (isLongClick.not()) {
+                                    startOrStopPause(state, onEvent)
+                                }
+                            },
+                            interactionSource = interactionSource,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        ) {
+                            Icon(
+                                imageVector =
+                                    if (isOngoing) {
+                                        Icons.Default.Stop
+                                    } else {
+                                        Icons.Default.PlayArrow
+                                    },
+                                contentDescription =
+                                    if (isOngoing) {
+                                        stringResource(id = R.string.stop)
+                                    } else {
+                                        stringResource(id = R.string.start)
+                                    },
+                            )
                         }
-                    },
-                    interactionSource = interactionSource,
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.padding(bottom = 10.dp),
-                ) {
-                    Icon(
-                        imageVector =
-                        if (isOngoing) {
-                            Icons.Default.Stop
-                        } else {
-                            Icons.Default.PlayArrow
-                        },
-                        contentDescription =
-                        if (isOngoing) {
-                            stringResource(id = R.string.stop)
-                        } else {
-                            stringResource(id = R.string.start)
-                        },
-                    )
+                    }
                 }
             }
         }

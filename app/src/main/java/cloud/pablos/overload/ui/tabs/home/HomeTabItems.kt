@@ -13,10 +13,11 @@ import java.util.Date
 import java.util.Locale
 
 val dateFormat = SimpleDateFormat("EEEE", Locale.getDefault())
-val daysBeforeYesterday: Calendar = Calendar.getInstance().apply {
-    time = Date()
-    add(Calendar.DATE, -2)
-}
+val daysBeforeYesterday: Calendar =
+    Calendar.getInstance().apply {
+        time = Date()
+        add(Calendar.DATE, -2)
+    }
 
 val dayBeforeYesterday: String = dateFormat.format(daysBeforeYesterday.time)
 
@@ -24,52 +25,51 @@ val dateFormatSymbols: DateFormatSymbols = DateFormatSymbols.getInstance(Locale.
 
 val dayNames: Array<String> = dateFormatSymbols.weekdays
 
-val dayBeforeYesterdayResId = when (dayBeforeYesterday) {
-    dayNames[Calendar.MONDAY] -> R.string.monday
-    dayNames[Calendar.TUESDAY] -> R.string.tuesday
-    dayNames[Calendar.WEDNESDAY] -> R.string.wednesday
-    dayNames[Calendar.THURSDAY] -> R.string.thursday
-    dayNames[Calendar.FRIDAY] -> R.string.friday
-    dayNames[Calendar.SATURDAY] -> R.string.saturday
-    dayNames[Calendar.SUNDAY] -> R.string.sunday
-    else -> {
-        R.string.unknown_day
+val dayBeforeYesterdayResId =
+    when (dayBeforeYesterday) {
+        dayNames[Calendar.MONDAY] -> R.string.monday
+        dayNames[Calendar.TUESDAY] -> R.string.tuesday
+        dayNames[Calendar.WEDNESDAY] -> R.string.wednesday
+        dayNames[Calendar.THURSDAY] -> R.string.thursday
+        dayNames[Calendar.FRIDAY] -> R.string.friday
+        dayNames[Calendar.SATURDAY] -> R.string.saturday
+        dayNames[Calendar.SUNDAY] -> R.string.sunday
+        else -> {
+            R.string.unknown_day
+        }
     }
-}
 
 @RequiresApi(Build.VERSION_CODES.S)
-val homeTabItems = listOf(
-    TabItem(
-        titleResId = dayBeforeYesterdayResId,
-        screen = { state, onEvent ->
-            DayView(
-                state = state,
-                onEvent = onEvent,
-                date = LocalDate.now().minusDays(2),
-                isEditable = true,
-            )
-        },
-    ),
-    TabItem(
-        titleResId = R.string.yesterday,
-        screen = { state, onEvent ->
-            DayView(
-                state = state,
-                onEvent = onEvent,
-                date = LocalDate.now().minusDays(1),
-                isEditable = true,
-            )
-        },
-    ),
-    TabItem(
-        titleResId = R.string.today,
-        screen = { state, onEvent ->
-            DayView(
-                state = state,
-                onEvent = onEvent,
-                date = LocalDate.now(),
-                isEditable = true,
-            )
-        },
-    ),
-)
+val homeTabItems =
+    listOf(
+        TabItem(
+            titleResId = dayBeforeYesterdayResId,
+            screen = { state, onEvent ->
+                DayView(
+                    state = state,
+                    onEvent = onEvent,
+                    date = LocalDate.now().minusDays(2),
+                )
+            },
+        ),
+        TabItem(
+            titleResId = R.string.yesterday,
+            screen = { state, onEvent ->
+                DayView(
+                    state = state,
+                    onEvent = onEvent,
+                    date = LocalDate.now().minusDays(1),
+                )
+            },
+        ),
+        TabItem(
+            titleResId = R.string.today,
+            screen = { state, onEvent ->
+                DayView(
+                    state = state,
+                    onEvent = onEvent,
+                    date = LocalDate.now(),
+                )
+            },
+        ),
+    )
