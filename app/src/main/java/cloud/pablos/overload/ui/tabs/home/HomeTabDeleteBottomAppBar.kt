@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.extractDate
@@ -24,15 +25,9 @@ fun HomeTabDeleteBottomAppBar(
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
 ) {
-    val date =
-        state.selectedDayCalendar.takeIf { it.isNotBlank() }?.let { getLocalDate(it) }
-            ?: LocalDate.now()
+    val date = getSelectedDay(state)
 
-    val itemsForSelectedDay =
-        state.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
-            extractDate(startTime) == date
-        }
+    val itemsForSelectedDay = getItemsOfDay(date, state)
 
     BottomAppBar(
         actions = {
@@ -77,4 +72,38 @@ fun HomeTabDeleteBottomAppBar(
             }
         },
     )
+}
+
+@Composable
+fun HomeTabDeleteFAB(
+    state: ItemState,
+    onEvent: (ItemEvent) -> Unit,
+) {
+    FloatingActionButton(
+        onClick = {
+            onEvent(ItemEvent.DeleteItems(state.selectedItemsHome))
+        },
+        containerColor = MaterialTheme.colorScheme.errorContainer,
+        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+    ) {
+        Icon(
+            Icons.Filled.DeleteForever,
+            contentDescription = stringResource(id = R.string.delete_items_forever),
+        )
+    }
+}
+
+fun getSelectedDay(state: ItemState): LocalDate {
+    return state.selectedDayCalendar.takeIf { it.isNotBlank() }?.let { getLocalDate(it) }
+        ?: LocalDate.now()
+}
+
+fun getItemsOfDay(
+    date: LocalDate,
+    state: ItemState,
+): List<Item> {
+    return state.items.filter { item ->
+        val startTime = parseToLocalDateTime(item.startTime)
+        extractDate(startTime) == date
+    }
 }

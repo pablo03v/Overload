@@ -166,12 +166,12 @@ private fun (() -> Unit).save(
             }
 
         if (dateIterator == startDate) {
-            onEvent(ItemEvent.SetId(id = item.id))
+            onEvent(ItemEvent.SetId(item.id))
         }
-        onEvent(ItemEvent.SetStart(start = newStartTime.format(formatter)))
-        onEvent(ItemEvent.SetEnd(end = newEndTime.format(formatter)))
-        onEvent(ItemEvent.SetOngoing(ongoing = false))
-        onEvent(ItemEvent.SetPause(pause = item.pause))
+        onEvent(ItemEvent.SetStart(newStartTime.format(formatter)))
+        onEvent(ItemEvent.SetEnd(newEndTime.format(formatter)))
+        onEvent(ItemEvent.SetOngoing(false))
+        onEvent(ItemEvent.SetPause(item.pause))
         onEvent(ItemEvent.SaveItem)
         dateIterator = dateIterator.plusDays(1)
     }

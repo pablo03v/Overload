@@ -188,7 +188,7 @@ fun DayCell(
                     enabled = clickable,
                     onClick = {
                         onEvent(ItemEvent.SetSelectedDayCalendar(getFormattedDate(date)))
-                        onEvent(ItemEvent.SetIsSelectedHome(isSelected = true))
+                        onEvent(ItemEvent.SetIsSelectedHome(true))
                         onNavigate()
                     },
                     indication =

@@ -17,7 +17,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.MenuOpen
+import androidx.compose.material.icons.filled.Deselect
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -54,10 +56,11 @@ import cloud.pablos.overload.ui.tabs.calendar.CalendarTabTopAppBar
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabTopAppBar
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeleteBottomAppBar
 import cloud.pablos.overload.ui.tabs.home.HomeTabTopAppBar
+import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
+import cloud.pablos.overload.ui.tabs.home.getSelectedDay
 import cloud.pablos.overload.ui.utils.OverloadNavigationContentPosition
 import cloud.pablos.overload.ui.views.DeleteTopAppBar
 import cloud.pablos.overload.ui.views.TextView
-import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -69,18 +72,20 @@ fun OverloadNavigationRail(
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
 ) {
-    if (state.isDeletingHome.not()) {
-        NavigationRail(
-            modifier = Modifier.fillMaxHeight(),
-            containerColor = MaterialTheme.colorScheme.inverseOnSurface,
-        ) {
-            Layout(
-                modifier = Modifier.widthIn(max = 80.dp),
-                content = {
-                    Column(
-                        modifier = Modifier.layoutId(LayoutType.HEADER),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+    NavigationRail(
+        modifier = Modifier.fillMaxHeight(),
+        containerColor = MaterialTheme.colorScheme.inverseOnSurface,
+    ) {
+        Layout(
+            modifier = Modifier.widthIn(max = 80.dp),
+            content = {
+                Column(
+                    modifier = Modifier.layoutId(LayoutType.HEADER).padding(bottom = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    AnimatedVisibility(
+                        visible = true, // state.isDeletingHome.not(),
                     ) {
                         NavigationRailItem(
                             selected = false,
@@ -92,47 +97,92 @@ fun OverloadNavigationRail(
                                 )
                             },
                         )
-
-                        AnimatedVisibility(
-                            visible = state.selectedDayCalendar == LocalDate.now().toString(),
-                        ) {
-                            OverloadNavigationFabSmall(state = state, onEvent = onEvent)
-                        }
                     }
-                    Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
-                        AnimatedVisibility(visible = state.isFabOpen.not()) {
+
+                    OverloadNavigationFabSmall(state = state, onEvent = onEvent)
+                }
+                Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
+                    when (state.isDeletingHome) {
+                        true -> {
+                            val date = getSelectedDay(state)
+                            val items = getItemsOfDay(date, state)
+
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.spacedBy(4.dp),
                             ) {
-                                TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
-                                    NavigationRailItem(
-                                        selected = selectedDestination == overloadDestination.route,
-                                        onClick = {
-                                            navigateToTopLevelDestination(
-                                                overloadDestination,
-                                            )
-                                        },
-                                        icon = {
-                                            Icon(
-                                                imageVector =
-                                                    if (selectedDestination == overloadDestination.route) {
-                                                        overloadDestination.selectedIcon
-                                                    } else {
-                                                        overloadDestination.unselectedIcon
+                                NavigationRailItem(
+                                    selected = false,
+                                    onClick = {
+                                        onEvent(
+                                            ItemEvent.SetSelectedItemsHome(
+                                                state.selectedItemsHome +
+                                                    items.filterNot {
+                                                        state.selectedItemsHome.contains(
+                                                            it,
+                                                        )
                                                     },
-                                                contentDescription = stringResource(id = overloadDestination.iconTextId),
-                                            )
-                                        },
-                                    )
+                                            ),
+                                        )
+                                    },
+                                    icon = {
+                                        Icon(
+                                            Icons.Filled.SelectAll,
+                                            contentDescription = stringResource(id = R.string.select_all_items_of_selected_day),
+                                        )
+                                    },
+                                )
+
+                                NavigationRailItem(
+                                    selected = false,
+                                    onClick = {
+                                        onEvent(ItemEvent.SetSelectedItemsHome(state.selectedItemsHome - items.toSet()))
+                                    },
+                                    icon = {
+                                        Icon(
+                                            Icons.Filled.Deselect,
+                                            contentDescription = stringResource(id = R.string.deselect_all_items_of_selected_day),
+                                        )
+                                    },
+                                )
+                            }
+                        }
+
+                        false -> {
+                            AnimatedVisibility(visible = state.isFabOpen.not()) {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                                ) {
+                                    TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
+                                        NavigationRailItem(
+                                            selected = selectedDestination == overloadDestination.route,
+                                            onClick = {
+                                                navigateToTopLevelDestination(
+                                                    overloadDestination,
+                                                )
+                                            },
+                                            icon = {
+                                                Icon(
+                                                    imageVector =
+                                                        if (selectedDestination == overloadDestination.route) {
+                                                            overloadDestination.selectedIcon
+                                                        } else {
+                                                            overloadDestination.unselectedIcon
+                                                        },
+                                                    contentDescription = stringResource(id = overloadDestination.iconTextId),
+                                                )
+                                            },
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
-                },
-                measurePolicy = navigationMeasurePolicy(navigationContentPosition),
-            )
-        }
+                }
+            },
+            measurePolicy = navigationMeasurePolicy(navigationContentPosition),
+        )
     }
 }
 
@@ -361,90 +411,153 @@ fun ModalNavigationDrawerContent(
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
 ) {
-    if (state.isDeletingHome.not()) {
-        ModalDrawerSheet {
-            Layout(
-                modifier =
-                    Modifier
-                        .background(MaterialTheme.colorScheme.inverseOnSurface)
-                        .padding(16.dp),
-                content = {
-                    Column(
-                        modifier = Modifier.layoutId(LayoutType.HEADER),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ModalDrawerSheet {
+        Layout(
+            modifier =
+                Modifier
+                    .background(MaterialTheme.colorScheme.inverseOnSurface)
+                    .padding(16.dp),
+            content = {
+                Column(
+                    modifier = Modifier.layoutId(LayoutType.HEADER).padding(bottom = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    Row(
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Row(
-                            modifier =
-                                Modifier
-                                    .fillMaxWidth()
-                                    .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            TextView(
-                                text = stringResource(id = R.string.app_name),
-                                fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        TextView(
+                            text = stringResource(id = R.string.app_name),
+                            fontSize = MaterialTheme.typography.titleLarge.fontSize,
+                        )
+                        IconButton(onClick = onDrawerClicked) {
+                            Icon(
+                                imageVector = Icons.AutoMirrored.Filled.MenuOpen,
+                                contentDescription = stringResource(id = R.string.navigation_drawer),
                             )
-                            IconButton(onClick = onDrawerClicked) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.MenuOpen,
-                                    contentDescription = stringResource(id = R.string.navigation_drawer),
-                                )
-                            }
-                        }
-
-                        AnimatedVisibility(
-                            visible = state.selectedDayCalendar == LocalDate.now().toString(),
-                        ) {
-                            OverloadNavigationFab(state, onEvent, onDrawerClicked)
                         }
                     }
 
-                    Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
-                        AnimatedVisibility(visible = state.isFabOpen.not()) {
+                    OverloadNavigationFab(state, onEvent, onDrawerClicked)
+                }
+
+                Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
+                    when (state.isDeletingHome) {
+                        true -> {
+                            val date = getSelectedDay(state)
+                            val items = getItemsOfDay(date, state)
+
                             Column(
                                 modifier = Modifier.verticalScroll(rememberScrollState()),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
-                                TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
-                                    NavigationDrawerItem(
-                                        selected = selectedDestination == overloadDestination.route,
-                                        label = {
-                                            TextView(stringResource(id = overloadDestination.iconTextId))
-                                        },
-                                        icon = {
-                                            Icon(
-                                                imageVector =
-                                                    if (selectedDestination == overloadDestination.route) {
-                                                        overloadDestination.selectedIcon
-                                                    } else {
-                                                        overloadDestination.unselectedIcon
+                                NavigationDrawerItem(
+                                    selected = false,
+                                    onClick = {
+                                        onEvent(
+                                            ItemEvent.SetSelectedItemsHome(
+                                                state.selectedItemsHome +
+                                                    items.filterNot {
+                                                        state.selectedItemsHome.contains(
+                                                            it,
+                                                        )
                                                     },
-                                                contentDescription =
-                                                    stringResource(
-                                                        id = overloadDestination.iconTextId,
-                                                    ),
-                                            )
-                                        },
-                                        colors =
-                                            NavigationDrawerItemDefaults.colors(
-                                                unselectedContainerColor = Color.Transparent,
                                             ),
-                                        onClick = {
-                                            navigateToTopLevelDestination(
-                                                overloadDestination,
-                                            )
-                                        },
-                                    )
+                                        )
+                                    },
+                                    label = {
+                                        TextView(
+                                            stringResource(
+                                                id = R.string.select_all_items_of_selected_day,
+                                            ).replaceFirstChar { it.uppercase() },
+                                        )
+                                    },
+                                    icon = {
+                                        Icon(
+                                            Icons.Filled.SelectAll,
+                                            contentDescription = stringResource(id = R.string.select_all_items_of_selected_day),
+                                        )
+                                    },
+                                    colors =
+                                        NavigationDrawerItemDefaults.colors(
+                                            unselectedContainerColor = Color.Transparent,
+                                        ),
+                                )
+                                NavigationDrawerItem(
+                                    selected = false,
+                                    onClick = {
+                                        onEvent(ItemEvent.SetSelectedItemsHome(state.selectedItemsHome - items.toSet()))
+                                    },
+                                    label = {
+                                        TextView(
+                                            stringResource(
+                                                id = R.string.deselect_all_items_of_selected_day,
+                                            ).replaceFirstChar { it.uppercase() },
+                                        )
+                                    },
+                                    icon = {
+                                        Icon(
+                                            Icons.Filled.Deselect,
+                                            contentDescription = stringResource(id = R.string.deselect_all_items_of_selected_day),
+                                        )
+                                    },
+                                    colors =
+                                        NavigationDrawerItemDefaults.colors(
+                                            unselectedContainerColor = Color.Transparent,
+                                        ),
+                                )
+                            }
+                        }
+                        false -> {
+                            AnimatedVisibility(visible = state.isFabOpen.not()) {
+                                Column(
+                                    modifier = Modifier.verticalScroll(rememberScrollState()),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
+                                        NavigationDrawerItem(
+                                            selected = selectedDestination == overloadDestination.route,
+                                            label = {
+                                                TextView(stringResource(id = overloadDestination.iconTextId))
+                                            },
+                                            icon = {
+                                                Icon(
+                                                    imageVector =
+                                                        if (selectedDestination == overloadDestination.route) {
+                                                            overloadDestination.selectedIcon
+                                                        } else {
+                                                            overloadDestination.unselectedIcon
+                                                        },
+                                                    contentDescription =
+                                                        stringResource(
+                                                            id = overloadDestination.iconTextId,
+                                                        ),
+                                                )
+                                            },
+                                            colors =
+                                                NavigationDrawerItemDefaults.colors(
+                                                    unselectedContainerColor = Color.Transparent,
+                                                ),
+                                            onClick = {
+                                                navigateToTopLevelDestination(
+                                                    overloadDestination,
+                                                )
+                                            },
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
-                },
-                measurePolicy = navigationMeasurePolicy(navigationContentPosition),
-            )
-        }
+                }
+            },
+            measurePolicy = navigationMeasurePolicy(navigationContentPosition),
+        )
     }
 }
 

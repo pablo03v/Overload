@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
+import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import cloud.pablos.overload.ui.views.extractDate
 import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import kotlinx.coroutines.flow.Flow
@@ -16,9 +17,9 @@ interface ItemDao {
     suspend fun upsertItem(item: Item)
 
     /*@Upsert
-    suspend fun upsertItems(items: List<Item>)*/
+    suspend fun upsertItems(items: List<Item>)
 
-    /*@Delete
+    @Delete
     suspend fun deleteItem(item: Item)*/
 
     @Delete
@@ -55,11 +56,7 @@ fun startOrStopPause(
 ) {
     val date = LocalDate.now()
 
-    val itemsForToday =
-        state.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
-            extractDate(startTime) == date
-        }
+    val itemsForToday = getItemsOfDay(date, state)
     val isFirstToday = itemsForToday.isEmpty()
     val isOngoingToday = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
 
@@ -73,32 +70,32 @@ fun startOrStopPause(
     if (isOngoingNotToday) {
         onEvent(ItemEvent.SetForgotToStopDialogShown(true))
     } else if (isFirstToday) {
-        onEvent(ItemEvent.SetStart(start = LocalDateTime.now().toString()))
-        onEvent(ItemEvent.SetOngoing(ongoing = true))
-        onEvent(ItemEvent.SetPause(pause = false))
+        onEvent(ItemEvent.SetStart(LocalDateTime.now().toString()))
+        onEvent(ItemEvent.SetOngoing(true))
+        onEvent(ItemEvent.SetPause(false))
         onEvent(ItemEvent.SaveItem)
 
-        onEvent(ItemEvent.SetIsOngoing(isOngoing = true))
+        onEvent(ItemEvent.SetIsOngoing(true))
     } else if (isOngoingToday) {
-        onEvent(ItemEvent.SetId(id = itemsForToday.last().id))
-        onEvent(ItemEvent.SetStart(start = itemsForToday.last().startTime))
-        onEvent(ItemEvent.SetEnd(end = LocalDateTime.now().toString()))
-        onEvent(ItemEvent.SetOngoing(ongoing = false))
+        onEvent(ItemEvent.SetId(itemsForToday.last().id))
+        onEvent(ItemEvent.SetStart(itemsForToday.last().startTime))
+        onEvent(ItemEvent.SetEnd(LocalDateTime.now().toString()))
+        onEvent(ItemEvent.SetOngoing(false))
         onEvent(ItemEvent.SaveItem)
 
-        onEvent(ItemEvent.SetIsOngoing(isOngoing = false))
+        onEvent(ItemEvent.SetIsOngoing(false))
     } else {
-        onEvent(ItemEvent.SetStart(start = itemsForToday.last().endTime))
-        onEvent(ItemEvent.SetEnd(end = LocalDateTime.now().toString()))
-        onEvent(ItemEvent.SetOngoing(ongoing = false))
-        onEvent(ItemEvent.SetPause(pause = true))
+        onEvent(ItemEvent.SetStart(itemsForToday.last().endTime))
+        onEvent(ItemEvent.SetEnd(LocalDateTime.now().toString()))
+        onEvent(ItemEvent.SetOngoing(false))
+        onEvent(ItemEvent.SetPause(true))
         onEvent(ItemEvent.SaveItem)
 
-        onEvent(ItemEvent.SetStart(start = LocalDateTime.now().toString()))
-        onEvent(ItemEvent.SetOngoing(ongoing = true))
-        onEvent(ItemEvent.SetPause(pause = false))
+        onEvent(ItemEvent.SetStart(LocalDateTime.now().toString()))
+        onEvent(ItemEvent.SetOngoing(true))
+        onEvent(ItemEvent.SetPause(false))
         onEvent(ItemEvent.SaveItem)
 
-        onEvent(ItemEvent.SetIsOngoing(isOngoing = true))
+        onEvent(ItemEvent.SetIsOngoing(true))
     }
 }

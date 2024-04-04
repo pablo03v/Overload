@@ -33,6 +33,7 @@ import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.tabs.configurations.OlSharedPreferences
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeletePauseDialog
 import cloud.pablos.overload.ui.tabs.home.HomeTabEditItemDialog
+import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import java.time.LocalDate
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
@@ -50,11 +51,7 @@ fun DayScreenDayView(
         LocalDate.now()
             .minusDays((daysCount - page - 1).toLong())
 
-    val items =
-        state.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
-            extractDate(startTime) == date
-        }
+    val items = getItemsOfDay(date, state)
 
     val itemsDesc = items.sortedByDescending { it.startTime }
 
@@ -164,6 +161,7 @@ fun DayScreenDayView(
                                 onLongClick = {
                                     onEvent(ItemEvent.SetIsDeletingHome(true))
                                     onEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
+                                    onEvent(ItemEvent.SetIsFabOpen(false))
                                 },
                                 onClick = {
                                     if (state.isDeletingHome) {
