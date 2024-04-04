@@ -7,6 +7,7 @@ import androidx.room.Upsert
 import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import cloud.pablos.overload.ui.views.extractDate
 import cloud.pablos.overload.ui.views.parseToLocalDateTime
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -29,25 +30,45 @@ interface ItemDao {
     fun getAllItems(): Flow<List<Item>>
 }
 
+data class DatabaseBackup(
+    val data: Map<String, List<Map<String, Any>>>,
+    val backupVersion: Int,
+    val backupDate: String,
+)
+
 // Export function
-fun backupItemsToCsv(state: ItemState): String {
-    val items = state.items
-    /*val gson = Gson()
+fun backupItemsToJson(state: ItemState): String {
+    val gson = Gson()
 
-    return try {
-        val json = gson.toJson(items)
-        json
-    } catch (e: Exception) {
-        "{}" // Return a placeholder JSON object
-    }*/
-
-    val csvHeader = "id,startTime,endTime,ongoing,pause\n"
-    val csvData =
-        items.joinToString("\n") { item ->
-            "${item.id},${item.startTime},${item.endTime},${item.ongoing},${item.pause}"
+    val itemsTable =
+        state.items.map { item ->
+            mapOf(
+                "id" to item.id,
+                "startTime" to item.startTime,
+                "endTime" to item.endTime,
+                "ongoing" to item.ongoing,
+                "pause" to item.pause,
+            )
         }
 
-    return csvHeader + csvData
+    val data =
+        mapOf(
+            "items" to itemsTable,
+        )
+
+    val backup =
+        DatabaseBackup(
+            data,
+            2,
+            LocalDateTime.now().toString(),
+        )
+
+    return try {
+        val json = gson.toJson(backup)
+        json
+    } catch (e: Exception) {
+        "{}"
+    }
 }
 
 fun startOrStopPause(

@@ -1,11 +1,13 @@
 package cloud.pablos.overload.ui.tabs.configurations
 
+import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.preference.PreferenceManager
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.shrinkOut
@@ -49,14 +51,17 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.room.withTransaction
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.item.DatabaseBackup
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemDatabase
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.data.item.backupItemsToCsv
+import cloud.pablos.overload.data.item.backupItemsToJson
+import cloud.pablos.overload.ui.MainActivity
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
 import cloud.pablos.overload.ui.views.TextView
+import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -66,6 +71,7 @@ import java.io.File
 fun ConfigurationsTab(
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    filePickerLauncher: ActivityResultLauncher<Intent>,
 ) {
     val context = LocalContext.current
     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -86,7 +92,6 @@ fun ConfigurationsTab(
             mutableStateOf(sharedPreferences.getBoolean(acraSysLogsEnabledKey, true))
         }
 
-    val importDialogState = remember { mutableStateOf(false) }
     val workGoalDialogState = remember { mutableStateOf(false) }
     val pauseGoalDialogState = remember { mutableStateOf(false) }
 
@@ -278,7 +283,7 @@ fun ConfigurationsTab(
                     modifier =
                         Modifier
                             .clickable {
-                                importDialogState.value = true
+                                launchFilePicker(filePickerLauncher)
                             }
                             .clearAndSetSemantics {
                                 contentDescription = itemLabel
@@ -375,9 +380,6 @@ fun ConfigurationsTab(
                 }
             }
         }
-        if (importDialogState.value) {
-            ConfigurationsTabImportDialog(onClose = { importDialogState.value = false })
-        }
 
         if (workGoalDialogState.value) {
             ConfigurationsTabGoalDialog(
@@ -400,8 +402,8 @@ fun backup(
     context: Context,
 ) {
     try {
-        val exportedData = backupItemsToCsv(state)
-        val cachePath = File(context.cacheDir, "backup.csv")
+        val exportedData = backupItemsToJson(state)
+        val cachePath = File(context.cacheDir, "backup.json")
 
         cachePath.writeText(exportedData)
 
@@ -416,7 +418,7 @@ fun backup(
             Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_STREAM, contentUri)
-                type = "text/comma-separated-values"
+                type = "application/json"
             }
 
         val shareIntent = Intent.createChooser(sendIntent, null)
@@ -426,6 +428,15 @@ fun backup(
             .show()
         e.printStackTrace()
     }
+}
+
+fun launchFilePicker(filePickerLauncher: ActivityResultLauncher<Intent>) {
+    val intent =
+        Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/json"
+        }
+    filePickerLauncher.launch(intent)
 }
 
 fun handleIntent(
@@ -449,12 +460,12 @@ fun handleIntent(
         } else if (intent.getStringExtra(Intent.EXTRA_STREAM)?.isBlank() == false) {
             val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
             uri?.let {
-                importFile(uri, contentResolver, context, db, lifecycleScope)
+                importCsvFile(uri, contentResolver, context, db, lifecycleScope)
             }
         } else if (intent.clipData != null) {
             val uri = intent.clipData?.getItemAt(0)?.uri
             if (uri != null) {
-                importFile(uri, contentResolver, context, db, lifecycleScope)
+                importCsvFile(uri, contentResolver, context, db, lifecycleScope)
             } else {
                 showImportFailedToast(context)
             }
@@ -504,7 +515,67 @@ private fun importCsvData(
         withContext(Dispatchers.Main) {
             if (allImportsSucceeded) {
                 showImportSuccessToast(context)
+                restartApp(context)
             } else {
+                showImportFailedToast(context)
+            }
+        }
+    }
+}
+
+private fun importJsonData(
+    jsonData: String,
+    lifecycleScope: LifecycleCoroutineScope,
+    db: ItemDatabase,
+    context: Context,
+) {
+    lifecycleScope.launch(Dispatchers.IO) {
+        try {
+            val gson = Gson()
+            val databaseBackup = gson.fromJson(jsonData, DatabaseBackup::class.java)
+
+            when (databaseBackup.backupVersion) {
+                2 -> {
+                    val itemDao = db.itemDao()
+
+                    var allImportsSucceeded = true
+
+                    db.withTransaction {
+                        val itemsTable = databaseBackup.data["items"] ?: emptyList()
+                        itemsTable.forEach { itemData ->
+                            val item =
+                                Item(
+                                    id = (itemData["id"] as? Double)?.toInt() ?: 0,
+                                    startTime = itemData["startTime"] as String,
+                                    endTime = itemData["endTime"] as String,
+                                    ongoing = itemData["ongoing"] as Boolean,
+                                    pause = itemData["pause"] as Boolean,
+                                )
+
+                            val importResult = itemDao.upsertItem(item)
+                            if (importResult != Unit) {
+                                allImportsSucceeded = false
+                            }
+                        }
+                    }
+
+                    withContext(Dispatchers.Main) {
+                        if (allImportsSucceeded) {
+                            showImportSuccessToast(context)
+                            restartApp(context)
+                        } else {
+                            showImportFailedToast(context)
+                        }
+                    }
+                }
+                else -> {
+                    withContext(Dispatchers.Main) {
+                        showImportFailedToast(context)
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) {
                 showImportFailedToast(context)
             }
         }
@@ -533,7 +604,7 @@ fun showImportFailedToast(context: Context) {
     Toast.makeText(context, context.getString(R.string.import_failure), Toast.LENGTH_SHORT).show()
 }
 
-private fun importFile(
+fun importCsvFile(
     uri: Uri,
     contentResolver: ContentResolver,
     context: Context,
@@ -545,6 +616,22 @@ private fun importFile(
             val sharedData = inputStream.bufferedReader().readText()
 
             importCsvData(sharedData, lifecycleScope, db, context)
+        }
+    }
+}
+
+fun importJsonFile(
+    uri: Uri,
+    contentResolver: ContentResolver,
+    context: Context,
+    db: ItemDatabase,
+    lifecycleScope: LifecycleCoroutineScope,
+) {
+    uri.let {
+        contentResolver.openInputStream(uri)?.use { inputStream ->
+            val sharedData = inputStream.bufferedReader().readText()
+
+            importJsonData(sharedData, lifecycleScope, db, context)
         }
     }
 }
@@ -590,4 +677,13 @@ class OlSharedPreferences(context: Context) {
     fun getWorkGoal(): Int = sharedPreferences.getInt("workGoal", 0)
 
     fun getPauseGoal(): Int = sharedPreferences.getInt("pauseGoal", 0)
+}
+
+fun restartApp(context: Context) {
+    val intent = Intent(context.applicationContext, MainActivity::class.java)
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+    context.startActivity(intent)
+    if (context is Activity) {
+        context.finish()
+    }
 }
