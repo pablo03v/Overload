@@ -1,6 +1,8 @@
 package cloud.pablos.overload.ui
 
+import android.content.Intent
 import android.os.Build
+import androidx.activity.result.ActivityResultLauncher
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -64,6 +66,7 @@ fun OverloadApp(
     displayFeatures: List<DisplayFeature>,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    filePickerLauncher: ActivityResultLauncher<Intent>,
 ) {
     val navigationType: OverloadNavigationType
     val contentType: OverloadContentType
@@ -136,6 +139,7 @@ fun OverloadApp(
         navigationContentPosition = navigationContentPosition,
         state = state,
         onEvent = onEvent,
+        filePickerLauncher = filePickerLauncher,
     )
 }
 
@@ -147,6 +151,7 @@ private fun OverloadNavigationWrapper(
     navigationContentPosition: OverloadNavigationContentPosition,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    filePickerLauncher: ActivityResultLauncher<Intent>,
 ) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -176,6 +181,7 @@ private fun OverloadNavigationWrapper(
                 },
                 state = state,
                 onEvent = onEvent,
+                filePickerLauncher = filePickerLauncher,
             )
         }
 
@@ -211,6 +217,7 @@ private fun OverloadNavigationWrapper(
                     },
                     state = state,
                     onEvent = onEvent,
+                    filePickerLauncher = filePickerLauncher,
                 )
             }
         }
@@ -230,6 +237,7 @@ fun OverloadAppContent(
     onDrawerClicked: () -> Unit = {},
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    filePickerLauncher: ActivityResultLauncher<Intent>,
 ) {
     var forgotDialogState by remember { mutableStateOf(false) }
     LaunchedEffect(state.isForgotToStopDialogShown) {
@@ -269,6 +277,7 @@ fun OverloadAppContent(
                 navController = navController,
                 state = state,
                 onEvent = onEvent,
+                filePickerLauncher = filePickerLauncher,
                 modifier =
                     Modifier
                         .weight(1f)
@@ -328,6 +337,7 @@ private fun OverloadNavHost(
     modifier: Modifier = Modifier,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
+    filePickerLauncher: ActivityResultLauncher<Intent>,
 ) {
     NavHost(
         modifier = modifier,
@@ -359,6 +369,7 @@ private fun OverloadNavHost(
             ConfigurationsTab(
                 state = state,
                 onEvent = onEvent,
+                filePickerLauncher = filePickerLauncher,
             )
         }
     }
