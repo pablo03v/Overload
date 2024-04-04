@@ -35,21 +35,21 @@ import cloud.pablos.overload.ui.tabs.home.HomeTabDeletePauseDialog
 import cloud.pablos.overload.ui.tabs.home.HomeTabEditItemDialog
 import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.time.format.DateTimeParseException
-import java.time.temporal.ChronoField
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun DayView(
+fun DayScreenDayView(
+    daysCount: Int,
+    page: Int,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
-    date: LocalDate,
 ) {
+    val date =
+        LocalDate.now()
+            .minusDays((daysCount - page - 1).toLong())
+
     val items = getItemsOfDay(date, state)
 
     val itemsDesc = items.sortedByDescending { it.startTime }
@@ -231,36 +231,4 @@ fun DayView(
             onEvent,
         )
     }
-}
-
-fun parseToLocalDateTime(dateTimeString: String): LocalDateTime {
-    val formatter =
-        DateTimeFormatterBuilder()
-            .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
-            .optionalStart()
-            .appendFraction(ChronoField.MICRO_OF_SECOND, 0, 6, true)
-            .optionalEnd()
-            .toFormatter()
-
-    return try {
-        LocalDateTime.parse(dateTimeString, formatter)
-    } catch (e: DateTimeParseException) {
-        return LocalDateTime.now()
-    }
-}
-
-fun getLocalDate(selectedDay: String): LocalDate {
-    val date: LocalDate =
-        if (selectedDay.isNotBlank()) {
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-            LocalDate.parse(selectedDay, formatter)
-        } else {
-            LocalDate.now()
-        }
-
-    return date
-}
-
-fun extractDate(localDateTime: LocalDateTime): LocalDate {
-    return localDateTime.toLocalDate()
 }

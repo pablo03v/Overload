@@ -80,8 +80,25 @@
     <string name="footer">skapad med ❤️ av pabloscloud</string>
     <string name="acra_toastText">Krasch upptäckt. Prosím, pomôžte mi zaslaním e-mailu!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Krasch upptäckt. Prosím, pomôžte nám to zlepšiť zaslaním tohto e-mailu, aby sme to mohli čo najskôr opraviť. \n Ospravedlňujeme sa za spôsobené nepríjemnosti!
-    </string>
+    <string name="acra_mailBody">Zistená havária. Prosím, pomôžte nám to zlepšiť zaslaním tohto e-mailu, aby sme to mohli čo najskôr opraviť.\n
+Ospravedlňujeme sa za spôsobené nepríjemnosti! Vaše príspevky sú nevyhnutné na odstránenie tohto problému.\n
+\n
+Popis - Čo ste urobili, keď aplikácia spadla?\n
+\n
+\n
+Kroky na reprodukciu - Môžete poskytnúť návod krok za krokom, ako reprodukovať pád?\n
+\n
+\n
+Vizualizácie - Priložte akékoľvek snímky obrazovky alebo záznamy obrazovky.\n
+\n
+\n
+Nedávne zmeny - Aktualizovali ste nedávno aplikáciu alebo zmenili nastavenia zariadenia?\n
+\n
+\n
+Frekvencia - Ako často dochádza k pádu?\n
+\n
+\n
+Ďakujeme za trpezlivosť!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Spara</string>
     <string name="pick_work_goal">Ange mål för arbetet</string>

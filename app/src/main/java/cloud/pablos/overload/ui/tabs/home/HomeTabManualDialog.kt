@@ -39,7 +39,6 @@ import cloud.pablos.overload.R
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.TextView
-import cloud.pablos.overload.ui.views.extractDate
 import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -66,11 +65,7 @@ fun HomeTabManualDialog(
     var selectedEndDateText by remember { mutableStateOf("") }
     var selectedEndTimeText by remember { mutableStateOf("") }
 
-    val itemsForToday =
-        state.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
-            extractDate(startTime) == date
-        }
+    val itemsForToday = getItemsOfDay(date, state)
 
     selectedStart =
         if (itemsForToday.isNotEmpty() && itemsForToday.last().endTime.isNotBlank()) {
@@ -317,10 +312,10 @@ fun HomeTabManualDialog(
                 onClick = {
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
-                    onEvent(ItemEvent.SetStart(start = selectedStart.format(formatter)))
-                    onEvent(ItemEvent.SetEnd(end = selectedEnd.format(formatter)))
-                    onEvent(ItemEvent.SetOngoing(ongoing = false))
-                    onEvent(ItemEvent.SetPause(pause = selectedPause))
+                    onEvent(ItemEvent.SetStart(selectedStart.format(formatter)))
+                    onEvent(ItemEvent.SetEnd(selectedEnd.format(formatter)))
+                    onEvent(ItemEvent.SetOngoing(false))
+                    onEvent(ItemEvent.SetPause(selectedPause))
                     onEvent(ItemEvent.SaveItem)
 
                     onClose()

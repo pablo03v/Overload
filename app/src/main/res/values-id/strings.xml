@@ -80,7 +80,7 @@
     <string name="footer">dibuat dengan ❤️ oleh pabloscloud</string>
     <string name="acra_toastText">Kecelakaan terdeteksi. Mohon bantuannya dengan mengirimkan email!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Kerusakan terdeteksi. Tolong bantu kami memperbaiki dengan mengirimkan email ini, agar kami dapat memperbaikinya sesegera mungkin.\n
+    <string name="acra_mailBody">Kerusakan terdeteksi. Tolong bantu kami memperbaiki dengan mengirimkan email ini, agar kami dapat memperbaikinya sesegera mungkin.\n
 Mohon maaf atas ketidaknyamanan yang terjadi! Masukan Anda sangat penting untuk memperbaiki masalah ini.\n
 \n
 Deskripsi - Apa yang Anda lakukan saat aplikasi macet?\n
@@ -98,8 +98,7 @@ Perubahan terbaru - Apakah Anda baru saja memperbarui aplikasi atau mengubah pen
 Frekuensi - Seberapa sering kerusakan ini terjadi?\n
 \n
 \n
-Terima kasih atas kesabaran Anda!
-    </string>
+Terima kasih atas kesabaran Anda!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Simpan</string>
     <string name="pick_work_goal">Tetapkan Tujuan Kerja</string>

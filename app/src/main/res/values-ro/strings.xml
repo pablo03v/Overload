@@ -80,7 +80,7 @@
     <string name="footer">creat cu ❤️ de pabloscloud</string>
     <string name="acra_toastText">S-a detectat un accident. Vă rugăm să ne ajutați trimițând un e-mail!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        S-a detectat un accident. Vă rugăm să ne ajutați să ne îmbunătățim trimițând acest e-mail, astfel încât să putem rezolva problema cât mai curând posibil.\n
+    <string name="acra_mailBody">S-a detectat un accident. Vă rugăm să ne ajutați să ne îmbunătățim trimițând acest e-mail, astfel încât să putem rezolva problema cât mai curând posibil.\n
 Ne cerem scuze pentru neplăcerile cauzate! Contribuția dvs. este esențială pentru remedierea acestei probleme.\n
 \n
 Descriere - Ce ați făcut atunci când aplicația s-a blocat?\n
@@ -98,8 +98,7 @@ Modificări recente - Ați actualizat recent aplicația sau ați modificat setă
 Frecvență - Cât de des apare această eroare?\n
 \n
 \n
-Vă mulțumim pentru răbdare!
-    </string>
+Vă mulțumim pentru răbdare!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Salvați</string>
     <string name="pick_work_goal">Setați obiectivul de lucru</string>

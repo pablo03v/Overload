@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
+import cloud.pablos.overload.R
 import cloud.pablos.overload.data.item.ItemDatabase
 import cloud.pablos.overload.data.item.ItemViewModel
 import cloud.pablos.overload.ui.tabs.configurations.handleIntent
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setTheme(R.style.Theme_Overload)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 

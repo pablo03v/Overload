@@ -80,7 +80,7 @@
     <string name="footer">búið til ❤️ með pabloscloud</string>
     <string name="acra_toastText">Hrun fannst. Hjálpið okkur með því að senda póst!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Hrun fannst. Vinsamlegast hjálpaðu okkur að bæta með því að senda þennan tölvupóst, svo við getum fengið þetta fastur eins fljótt og auðið er.\n
+    <string name="acra_mailBody">Hrun fannst. Vinsamlegast hjálpaðu okkur að bæta með því að senda þennan tölvupóst, svo við getum fengið þetta fastur eins fljótt og auðið er.\n
 Afsakið óþægindin sem urðu! Inntak þitt er nauðsynlegt til að laga þetta mál.\n
 \n
 Lýsing-Hvað gerðir þú þegar app hrundi?\n
@@ -98,8 +98,7 @@ Nýlegar breytingar - uppfærðir þú appið nýlega eða breyttir stillingum t
 Tíðni-Hversu oft gerist þetta hrun?\n
 \n
 \n
-Takk fyrir þolinmæðina!
-    </string>
+Takk fyrir þolinmæðina!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Vista</string>
     <string name="pick_work_goal">Settu Þér Markmið Í Vinnunni</string>

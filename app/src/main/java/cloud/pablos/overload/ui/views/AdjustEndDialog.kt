@@ -201,11 +201,11 @@ private fun (() -> Unit).save(
 ) {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
-    onEvent(ItemEvent.SetId(id = item.id))
-    onEvent(ItemEvent.SetStart(start = item.startTime))
-    onEvent(ItemEvent.SetEnd(end = newEnd.format(formatter)))
-    onEvent(ItemEvent.SetOngoing(ongoing = false))
-    onEvent(ItemEvent.SetPause(pause = item.pause))
+    onEvent(ItemEvent.SetId(item.id))
+    onEvent(ItemEvent.SetStart(item.startTime))
+    onEvent(ItemEvent.SetEnd(newEnd.format(formatter)))
+    onEvent(ItemEvent.SetOngoing(false))
+    onEvent(ItemEvent.SetPause(item.pause))
     onEvent(ItemEvent.SaveItem)
 
     this()

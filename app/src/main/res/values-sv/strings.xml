@@ -80,7 +80,7 @@
     <string name="footer">skapad med ❤️ av pabloscloud</string>
     <string name="acra_toastText">Krasch upptäckt. Vänligen hjälp till genom att skicka ett mail!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Krasch upptäckt. Hjälp oss att förbättra genom att skicka det här e-postmeddelandet, så att vi kan åtgärda problemet så snart som möjligt.\n
+    <string name="acra_mailBody">Krasch upptäckt. Hjälp oss att förbättra genom att skicka det här e-postmeddelandet, så att vi kan åtgärda problemet så snart som möjligt.\n
 Vi beklagar de olägenheter som uppstått! Din input är avgörande för att lösa detta problem.\n
 \n
 Beskrivning - Vad gjorde du när appen kraschade?\n
@@ -98,8 +98,7 @@ Senaste ändringar - Har du nyligen uppdaterat appen eller ändrat enhetens inst
 Frekvens - Hur ofta inträffar denna krasch?\n
 \n
 \n
-Tack för ditt tålamod!
-    </string>
+Tack för ditt tålamod!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Spara</string>
     <string name="pick_work_goal">Ange mål för arbetet</string>

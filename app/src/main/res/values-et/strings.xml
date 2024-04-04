@@ -80,7 +80,7 @@
     <string name="footer">loodud koos ❤️ by pabloscloud</string>
     <string name="acra_toastText">Kokkupõrge tuvastati. Palun aidake, saates meilile!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Kokkupõrge tuvastatud. Palun aidake meil parandada, saates selle e-kirja, et saaksime selle võimalikult kiiresti parandada.\n
+    <string name="acra_mailBody">Kokkupõrge tuvastatud. Palun aidake meil parandada, saates selle e-kirja, et saaksime selle võimalikult kiiresti parandada.\n
 Vabandame tekitatud ebamugavuste pärast! Teie panus on selle probleemi lahendamiseks väga oluline.\n
 \n
 Kirjeldus - Mida tegite, kui rakendus kukkus?\n
@@ -98,8 +98,7 @@ Hiljutised muudatused - Kas uuendasite hiljuti rakendust või muutsite seadme se
 Sagedus - Kui sageli see krahh esineb?\n
 \n
 \n
-Täname kannatlikkuse eest!
-    </string>
+Täname kannatlikkuse eest!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Säästa</string>
     <string name="pick_work_goal">Määra töö eesmärk</string>

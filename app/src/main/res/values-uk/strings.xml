@@ -80,7 +80,7 @@
     <string name="footer">з ❤️ створив pabloscloud</string>
     <string name="acra_toastText">Виявлено збій. Будь ласка, допоможіть, надіславши листа!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Виявлено збій. Будь ласка, допоможіть нам покращити програму, надіславши цей лист, щоб ми могли виправити це якнайшвидше.\n
+    <string name="acra_mailBody">Виявлено збій. Будь ласка, допоможіть нам покращити програму, надіславши цей лист, щоб ми могли виправити це якнайшвидше.\n
 Вибачте за незручності! Ваш внесок дуже важливий для вирішення цієї проблеми.\n
 \n
 Опис – Що Ви робили, коли програма завершила роботу?\n
@@ -98,8 +98,7 @@
 Частота – Як часто відбувається цей збій?\n
 \n
 \n
-Дякуємо за терпіння!
-    </string>
+Дякуємо за терпіння!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Зберегти</string>
     <string name="pick_work_goal">Встановіть робочу мету</string>

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
 import androidx.compose.material3.FloatingActionButton
@@ -32,9 +33,8 @@ import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.startOrStopPause
 import cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog
+import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import cloud.pablos.overload.ui.views.TextView
-import cloud.pablos.overload.ui.views.extractDate
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
@@ -47,10 +47,7 @@ fun OverloadNavigationFab(
 ) {
     val date = LocalDate.now()
 
-    val itemsForToday = state.items.filter { item ->
-        val startTime = parseToLocalDateTime(item.startTime)
-        extractDate(startTime) == date
-    }
+    val itemsForToday = getItemsOfDay(date, state)
 
     val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
 
@@ -70,7 +67,8 @@ fun OverloadNavigationFab(
                     delay(viewConfiguration.longPressTimeoutMillis)
                     isLongClick = true
 
-                    onEvent(ItemEvent.SetIsFabOpen(isFabOpen = true))
+                    onEvent(ItemEvent.SetIsFabOpen(true))
+                    onEvent(ItemEvent.SetIsDeletingHome(false))
                 }
                 is PressInteraction.Release -> {
                 }
@@ -89,7 +87,7 @@ fun OverloadNavigationFab(
             true -> {
                 FloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(isFabOpen = false))
+                        onEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     interactionSource = interactionSource,
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -121,7 +119,7 @@ fun OverloadNavigationFab(
 
                 SmallFloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(isFabOpen = false))
+                        onEvent(ItemEvent.SetIsFabOpen(false))
                         manualDialogState.value = true
                         onDrawerClicked()
                     },
@@ -153,48 +151,87 @@ fun OverloadNavigationFab(
                 }
             }
             false -> {
-                FloatingActionButton(
-                    onClick = {
-                        if (isLongClick.not()) {
-                            startOrStopPause(state, onEvent)
-                        }
-                    },
-                    interactionSource = interactionSource,
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.Start,
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.padding(8.dp),
+                when (state.isDeletingHome) {
+                    true -> {
+                        FloatingActionButton(
+                            onClick = {
+                                onEvent(ItemEvent.DeleteItems(state.selectedItemsHome))
+                            },
+                            interactionSource = interactionSource,
+                            containerColor = MaterialTheme.colorScheme.errorContainer,
+                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
-                            Icon(
-                                imageVector = if (isOngoing) Icons.Default.Stop else Icons.Default.PlayArrow,
-                                contentDescription = if (isOngoing) {
-                                    stringResource(id = R.string.stop)
-                                } else {
-                                    stringResource(
-                                        id = R.string.start,
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.Start,
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Start,
+                                    modifier = Modifier.padding(8.dp),
+                                ) {
+                                    Icon(
+                                        Icons.Filled.DeleteForever,
+                                        contentDescription = stringResource(id = R.string.delete_items_forever),
+                                        modifier = Modifier.padding(8.dp),
                                     )
-                                },
-                                modifier = Modifier.padding(8.dp),
-                            )
 
-                            TextView(
-                                text = if (isOngoing) {
-                                    stringResource(id = R.string.stop)
-                                } else {
-                                    stringResource(
-                                        id = R.string.start,
+                                    TextView(
+                                        text = stringResource(id = R.string.delete_items_forever).replaceFirstChar { it.uppercase() },
+                                        modifier = Modifier.padding(end = 8.dp),
                                     )
-                                },
-                                modifier = Modifier.padding(end = 8.dp),
-                            )
+                                }
+                            }
+                        }
+                    }
+                    false -> {
+                        FloatingActionButton(
+                            onClick = {
+                                if (isLongClick.not()) {
+                                    startOrStopPause(state, onEvent)
+                                }
+                            },
+                            interactionSource = interactionSource,
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.Start,
+                            ) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Start,
+                                    modifier = Modifier.padding(8.dp),
+                                ) {
+                                    Icon(
+                                        imageVector = if (isOngoing) Icons.Default.Stop else Icons.Default.PlayArrow,
+                                        contentDescription =
+                                            if (isOngoing) {
+                                                stringResource(id = R.string.stop)
+                                            } else {
+                                                stringResource(
+                                                    id = R.string.start,
+                                                )
+                                            },
+                                        modifier = Modifier.padding(8.dp),
+                                    )
+
+                                    TextView(
+                                        text =
+                                            if (isOngoing) {
+                                                stringResource(id = R.string.stop)
+                                            } else {
+                                                stringResource(
+                                                    id = R.string.start,
+                                                )
+                                            },
+                                        modifier = Modifier.padding(end = 8.dp),
+                                    )
+                                }
+                            }
                         }
                     }
                 }

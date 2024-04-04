@@ -80,7 +80,7 @@
     <string name="footer">създаден с ❤️ от pabloscloud</string>
     <string name="acra_toastText">Открит е срив. Моля, помогнете, като изпратите имейл!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Открит е срив. Моля, помогнете ни да се подобрим, като изпратите този имейл, за да можем да поправим проблема възможно най-скоро.\n
+    <string name="acra_mailBody">Открит е срив. Моля, помогнете ни да се подобрим, като изпратите този имейл, за да можем да поправим проблема възможно най-скоро.\n
 Съжаляваме за причинените неудобства! Вашият принос е от съществено значение за отстраняването на този проблем.\n
 \n
 Описание - Какво направихте, когато приложението се срина?\n
@@ -98,8 +98,7 @@
 Честота - Колко често се случва този срив?\n
 \n
 \n
-Благодаря за търпението!
-    </string>
+Благодаря за търпението!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Запазете</string>
     <string name="pick_work_goal">Задайте работна цел</string>

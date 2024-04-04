@@ -80,7 +80,7 @@
     <string name="footer">vytvořeno pomocí ❤️ od pabloscloud</string>
     <string name="acra_toastText">Zjištěna havárie. Pomozte prosím zasláním e-mailu!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Zjištěna havárie. Pomozte nám prosím zlepšit tento e-mail, abychom mohli co nejdříve provést opravu.\n
+    <string name="acra_mailBody">Zjištěna havárie. Pomozte nám prosím zlepšit tento e-mail, abychom mohli co nejdříve provést opravu.\n
 Omlouváme se za způsobené potíže! Váš příspěvek je pro opravu tohoto problému zásadní.\n
 \n
 Popis - Co jste udělali, když aplikace spadla?\n
@@ -98,8 +98,7 @@ Nedávné změny - Aktualizovali jste nedávno aplikaci nebo změnili nastavení
 Četnost - Jak často dochází k pádu?\n
 \n
 \n
-Děkujeme za trpělivost!
-    </string>
+Děkujeme za trpělivost!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Uložit</string>
     <string name="pick_work_goal">Stanovení pracovního cíle</string>

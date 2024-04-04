@@ -80,7 +80,7 @@
     <string name="footer">Met ❤️ gemaakt door pabloscloud</string>
     <string name="acra_toastText">Er is een crash geweest. Help ons door een e-mail te versturen!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Er is een crash geweest. Help ons om de app te verbeteren door deze e-mail te versturen.\n
+    <string name="acra_mailBody">Er is een crash geweest. Help ons om de app te verbeteren door deze e-mail te versturen.\n
 Onze excuses voor het ongemak! We waarderen het dat je wilt helpen om dit probleem op te lossen.\n
 \n
 Beschrijving - Wat was je aan het doen toen de app crashte?\n
@@ -98,8 +98,7 @@ Onlangs gewijzigd - Heb je de app onlangs geüpdatet of de systeeminstellingen a
 Frequentie - Hoe vaak komt deze crash voor?\n
 \n
 \n
-Bedankt voor je geduld!
-    </string>
+Bedankt voor je geduld!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Opslaan</string>
     <string name="pick_work_goal">Werkdoel instellen</string>

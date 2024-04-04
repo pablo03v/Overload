@@ -37,8 +37,6 @@ import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.startOrStopPause
 import cloud.pablos.overload.ui.views.TextView
-import cloud.pablos.overload.ui.views.extractDate
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
@@ -51,10 +49,7 @@ fun HomeTabFab(
 ) {
     val date = LocalDate.now()
 
-    val itemsForToday = state.items.filter { item ->
-        val startTime = parseToLocalDateTime(item.startTime)
-        extractDate(startTime) == date
-    }
+    val itemsForToday = getItemsOfDay(date, state)
 
     val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
     val interactionSource = remember { MutableInteractionSource() }
@@ -73,7 +68,8 @@ fun HomeTabFab(
                     delay(viewConfiguration.longPressTimeoutMillis)
                     isLongClick = true
 
-                    onEvent(ItemEvent.SetIsFabOpen(isFabOpen = true))
+                    onEvent(ItemEvent.SetIsFabOpen(true))
+                    onEvent(ItemEvent.SetIsDeletingHome(false))
                 }
                 is PressInteraction.Release -> {
                 }
@@ -98,16 +94,17 @@ fun HomeTabFab(
                     ) {
                         TextView(
                             text = stringResource(id = R.string.manual_entry),
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                            modifier =
+                                Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(color = MaterialTheme.colorScheme.surfaceContainer)
+                                    .padding(horizontal = 8.dp, vertical = 4.dp),
                         )
                     }
 
                     SmallFloatingActionButton(
                         onClick = {
-                            onEvent(ItemEvent.SetIsFabOpen(isFabOpen = false))
+                            onEvent(ItemEvent.SetIsFabOpen(false))
                             manualDialogState.value = true
                         },
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -122,7 +119,7 @@ fun HomeTabFab(
 
                 FloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(isFabOpen = false))
+                        onEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -152,23 +149,25 @@ fun HomeTabFab(
                     ) {
                         Icon(
                             imageVector = if (isOngoing) Icons.Default.Stop else Icons.Default.PlayArrow,
-                            contentDescription = if (isOngoing) {
-                                stringResource(id = R.string.stop)
-                            } else {
-                                stringResource(
-                                    id = R.string.start,
-                                )
-                            },
+                            contentDescription =
+                                if (isOngoing) {
+                                    stringResource(id = R.string.stop)
+                                } else {
+                                    stringResource(
+                                        id = R.string.start,
+                                    )
+                                },
                             modifier = Modifier.padding(8.dp),
                         )
                         TextView(
-                            text = if (isOngoing) {
-                                stringResource(id = R.string.stop)
-                            } else {
-                                stringResource(
-                                    id = R.string.start,
-                                )
-                            },
+                            text =
+                                if (isOngoing) {
+                                    stringResource(id = R.string.stop)
+                                } else {
+                                    stringResource(
+                                        id = R.string.start,
+                                    )
+                                },
                             modifier = Modifier.padding(end = 8.dp),
                         )
                     }

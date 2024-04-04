@@ -80,7 +80,7 @@
     <string name="footer">létrehozta a ❤️ által pabloscloud</string>
     <string name="acra_toastText">Összeomlás észlelve. Kérjük, segítsen egy levél elküldésével!</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
-    <string name="acra_mailBody">        Ütközés észlelve. Kérjük, segítsen nekünk a javításban, küldje el ezt az e-mailt, hogy minél hamarabb kijavíthassuk a hibát.\n
+    <string name="acra_mailBody">Ütközés észlelve. Kérjük, segítsen nekünk a javításban, küldje el ezt az e-mailt, hogy minél hamarabb kijavíthassuk a hibát.\n
 Elnézést az okozott kellemetlenségekért! Az Ön hozzájárulása elengedhetetlen a probléma javításához.\n
 \n
 Leírás - Mit csináltál, amikor az alkalmazás lezuhant?\n
@@ -98,8 +98,7 @@ Legutóbbi változások - Frissítette nemrégiben az alkalmazást vagy módosí
 Gyakoriság - Milyen gyakran fordul elő az összeomlás?\n
 \n
 \n
-Köszönjük a türelmet!
-    </string>
+Köszönjük a türelmet!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Mentés</string>
     <string name="pick_work_goal">Munkacél beállítása</string>
