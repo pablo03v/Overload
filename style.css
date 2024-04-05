@@ -1,4 +1,8 @@
-/*light*/
+    body {
+        max-width: 600px; margin: 0 auto; padding: 20px;
+    }
+
+    /*light*/
     .markdown-body {
       -ms-text-size-adjust: 100%;
       -webkit-text-size-adjust: 100%;
