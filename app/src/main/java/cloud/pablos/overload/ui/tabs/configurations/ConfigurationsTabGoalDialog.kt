@@ -144,7 +144,7 @@ fun TimeInput(
         placeholder = { Text(text = "0") },
         isError = isError,
         modifier = Modifier.focusRequester(focusRequester),
-        trailingIcon = { Text(text = label) },
+        trailingIcon = { Text(text = label, modifier = Modifier.padding(end = 10.dp)) },
     )
 }
 
