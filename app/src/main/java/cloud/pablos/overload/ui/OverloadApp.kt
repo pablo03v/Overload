@@ -36,6 +36,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.ModalNavigationDrawerContent
@@ -65,8 +67,10 @@ import kotlinx.coroutines.launch
 fun OverloadApp(
     windowSize: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
     filePickerLauncher: ActivityResultLauncher<Intent>,
 ) {
     val navigationType: OverloadNavigationType
@@ -138,8 +142,10 @@ fun OverloadApp(
         navigationType = navigationType,
         contentType = contentType,
         navigationContentPosition = navigationContentPosition,
-        state = state,
-        onEvent = onEvent,
+        categoryState = categoryState,
+        categoryEvent = categoryEvent,
+        state = itemState,
+        onEvent = itemEvent,
         filePickerLauncher = filePickerLauncher,
     )
 }
@@ -150,6 +156,8 @@ private fun OverloadNavigationWrapper(
     navigationType: OverloadNavigationType,
     contentType: OverloadContentType,
     navigationContentPosition: OverloadNavigationContentPosition,
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
     filePickerLauncher: ActivityResultLauncher<Intent>,
@@ -180,6 +188,8 @@ private fun OverloadNavigationWrapper(
                         drawerState.open()
                     }
                 },
+                categoryState = categoryState,
+                categoryEvent = categoryEvent,
                 state = state,
                 onEvent = onEvent,
                 filePickerLauncher = filePickerLauncher,
@@ -216,6 +226,8 @@ private fun OverloadNavigationWrapper(
                             drawerState.open()
                         }
                     },
+                    categoryState = categoryState,
+                    categoryEvent = categoryEvent,
                     state = state,
                     onEvent = onEvent,
                     filePickerLauncher = filePickerLauncher,
@@ -236,6 +248,8 @@ fun OverloadAppContent(
     selectedDestination: String,
     navigateToTopLevelDestination: (OverloadTopLevelDestination) -> Unit,
     onDrawerClicked: () -> Unit = {},
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
     filePickerLauncher: ActivityResultLauncher<Intent>,
@@ -276,6 +290,8 @@ fun OverloadAppContent(
                 navigationType = navigationType,
                 contentType = contentType,
                 navController = navController,
+                categoryState = categoryState,
+                categoryEvent = categoryEvent,
                 state = state,
                 onEvent = onEvent,
                 filePickerLauncher = filePickerLauncher,
@@ -336,6 +352,8 @@ private fun OverloadNavHost(
     contentType: OverloadContentType,
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
     filePickerLauncher: ActivityResultLauncher<Intent>,
@@ -362,6 +380,8 @@ private fun OverloadNavHost(
         }
         composable(OverloadRoute.CATEGORY) {
             CategoryScreen(
+                categoryState = categoryState,
+                categoryEvent = categoryEvent,
                 state = state,
                 onEvent = onEvent,
             )

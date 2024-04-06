@@ -51,9 +51,9 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavHostController
 import androidx.room.withTransaction
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.OverloadDatabase
 import cloud.pablos.overload.data.item.DatabaseBackup
 import cloud.pablos.overload.data.item.Item
-import cloud.pablos.overload.data.item.ItemDatabase
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.backupItemsToJson
@@ -451,7 +451,7 @@ fun launchFilePicker(filePickerLauncher: ActivityResultLauncher<Intent>) {
 fun handleIntent(
     intent: Intent?,
     lifecycleScope: LifecycleCoroutineScope,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     context: Context,
     contentResolver: ContentResolver,
 ) {
@@ -487,7 +487,7 @@ fun handleIntent(
 private fun importCsvData(
     csvData: String,
     lifecycleScope: LifecycleCoroutineScope,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     context: Context,
 ) {
     val parsedData = parseCsvData(csvData)
@@ -535,7 +535,7 @@ private fun importCsvData(
 private fun importJsonData(
     jsonData: String,
     lifecycleScope: LifecycleCoroutineScope,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     context: Context,
 ) {
     lifecycleScope.launch(Dispatchers.IO) {
@@ -617,7 +617,7 @@ fun importCsvFile(
     uri: Uri,
     contentResolver: ContentResolver,
     context: Context,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     lifecycleScope: LifecycleCoroutineScope,
 ) {
     uri.let {
@@ -633,7 +633,7 @@ fun importJsonFile(
     uri: Uri,
     contentResolver: ContentResolver,
     context: Context,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     lifecycleScope: LifecycleCoroutineScope,
 ) {
     uri.let {
