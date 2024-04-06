@@ -11,25 +11,25 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.shrinkOut
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.Copyright
 import androidx.compose.material.icons.rounded.EmojiNature
 import androidx.compose.material.icons.rounded.PestControl
+import androidx.compose.material.icons.rounded.School
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.icons.rounded.Unarchive
 import androidx.compose.material.icons.rounded.Work
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,15 +40,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.navigation.NavHostController
 import androidx.room.withTransaction
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.item.DatabaseBackup
@@ -72,6 +72,7 @@ fun ConfigurationsTab(
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
     filePickerLauncher: ActivityResultLauncher<Intent>,
+    navController: NavHostController,
 ) {
     val context = LocalContext.current
     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -110,8 +111,9 @@ fun ConfigurationsTab(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
+            /*
             // Goals Title
             item {
                 ConfigurationsTabItem(title = stringResource(id = R.string.goals))
@@ -191,6 +193,65 @@ fun ConfigurationsTab(
                 Row {
                     HorizontalDivider()
                 }
+            }*/
+
+            // Categories Title
+            item {
+                ConfigurationsTabItem(title = stringResource(id = R.string.categories))
+            }
+
+            // TODO: open new page, get categories from database
+
+            // Categories Items
+            item {
+                ConfigurationsTabItem(
+                    title = "Work",
+                    icon = Icons.Rounded.Work,
+                    action = { navController.navigate(OverloadRoute.CATEGORY) },
+                    background = true,
+                )
+            }
+            item {
+                ConfigurationsTabItem(
+                    title = "School",
+                    icon = Icons.Rounded.School,
+                    action = { navController.navigate(OverloadRoute.CATEGORY) },
+                    background = true,
+                )
+            }
+
+            item {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier =
+                        Modifier
+                            .fillMaxWidth(),
+                ) {
+                    FilledTonalButton(onClick = {
+                    }) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Add,
+                                contentDescription = stringResource(id = R.string.select_year),
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            )
+                            TextView(
+                                text = "add category",
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Categories Divider
+            item {
+                Row {
+                    HorizontalDivider()
+                }
             }
 
             // Analytics Title
@@ -238,74 +299,22 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(title = stringResource(id = R.string.storage))
             }
 
-            // Storage Backup
             item {
-                val itemLabel =
-                    stringResource(id = R.string.backup) + ": " + stringResource(id = R.string.backup_descr)
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier =
-                        Modifier
-                            .clickable {
-                                backup(state, context)
-                            }
-                            .clearAndSetSemantics {
-                                contentDescription = itemLabel
-                            },
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Archive,
-                        contentDescription = stringResource(id = R.string.backup),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Column {
-                            ConfigurationTitle(stringResource(id = R.string.backup))
-                            ConfigurationDescription(stringResource(id = R.string.backup_descr))
-                        }
-                    }
-                }
+                ConfigurationsTabItem(
+                    title = stringResource(id = R.string.backup),
+                    description = stringResource(id = R.string.backup_descr),
+                    icon = Icons.Rounded.Archive,
+                    action = { backup(state, context) },
+                )
             }
 
-            // Storage Import
             item {
-                val itemLabel =
-                    stringResource(id = R.string.import_ol) + ": " + stringResource(id = R.string.import_descr)
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier =
-                        Modifier
-                            .clickable {
-                                launchFilePicker(filePickerLauncher)
-                            }
-                            .clearAndSetSemantics {
-                                contentDescription = itemLabel
-                            },
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Unarchive,
-                        contentDescription = stringResource(id = R.string.import_ol),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Column {
-                            ConfigurationTitle(stringResource(id = R.string.import_ol))
-                            ConfigurationDescription(stringResource(id = R.string.import_descr))
-                        }
-                    }
-                }
+                ConfigurationsTabItem(
+                    title = stringResource(id = R.string.import_ol),
+                    description = stringResource(id = R.string.import_descr),
+                    icon = Icons.Rounded.Unarchive,
+                    action = { launchFilePicker(filePickerLauncher) },
+                )
             }
 
             // Storage Divider
@@ -374,7 +383,7 @@ fun ConfigurationsTab(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
+                            .padding(horizontal = 5.dp),
                 ) {
                     ConfigurationDescription(stringResource(id = R.string.footer))
                 }
@@ -642,15 +651,19 @@ fun ConfigurationLabel(text: String) {
         text = text,
         fontSize = MaterialTheme.typography.titleLarge.fontSize,
         color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(vertical = 15.dp),
     )
 }
 
 @Composable
-fun ConfigurationTitle(text: String) {
+fun ConfigurationTitle(
+    text: String,
+    color: Color = MaterialTheme.colorScheme.onBackground,
+) {
     TextView(
         text = text,
         fontSize = MaterialTheme.typography.titleMedium.fontSize,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = color,
     )
 }
 

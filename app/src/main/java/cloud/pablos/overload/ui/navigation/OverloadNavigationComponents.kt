@@ -47,9 +47,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
+import androidx.navigation.NavHostController
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
+import cloud.pablos.overload.ui.screens.day.CategoryScreenBottomAppBar
 import cloud.pablos.overload.ui.screens.day.DayScreenBottomAppBar
 import cloud.pablos.overload.ui.screens.day.DayScreenTopAppBar
 import cloud.pablos.overload.ui.tabs.calendar.CalendarTabTopAppBar
@@ -190,6 +192,8 @@ class BottomBarState private constructor() {
     companion object {
         val Normal = BottomBarState()
         val Deleting = BottomBarState()
+
+        val Category = BottomBarState()
         val Day = BottomBarState()
     }
 }
@@ -200,7 +204,7 @@ fun OverloadBottomNavigationBar(
     navigateToTopLevelDestination: (OverloadTopLevelDestination) -> Unit,
     state: ItemState,
     onEvent: (ItemEvent) -> Unit,
-    onNavigate: () -> Unit,
+    navController: NavHostController,
 ) {
     var currentBottomBarState by remember { mutableStateOf(BottomBarState.Normal) }
 
@@ -212,6 +216,10 @@ fun OverloadBottomNavigationBar(
                         true -> BottomBarState.Deleting
                         false -> BottomBarState.Normal
                     }
+                }
+
+                OverloadRoute.CATEGORY -> {
+                    BottomBarState.Category
                 }
 
                 OverloadRoute.DAY -> {
@@ -230,8 +238,9 @@ fun OverloadBottomNavigationBar(
 
     for (bottomBarState in listOf(
         BottomBarState.Normal,
-        BottomBarState.Deleting,
+        BottomBarState.Category,
         BottomBarState.Day,
+        BottomBarState.Deleting,
     )) {
         AnimatedVisibility(
             visible = bottomBarState == currentBottomBarState,
@@ -298,8 +307,12 @@ fun OverloadBottomNavigationBar(
                     HomeTabDeleteBottomAppBar(state, onEvent)
                 }
 
+                BottomBarState.Category -> {
+                    CategoryScreenBottomAppBar { navController.navigate(OverloadRoute.CONFIGURATIONS) }
+                }
+
                 BottomBarState.Day -> {
-                    DayScreenBottomAppBar(onNavigate)
+                    DayScreenBottomAppBar { navController.navigate(OverloadRoute.CALENDAR) }
                 }
             }
         }
@@ -312,6 +325,7 @@ class TopBarState private constructor() {
         val Calendar = TopBarState()
         val Configurations = TopBarState()
 
+        val Category = TopBarState()
         val Day = TopBarState()
 
         val Deleting = TopBarState()
@@ -341,6 +355,10 @@ fun OverloadTopAppBar(
                         true -> TopBarState.Deleting
                         false -> TopBarState.Calendar
                     }
+                }
+
+                OverloadRoute.CATEGORY -> {
+                    TopBarState.Category
                 }
 
                 OverloadRoute.CONFIGURATIONS -> {

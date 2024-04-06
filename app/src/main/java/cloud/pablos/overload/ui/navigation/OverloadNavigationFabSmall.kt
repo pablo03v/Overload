@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.rounded.Work
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -89,6 +90,21 @@ fun OverloadNavigationFabSmall(
                     Icon(
                         imageVector = Icons.Default.Close,
                         contentDescription = stringResource(id = R.string.close),
+                    )
+                }
+
+                SmallFloatingActionButton(
+                    onClick = {
+                        onEvent(ItemEvent.SetIsFabOpen(false))
+
+                        // TODO: switch to category
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.primaryContainer,
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.Work,
+                        contentDescription = "Work",
                     )
                 }
 

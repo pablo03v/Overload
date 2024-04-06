@@ -44,6 +44,7 @@ import cloud.pablos.overload.ui.navigation.OverloadNavigationActions
 import cloud.pablos.overload.ui.navigation.OverloadNavigationRail
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopLevelDestination
+import cloud.pablos.overload.ui.screens.day.CategoryScreen
 import cloud.pablos.overload.ui.screens.day.DayScreen
 import cloud.pablos.overload.ui.tabs.calendar.CalendarTab
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab
@@ -299,7 +300,7 @@ fun OverloadAppContent(
                     navigateToTopLevelDestination = navigateToTopLevelDestination,
                     state = state,
                     onEvent = onEvent,
-                    onNavigate = { navController.navigate(OverloadRoute.CALENDAR) },
+                    navController = navController,
                 )
             }
         }
@@ -359,6 +360,12 @@ private fun OverloadNavHost(
                 onNavigate = { navController.navigate(OverloadRoute.DAY) },
             )
         }
+        composable(OverloadRoute.CATEGORY) {
+            CategoryScreen(
+                state = state,
+                onEvent = onEvent,
+            )
+        }
         composable(OverloadRoute.DAY) {
             DayScreen(
                 state = state,
@@ -370,6 +377,7 @@ private fun OverloadNavHost(
                 state = state,
                 onEvent = onEvent,
                 filePickerLauncher = filePickerLauncher,
+                navController = navController,
             )
         }
     }

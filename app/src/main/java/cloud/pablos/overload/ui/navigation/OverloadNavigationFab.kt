@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
+import androidx.compose.material.icons.rounded.Work
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -111,6 +112,41 @@ fun OverloadNavigationFab(
 
                             TextView(
                                 text = stringResource(id = R.string.close),
+                                modifier = Modifier.padding(end = 8.dp),
+                            )
+                        }
+                    }
+                }
+
+                SmallFloatingActionButton(
+                    onClick = {
+                        onEvent(ItemEvent.SetIsFabOpen(false))
+
+                        // TODO: switch to category
+
+                        onDrawerClicked()
+                    },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start,
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Rounded.Work,
+                                contentDescription = "Work",
+                                modifier = Modifier.padding(8.dp),
+                            )
+
+                            TextView(
+                                text = "Work",
                                 modifier = Modifier.padding(end = 8.dp),
                             )
                         }
