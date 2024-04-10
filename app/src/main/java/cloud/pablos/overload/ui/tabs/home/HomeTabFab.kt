@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material.icons.rounded.Work
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -34,6 +33,8 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.startOrStopPause
@@ -45,12 +46,14 @@ import java.time.LocalDate
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun HomeTabFab(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryEvent: (CategoryEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val date = LocalDate.now()
 
-    val itemsForToday = getItemsOfDay(date, state)
+    val itemsForToday = getItemsOfDay(date, categoryState, itemState)
 
     val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
     val interactionSource = remember { MutableInteractionSource() }
@@ -69,8 +72,8 @@ fun HomeTabFab(
                     delay(viewConfiguration.longPressTimeoutMillis)
                     isLongClick = true
 
-                    onEvent(ItemEvent.SetIsFabOpen(true))
-                    onEvent(ItemEvent.SetIsDeletingHome(false))
+                    itemEvent(ItemEvent.SetIsFabOpen(true))
+                    itemEvent(ItemEvent.SetIsDeletingHome(false))
                 }
                 is PressInteraction.Release -> {
                 }
@@ -85,37 +88,40 @@ fun HomeTabFab(
         horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        when (state.isFabOpen) {
+        when (itemState.isFabOpen) {
             true -> {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Box(
-                        modifier = Modifier.padding(end = 8.dp),
+                categoryState.categories.forEach { category ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        TextView(
-                            text = "Switch to Work",
-                            modifier =
-                                Modifier
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                                    .padding(horizontal = 8.dp, vertical = 4.dp),
-                        )
-                    }
+                        Box(
+                            modifier = Modifier.padding(end = 8.dp),
+                        ) {
+                            TextView(
+                                text = "Switch to " + category.name,
+                                modifier =
+                                    Modifier
+                                        .clip(RoundedCornerShape(12.dp))
+                                        .background(color = MaterialTheme.colorScheme.surfaceContainer)
+                                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                            )
+                        }
 
-                    SmallFloatingActionButton(
-                        onClick = {
-                            onEvent(ItemEvent.SetIsFabOpen(false))
+                        SmallFloatingActionButton(
+                            onClick = {
+                                categoryEvent(CategoryEvent.SetSelectedCategory(category.id))
 
-                            // TODO: switch to category
-                        },
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.primaryContainer,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Rounded.Work,
-                            contentDescription = "Work,",
-                        )
+                                itemEvent(ItemEvent.SetIsFabOpen(false))
+                            },
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.primaryContainer,
+                        ) {
+                            TextView(text = category.emoji)
+                            /*Icon(
+                                imageVector = category.icon,
+                                contentDescription = category.name,
+                            )*/
+                        }
                     }
                 }
 
@@ -137,7 +143,7 @@ fun HomeTabFab(
 
                     SmallFloatingActionButton(
                         onClick = {
-                            onEvent(ItemEvent.SetIsFabOpen(false))
+                            itemEvent(ItemEvent.SetIsFabOpen(false))
                             manualDialogState.value = true
                         },
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -152,7 +158,7 @@ fun HomeTabFab(
 
                 FloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(false))
+                        itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -169,7 +175,7 @@ fun HomeTabFab(
                 FloatingActionButton(
                     onClick = {
                         if (isLongClick.not()) {
-                            startOrStopPause(state, onEvent)
+                            startOrStopPause(categoryState, itemState, itemEvent)
                         }
                     },
                     interactionSource = interactionSource,
@@ -210,6 +216,6 @@ fun HomeTabFab(
     }
 
     if (manualDialogState.value) {
-        HomeTabManualDialog(onClose = { manualDialogState.value = false }, state, onEvent)
+        HomeTabManualDialog(onClose = { manualDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

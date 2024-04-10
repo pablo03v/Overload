@@ -19,8 +19,8 @@ android {
 
         kapt {
             arguments {
-                arg("room.schemaLocation", "")
-                arg("room.exportSchema", "false")
+                arg("room.schemaLocation", "$projectDir/schemas")
+                arg("room.exportSchema", "true")
             }
         }
     }

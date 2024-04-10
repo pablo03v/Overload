@@ -39,7 +39,7 @@ import java.time.format.DateTimeFormatter
 fun DayViewItemNotOngoing(
     item: Item,
     isSelected: Boolean,
-    state: ItemState,
+    itemState: ItemState,
 ) {
     var backgroundColor: Color
     var foregroundColor: Color
@@ -52,7 +52,7 @@ fun DayViewItemNotOngoing(
         parsedEndTime = parseToLocalDateTime(it.endTime)
         when (isSelected) {
             true -> {
-                when (state.isDeletingHome) {
+                when (itemState.isDeletingHome) {
                     true -> {
                         backgroundColor = MaterialTheme.colorScheme.errorContainer
                         foregroundColor = MaterialTheme.colorScheme.onErrorContainer

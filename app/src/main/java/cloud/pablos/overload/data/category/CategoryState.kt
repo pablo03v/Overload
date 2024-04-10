@@ -1,9 +1,18 @@
 package cloud.pablos.overload.data.category
 
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.ui.graphics.Color
+
 data class CategoryState(
     val categories: List<Category> = emptyList(),
-    val id: Int = 0,
+    val categoryWithItems: List<CategoryWithItems> = emptyList(),
+    // --
+    val id: Int = 1,
+    val color: String = Color.Unspecified.toString(),
+    val emoji: String = "🕣",
     val name: String = "Default",
-    // val color: Color = Color.Unspecified,
-    // val default: Boolean = true,
+    val isDefault: Boolean = true,
+    // --
+    val selectedCategoryConfigurations: Int = 1,
+    val selectedCategory: Int = 1,
 )

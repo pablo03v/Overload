@@ -44,30 +44,33 @@ val homeTabItems =
     listOf(
         TabItem(
             titleResId = dayBeforeYesterdayResId,
-            screen = { state, onEvent ->
+            screen = { categoryState, state, itemEvent ->
                 DayView(
-                    state = state,
-                    onEvent = onEvent,
+                    categoryState,
+                    itemState = state,
+                    itemEvent = itemEvent,
                     date = LocalDate.now().minusDays(2),
                 )
             },
         ),
         TabItem(
             titleResId = R.string.yesterday,
-            screen = { state, onEvent ->
+            screen = { categoryState, state, itemEvent ->
                 DayView(
-                    state = state,
-                    onEvent = onEvent,
+                    categoryState,
+                    itemState = state,
+                    itemEvent = itemEvent,
                     date = LocalDate.now().minusDays(1),
                 )
             },
         ),
         TabItem(
             titleResId = R.string.today,
-            screen = { state, onEvent ->
+            screen = { categoryState, state, itemEvent ->
                 DayView(
-                    state = state,
-                    onEvent = onEvent,
+                    categoryState,
+                    itemState = state,
+                    itemEvent = itemEvent,
                     date = LocalDate.now(),
                 )
             },

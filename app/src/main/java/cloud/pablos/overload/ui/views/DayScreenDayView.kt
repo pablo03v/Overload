@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
@@ -43,14 +44,15 @@ import java.time.LocalDate
 fun DayScreenDayView(
     daysCount: Int,
     page: Int,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val date =
         LocalDate.now()
             .minusDays((daysCount - page - 1).toLong())
 
-    val items = getItemsOfDay(date, state)
+    val items = getItemsOfDay(date, categoryState, itemState)
 
     val itemsDesc = items.sortedByDescending { it.startTime }
 
@@ -114,10 +116,10 @@ fun DayScreenDayView(
                                         deletePauseDialogState.value = true
                                     },
                                     onClick = {
-                                        if (state.isDeletingHome) {
+                                        if (itemState.isDeletingHome) {
                                             deletePauseDialogState.value = true
                                         } else {
-                                            onEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
+                                            itemEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
                                             editItemDialogState.value = true
                                         }
                                     },
@@ -131,9 +133,10 @@ fun DayScreenDayView(
                                     endTime = LocalDate.now().toString(),
                                     ongoing = true,
                                     pause = true,
+                                    categoryId = categoryState.selectedCategory,
                                 ),
                             isSelected = false,
-                            state = state,
+                            itemState = itemState,
                         )
                     }
                 }
@@ -144,7 +147,7 @@ fun DayScreenDayView(
                 val isLastItem = index == itemSize - 1
 
                 val item = itemsDesc[index]
-                val isSelected = state.selectedItemsHome.contains(item)
+                val isSelected = itemState.selectedItemsHome.contains(item)
                 Box(
                     modifier =
                         Modifier
@@ -156,22 +159,22 @@ fun DayScreenDayView(
                             )
                             .combinedClickable(
                                 onLongClick = {
-                                    onEvent(ItemEvent.SetIsDeletingHome(true))
-                                    onEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
-                                    onEvent(ItemEvent.SetIsFabOpen(false))
+                                    itemEvent(ItemEvent.SetIsDeletingHome(true))
+                                    itemEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
+                                    itemEvent(ItemEvent.SetIsFabOpen(false))
                                 },
                                 onClick = {
-                                    if (state.isDeletingHome) {
+                                    if (itemState.isDeletingHome) {
                                         when (isSelected) {
                                             true ->
-                                                onEvent(
-                                                    ItemEvent.SetSelectedItemsHome(state.selectedItemsHome.filterNot { it == item }),
+                                                itemEvent(
+                                                    ItemEvent.SetSelectedItemsHome(itemState.selectedItemsHome.filterNot { it == item }),
                                                 )
 
                                             else ->
-                                                onEvent(
+                                                itemEvent(
                                                     ItemEvent.SetSelectedItemsHome(
-                                                        state.selectedItemsHome +
+                                                        itemState.selectedItemsHome +
                                                             listOf(
                                                                 item,
                                                             ),
@@ -179,15 +182,15 @@ fun DayScreenDayView(
                                                 )
                                         }
                                     } else {
-                                        onEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
+                                        itemEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
                                         editItemDialogState.value = true
                                     }
                                 },
                             ),
                 ) {
                     when (item.ongoing.not() && item.endTime.isNotBlank()) {
-                        true -> DayViewItemNotOngoing(item, isSelected = isSelected, state)
-                        else -> DayViewItemOngoing(item, isSelected = isSelected, state = state)
+                        true -> DayViewItemNotOngoing(item, isSelected = isSelected, itemState)
+                        else -> DayViewItemOngoing(item, isSelected = isSelected, itemState = itemState)
                     }
                 }
             }
@@ -224,11 +227,12 @@ fun DayScreenDayView(
     if (editItemDialogState.value) {
         HomeTabEditItemDialog(
             onClose = {
-                onEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
+                itemEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
                 editItemDialogState.value = false
             },
-            state,
-            onEvent,
+            categoryState,
+            itemState,
+            itemEvent,
         )
     }
 }

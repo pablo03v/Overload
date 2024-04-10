@@ -1,6 +1,7 @@
 package cloud.pablos.overload.data
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -9,14 +10,21 @@ import cloud.pablos.overload.data.category.CategoryDao
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemDao
 
-@Database(entities = [Category::class, Item::class], version = 1)
+@Database(
+    entities = [Category::class, Item::class],
+    version = 2,
+    exportSchema = true,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2),
+    ],
+)
 abstract class OverloadDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
 
     abstract fun itemDao(): ItemDao
 
     companion object {
-        const val DATABASE_NAME = "overload"
+        const val DATABASE_NAME = "items"
 
         @Volatile private var instance: OverloadDatabase? = null
 

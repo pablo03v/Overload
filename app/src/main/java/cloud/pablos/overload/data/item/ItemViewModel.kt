@@ -23,7 +23,7 @@ class ItemViewModel(
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), ItemState())
 
-    fun onEvent(event: ItemEvent) {
+    fun itemEvent(event: ItemEvent) {
         when (event) {
             is ItemEvent.DeleteItems -> {
                 viewModelScope.launch {
@@ -44,6 +44,7 @@ class ItemViewModel(
                 val end = _state.value.end
                 val ongoing = _state.value.ongoing
                 val pause = _state.value.pause
+                val categoryId = _state.value.categoryId
 
                 val item =
                     Item(
@@ -52,6 +53,7 @@ class ItemViewModel(
                         endTime = end,
                         ongoing = ongoing,
                         pause = pause,
+                        categoryId = categoryId,
                     )
 
                 viewModelScope.launch {
@@ -183,6 +185,14 @@ class ItemViewModel(
                     it.copy(
                         navigateToScreenRoute = event.route,
                         navigateToScreenPopBackStack = event.popBackStack,
+                    )
+                }
+            }
+
+            is ItemEvent.SetCategoryId -> {
+                _state.update {
+                    it.copy(
+                        categoryId = event.categoryId,
                     )
                 }
             }

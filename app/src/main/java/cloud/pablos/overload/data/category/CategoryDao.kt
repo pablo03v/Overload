@@ -3,6 +3,7 @@ package cloud.pablos.overload.data.category
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
@@ -22,4 +23,8 @@ interface CategoryDao {
 
     @Query("SELECT * FROM categories")
     fun getAllCategories(): Flow<List<Category>>
+
+    @Transaction
+    @Query("SELECT * FROM categories")
+    fun getCategoryWithItems(): Flow<List<CategoryWithItems>>
 }

@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
         Room.databaseBuilder(
             applicationContext,
             OverloadDatabase::class.java,
-            "overload",
+            "items",
         ).build()
     }
 
@@ -97,10 +97,10 @@ class MainActivity : ComponentActivity() {
                 val displayFeatures = calculateDisplayFeatures(this)
 
                 val categoryState by categoryViewModel.state.collectAsState()
-                val categoryEvent = categoryViewModel::onEvent
+                val categoryEvent = categoryViewModel::categoryEvent
 
                 val itemState by itemViewModel.state.collectAsState()
-                val itemEvent = itemViewModel::onEvent
+                val itemEvent = itemViewModel::itemEvent
 
                 OverloadApp(
                     windowSize = windowSize,

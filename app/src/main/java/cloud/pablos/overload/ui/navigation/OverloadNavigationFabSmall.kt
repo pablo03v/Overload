@@ -9,7 +9,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
-import androidx.compose.material.icons.rounded.Work
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -25,24 +24,29 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.startOrStopPause
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeleteFAB
 import cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog
 import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
+import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 
 @Composable
 fun OverloadNavigationFabSmall(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryEvent: (CategoryEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val date = LocalDate.now()
 
-    val itemsForToday = getItemsOfDay(date, state)
+    val itemsForToday = getItemsOfDay(date, categoryState, itemState)
 
     val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
 
@@ -62,8 +66,8 @@ fun OverloadNavigationFabSmall(
                     delay(viewConfiguration.longPressTimeoutMillis)
                     isLongClick = true
 
-                    onEvent(ItemEvent.SetIsFabOpen(true))
-                    onEvent(ItemEvent.SetIsDeletingHome(false))
+                    itemEvent(ItemEvent.SetIsFabOpen(true))
+                    itemEvent(ItemEvent.SetIsDeletingHome(false))
                 }
                 is PressInteraction.Release -> {
                 }
@@ -78,11 +82,11 @@ fun OverloadNavigationFabSmall(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        when (state.isFabOpen) {
+        when (itemState.isFabOpen) {
             true -> {
                 FloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(false))
+                        itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
@@ -95,22 +99,7 @@ fun OverloadNavigationFabSmall(
 
                 SmallFloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(false))
-
-                        // TODO: switch to category
-                    },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.primaryContainer,
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Work,
-                        contentDescription = "Work",
-                    )
-                }
-
-                SmallFloatingActionButton(
-                    onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(false))
+                        itemEvent(ItemEvent.SetIsFabOpen(false))
                         manualDialogState.value = true
                     },
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -121,18 +110,32 @@ fun OverloadNavigationFabSmall(
                         contentDescription = stringResource(id = R.string.manual_entry),
                     )
                 }
+
+                categoryState.categories.forEach { category ->
+                    SmallFloatingActionButton(
+                        onClick = {
+                            categoryEvent(CategoryEvent.SetSelectedCategory(category.id))
+
+                            itemEvent(ItemEvent.SetIsFabOpen(false))
+                        },
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.primaryContainer,
+                    ) {
+                        TextView(text = category.emoji)
+                    }
+                }
             }
             false -> {
-                when (state.isDeletingHome) {
+                when (itemState.isDeletingHome) {
                     true -> {
-                        HomeTabDeleteFAB(state, onEvent)
+                        HomeTabDeleteFAB(itemState, itemEvent)
                     }
 
                     false -> {
                         FloatingActionButton(
                             onClick = {
                                 if (isLongClick.not()) {
-                                    startOrStopPause(state, onEvent)
+                                    startOrStopPause(categoryState, itemState, itemEvent)
                                 }
                             },
                             interactionSource = interactionSource,
@@ -161,6 +164,6 @@ fun OverloadNavigationFabSmall(
     }
 
     if (manualDialogState.value) {
-        HomeTabManualDialog(onClose = { manualDialogState.value = false }, state, onEvent)
+        HomeTabManualDialog(onClose = { manualDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

@@ -28,6 +28,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
@@ -44,8 +46,10 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HomeTab(
     navigationType: OverloadNavigationType,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryEvent: (CategoryEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val pagerState =
         rememberPagerState(
@@ -64,27 +68,28 @@ fun HomeTab(
                 2 -> getFormattedDate()
                 else -> getFormattedDate()
             }
-        onEvent(ItemEvent.SetSelectedDayCalendar(selectedDayString))
+        itemEvent(ItemEvent.SetSelectedDayCalendar(selectedDayString))
     }
 
     Scaffold(
         topBar = {
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.HOME,
-                state = state,
-                onEvent = onEvent,
+                categoryState = categoryState,
+                itemState = itemState,
+                itemEvent = itemEvent,
             )
         },
         floatingActionButton = {
             AnimatedVisibility(
                 visible =
                     navigationType == OverloadNavigationType.BOTTOM_NAVIGATION &&
-                        state.selectedDayCalendar == LocalDate.now().toString() &&
-                        state.isDeletingHome.not(),
-                enter = if (state.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
-                exit = if (state.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
+                        itemState.selectedDayCalendar == LocalDate.now().toString() &&
+                        itemState.isDeletingHome.not(),
+                enter = if (itemState.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
+                exit = if (itemState.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
             ) {
-                HomeTabFab(state = state, onEvent = onEvent)
+                HomeTabFab(categoryEvent = categoryEvent, categoryState = categoryState, itemState = itemState, itemEvent = itemEvent)
             }
         },
     ) { paddingValues ->
@@ -120,7 +125,7 @@ fun HomeTab(
                     state = pagerState,
                 ) { page ->
                     val item = homeTabItems[page]
-                    item.screen(state, onEvent)
+                    item.screen(categoryState, itemState, itemEvent)
                 }
             }
         }

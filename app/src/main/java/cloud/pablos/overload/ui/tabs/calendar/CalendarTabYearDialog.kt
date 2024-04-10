@@ -30,7 +30,7 @@ import java.time.LocalDate
 @Composable
 fun CalendarTabYearDialog(
     firstYear: Int,
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     onClose: () -> Unit,
 ) {
     Dialog(
@@ -42,7 +42,7 @@ fun CalendarTabYearDialog(
                 color = MaterialTheme.colorScheme.background,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                YearDialogContent(firstYear = firstYear, onEvent = onEvent, onClose = onClose)
+                YearDialogContent(firstYear = firstYear, itemEvent = itemEvent, onClose = onClose)
             }
         },
     )
@@ -51,7 +51,7 @@ fun CalendarTabYearDialog(
 @Composable
 private fun YearDialogContent(
     firstYear: Int,
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     onClose: () -> Unit,
 ) {
     Column(
@@ -71,14 +71,14 @@ private fun YearDialogContent(
             modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
         )
 
-        YearListContent(firstYear = firstYear, onEvent = onEvent, onClose = onClose)
+        YearListContent(firstYear = firstYear, itemEvent = itemEvent, onClose = onClose)
     }
 }
 
 @Composable
 private fun YearListContent(
     firstYear: Int,
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     onClose: () -> Unit,
 ) {
     LazyColumn(
@@ -86,7 +86,7 @@ private fun YearListContent(
     ) {
         val currentYear = LocalDate.now().year
         items((currentYear downTo firstYear).toList()) { year ->
-            YearRow(year = year, onEvent = onEvent, onClose = onClose)
+            YearRow(year = year, itemEvent = itemEvent, onClose = onClose)
             if (year != firstYear) {
                 HorizontalDivider()
             }
@@ -95,15 +95,20 @@ private fun YearListContent(
 }
 
 @Composable
-private fun YearRow(year: Int, onEvent: (ItemEvent) -> Unit, onClose: () -> Unit) {
+private fun YearRow(
+    year: Int,
+    itemEvent: (ItemEvent) -> Unit,
+    onClose: () -> Unit,
+) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onEvent(ItemEvent.SetSelectedYearCalendar(year))
-                onClose()
-            }
-            .padding(16.dp),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable {
+                    itemEvent(ItemEvent.SetSelectedYearCalendar(year))
+                    onClose()
+                }
+                .padding(16.dp),
         horizontalArrangement = Arrangement.Center,
     ) {
         TextView(text = year.toString())

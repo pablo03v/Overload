@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.preference.PreferenceManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.compose.animation.AnimatedVisibility
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.BugReport
@@ -25,10 +27,8 @@ import androidx.compose.material.icons.rounded.Code
 import androidx.compose.material.icons.rounded.Copyright
 import androidx.compose.material.icons.rounded.EmojiNature
 import androidx.compose.material.icons.rounded.PestControl
-import androidx.compose.material.icons.rounded.School
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.icons.rounded.Unarchive
-import androidx.compose.material.icons.rounded.Work
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -36,6 +36,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -51,12 +52,14 @@ import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavHostController
 import androidx.room.withTransaction
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Backup
 import cloud.pablos.overload.data.OverloadDatabase
-import cloud.pablos.overload.data.item.DatabaseBackup
+import cloud.pablos.overload.data.category.Category
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.data.item.backupItemsToJson
 import cloud.pablos.overload.ui.MainActivity
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
@@ -69,8 +72,10 @@ import java.io.File
 
 @Composable
 fun ConfigurationsTab(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
     filePickerLauncher: ActivityResultLauncher<Intent>,
     navController: NavHostController,
 ) {
@@ -93,15 +98,31 @@ fun ConfigurationsTab(
             mutableStateOf(sharedPreferences.getBoolean(acraSysLogsEnabledKey, true))
         }
 
+    val createCategoryDialog = remember { mutableStateOf(false) }
     val workGoalDialogState = remember { mutableStateOf(false) }
     val pauseGoalDialogState = remember { mutableStateOf(false) }
+
+    val color = MaterialTheme.colorScheme.onSurfaceVariant.toString()
+
+    val categories = categoryState.categories
+    LaunchedEffect(categories) {
+        if (categories.isEmpty()) {
+            categoryEvent(CategoryEvent.SetId(0))
+            categoryEvent(CategoryEvent.SetName("Default"))
+            categoryEvent(CategoryEvent.SetColor(color))
+            categoryEvent(CategoryEvent.SetEmoji("🕣"))
+            categoryEvent(CategoryEvent.SetIsDefault(true))
+            categoryEvent(CategoryEvent.SaveCategory)
+        }
+    }
 
     Scaffold(
         topBar = {
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.CONFIGURATIONS,
-                state = state,
-                onEvent = onEvent,
+                categoryState = categoryState,
+                itemState = itemState,
+                itemEvent = itemEvent,
             )
         },
     ) { paddingValues ->
@@ -200,24 +221,17 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(title = stringResource(id = R.string.categories))
             }
 
-            // TODO: open new page, get categories from database
-
-            // Categories Items
-            item {
-                ConfigurationsTabItem(
-                    title = "Work",
-                    icon = Icons.Rounded.Work,
-                    action = { navController.navigate(OverloadRoute.CATEGORY) },
-                    background = true,
-                )
-            }
-            item {
-                ConfigurationsTabItem(
-                    title = "School",
-                    icon = Icons.Rounded.School,
-                    action = { navController.navigate(OverloadRoute.CATEGORY) },
-                    background = true,
-                )
+            categoryState.categories.forEach { category ->
+                item {
+                    ConfigurationsTabItem(
+                        title = category.emoji + " " + category.name,
+                        action = {
+                            categoryEvent(CategoryEvent.SetSelectedCategoryConfigurations(category.id))
+                            navController.navigate(OverloadRoute.CATEGORY)
+                        },
+                        background = true,
+                    )
+                }
             }
 
             item {
@@ -228,6 +242,16 @@ fun ConfigurationsTab(
                             .fillMaxWidth(),
                 ) {
                     FilledTonalButton(onClick = {
+                        if (categoryState.categories.isEmpty()) {
+                            categoryEvent(CategoryEvent.SetId(1))
+                            categoryEvent(CategoryEvent.SetName("Default"))
+                            categoryEvent(CategoryEvent.SetColor(color))
+                            categoryEvent(CategoryEvent.SetEmoji("🕣"))
+                            categoryEvent(CategoryEvent.SetIsDefault(true))
+                            categoryEvent(CategoryEvent.SaveCategory)
+                        } else {
+                            createCategoryDialog.value = true
+                        }
                     }) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -304,7 +328,7 @@ fun ConfigurationsTab(
                     title = stringResource(id = R.string.backup),
                     description = stringResource(id = R.string.backup_descr),
                     icon = Icons.Rounded.Archive,
-                    action = { backup(state, context) },
+                    action = { backup(categoryState, itemState, context) },
                 )
             }
 
@@ -390,6 +414,13 @@ fun ConfigurationsTab(
             }
         }
 
+        if (createCategoryDialog.value) {
+            ConfigurationsTabCreateCategoryDialog(
+                onClose = { createCategoryDialog.value = false },
+                categoryEvent = categoryEvent,
+            )
+        }
+
         if (workGoalDialogState.value) {
             ConfigurationsTabGoalDialog(
                 onClose = { workGoalDialogState.value = false },
@@ -407,11 +438,12 @@ fun ConfigurationsTab(
 }
 
 fun backup(
-    state: ItemState,
+    categoryState: CategoryState,
+    itemState: ItemState,
     context: Context,
 ) {
     try {
-        val exportedData = backupItemsToJson(state)
+        val exportedData = Backup.backupToJson(categoryState, itemState)
         val cachePath = File(context.cacheDir, "backup.json")
 
         cachePath.writeText(exportedData)
@@ -504,6 +536,7 @@ private fun importCsvData(
                     val endTime = row[2].trim()
                     val ongoing = row[3].trim()
                     val pause = row[4].trim()
+                    val categoryId = row[5].trim()
 
                     val item =
                         Item(
@@ -511,6 +544,7 @@ private fun importCsvData(
                             endTime = endTime,
                             ongoing = ongoing.toBoolean(),
                             pause = pause.toBoolean(),
+                            categoryId = categoryId.toInt(),
                         )
 
                     val importResult = itemDao.upsertItem(item)
@@ -541,15 +575,18 @@ private fun importJsonData(
     lifecycleScope.launch(Dispatchers.IO) {
         try {
             val gson = Gson()
-            val databaseBackup = gson.fromJson(jsonData, DatabaseBackup::class.java)
+            val databaseBackup = gson.fromJson(jsonData, Backup.DatabaseBackup::class.java)
 
             when (databaseBackup.backupVersion) {
                 2 -> {
+                    Log.d("import", "Import started")
                     val itemDao = db.itemDao()
+                    val categoryDao = db.categoryDao()
 
                     var allImportsSucceeded = true
 
                     db.withTransaction {
+                        Log.d("import", "Importing items")
                         val itemsTable = databaseBackup.data["items"] ?: emptyList()
                         itemsTable.forEach { itemData ->
                             val item =
@@ -559,13 +596,37 @@ private fun importJsonData(
                                     endTime = itemData["endTime"] as String,
                                     ongoing = itemData["ongoing"] as Boolean,
                                     pause = itemData["pause"] as Boolean,
+                                    categoryId = (itemData["categoryId"] as? Double)?.toInt() ?: 0,
                                 )
+
+                            Log.d("import", "Importing Item: $item")
 
                             val importResult = itemDao.upsertItem(item)
                             if (importResult != Unit) {
                                 allImportsSucceeded = false
                             }
                         }
+
+                        Log.d("import", "Importing categories")
+                        val categoriesTable = databaseBackup.data["categories"] ?: emptyList()
+                        categoriesTable.forEach { categoriesData ->
+                            val category =
+                                Category(
+                                    id = (categoriesData["id"] as? Double)?.toInt() ?: 0,
+                                    color = categoriesData["color"] as String,
+                                    emoji = categoriesData["emoji"] as String,
+                                    isDefault = categoriesData["isDefault"] as Boolean,
+                                    name = categoriesData["name"] as String,
+                                )
+
+                            Log.d("import", "Importing Category: $category")
+
+                            val importResult = categoryDao.upsertCategory(category)
+                            if (importResult != Unit) {
+                                allImportsSucceeded = false
+                            }
+                        }
+                        Log.d("import", "Import done")
                     }
 
                     withContext(Dispatchers.Main) {
@@ -584,6 +645,7 @@ private fun importJsonData(
                 }
             }
         } catch (e: Exception) {
+            Log.d("import", e.toString())
             withContext(Dispatchers.Main) {
                 showImportFailedToast(context)
             }

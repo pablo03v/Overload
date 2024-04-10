@@ -41,8 +41,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun SpreadAcrossDaysDialog(
     onClose: () -> Unit,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val context = LocalContext.current
     val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#spread-acorss-days".toUri()
@@ -50,7 +50,7 @@ fun SpreadAcrossDaysDialog(
     val date = LocalDate.now()
 
     val itemsNotToday =
-        state.items.filter { item ->
+        itemState.items.filter { item ->
             val startTime = parseToLocalDateTime(item.startTime)
             extractDate(startTime) != date
         }
@@ -105,7 +105,7 @@ fun SpreadAcrossDaysDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    DayViewItemOngoing(item = firstOngoingItem, showDate = true, hideEnd = true, state = state)
+                    DayViewItemOngoing(item = firstOngoingItem, showDate = true, hideEnd = true, itemState = itemState)
                 }
             },
             confirmButton = {
@@ -125,7 +125,7 @@ fun SpreadAcrossDaysDialog(
             dismissButton = {
                 Button(
                     onClick = {
-                        onClose.save(onEvent, firstOngoingItem)
+                        onClose.save(itemEvent, firstOngoingItem)
                     },
                     colors =
                         ButtonDefaults.buttonColors(
@@ -144,7 +144,7 @@ fun SpreadAcrossDaysDialog(
 }
 
 private fun (() -> Unit).save(
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     item: Item,
 ) {
     val currentDate = LocalDate.now()
@@ -166,13 +166,13 @@ private fun (() -> Unit).save(
             }
 
         if (dateIterator == startDate) {
-            onEvent(ItemEvent.SetId(item.id))
+            itemEvent(ItemEvent.SetId(item.id))
         }
-        onEvent(ItemEvent.SetStart(newStartTime.format(formatter)))
-        onEvent(ItemEvent.SetEnd(newEndTime.format(formatter)))
-        onEvent(ItemEvent.SetOngoing(false))
-        onEvent(ItemEvent.SetPause(item.pause))
-        onEvent(ItemEvent.SaveItem)
+        itemEvent(ItemEvent.SetStart(newStartTime.format(formatter)))
+        itemEvent(ItemEvent.SetEnd(newEndTime.format(formatter)))
+        itemEvent(ItemEvent.SetOngoing(false))
+        itemEvent(ItemEvent.SetPause(item.pause))
+        itemEvent(ItemEvent.SaveItem)
         dateIterator = dateIterator.plusDays(1)
     }
 

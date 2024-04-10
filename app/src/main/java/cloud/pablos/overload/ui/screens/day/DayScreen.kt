@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
@@ -30,16 +31,17 @@ import java.time.temporal.ChronoUnit
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DayScreen(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
-    val selectedDay = getLocalDate(state.selectedDayCalendar)
+    val selectedDay = getLocalDate(itemState.selectedDayCalendar)
 
     val firstYear =
-        if (state.items.isEmpty()) {
+        if (itemState.items.isEmpty()) {
             LocalDate.now().year
         } else {
-            state.items.minByOrNull { it.startTime }
+            itemState.items.minByOrNull { it.startTime }
                 ?.let { parseToLocalDateTime(it.startTime).year }
                 ?: LocalDate.now().year
         }
@@ -56,7 +58,7 @@ fun DayScreen(
         )
 
     LaunchedEffect(pagerState.currentPage) {
-        onEvent(
+        itemEvent(
             ItemEvent.SetSelectedDayCalendar(
                 LocalDate.now()
                     .minusDays((daysCount - pagerState.currentPage - 1).toLong())
@@ -68,7 +70,7 @@ fun DayScreen(
     var hasLoaded by remember { mutableStateOf(false) }
     LaunchedEffect(hasLoaded) {
         if (!hasLoaded) {
-            if (getLocalDate(state.selectedDayCalendar) != LocalDate.now()) {
+            if (getLocalDate(itemState.selectedDayCalendar) != LocalDate.now()) {
                 pagerState.scrollToPage(ChronoUnit.DAYS.between(firstDay, selectedDay).toInt())
             }
             hasLoaded = true
@@ -79,8 +81,9 @@ fun DayScreen(
         topBar = {
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.DAY,
-                state = state,
-                onEvent = onEvent,
+                categoryState = categoryState,
+                itemState = itemState,
+                itemEvent = itemEvent,
             )
         },
     ) { paddingValues ->
@@ -93,8 +96,9 @@ fun DayScreen(
                 DayScreenDayView(
                     daysCount = daysCount,
                     page = page,
-                    state = state,
-                    onEvent = onEvent,
+                    categoryState = categoryState,
+                    itemState = itemState,
+                    itemEvent = itemEvent,
                 )
             }
         }

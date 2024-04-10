@@ -5,11 +5,17 @@ sealed interface CategoryEvent {
 
     data class SetId(val id: Int) : CategoryEvent
 
+    data class SetColor(val color: String) : CategoryEvent
+
+    data class SetEmoji(val emoji: String) : CategoryEvent
+
     data class SetName(val name: String) : CategoryEvent
 
-    // data class SetColor(val color: Color) : CategoryEvent
-
-    // data class SetDefault(val default: Boolean) : CategoryEvent
+    data class SetIsDefault(val isDefault: Boolean) : CategoryEvent
 
     data class DeleteCategory(val category: Category) : CategoryEvent
+
+    data class SetSelectedCategoryConfigurations(val selectedCategoryConfigurations: Int) : CategoryEvent
+
+    data class SetSelectedCategory(val selectedCategory: Int) : CategoryEvent
 }

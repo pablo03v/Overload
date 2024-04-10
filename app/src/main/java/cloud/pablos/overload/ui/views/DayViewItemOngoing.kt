@@ -53,7 +53,7 @@ fun DayViewItemOngoing(
     isSelected: Boolean = false,
     showDate: Boolean = false,
     hideEnd: Boolean = false,
-    state: ItemState,
+    itemState: ItemState,
 ) {
     var backgroundColor: Color
     var foregroundColor: Color
@@ -75,7 +75,7 @@ fun DayViewItemOngoing(
 
         when (isSelected) {
             true -> {
-                when (state.isDeletingHome) {
+                when (itemState.isDeletingHome) {
                     true -> {
                         backgroundColor = MaterialTheme.colorScheme.errorContainer
                         foregroundColor = MaterialTheme.colorScheme.onErrorContainer

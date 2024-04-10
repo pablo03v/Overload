@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
 import android.preference.PreferenceManager
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -47,7 +46,6 @@ fun ConfigurationsTabItem(
     action: (() -> Unit)? = null,
     background: Boolean = false,
 ) {
-    Log.d("test", action.toString())
     val context = LocalContext.current
 
     val openLinkStr = stringResource(id = R.string.open_link_with)
@@ -122,6 +120,7 @@ fun ConfigurationsTabItem(
                 } else {
                     Row(
                         horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         ConfigurationTitle(title, MaterialTheme.colorScheme.onSurfaceVariant)

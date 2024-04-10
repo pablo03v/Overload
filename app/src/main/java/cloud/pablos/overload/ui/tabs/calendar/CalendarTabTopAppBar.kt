@@ -23,16 +23,16 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarTabTopAppBar(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val yearDialogState = remember { mutableStateOf(false) }
 
     val firstYear =
-        if (state.items.isEmpty()) {
+        if (itemState.items.isEmpty()) {
             LocalDate.now().year
         } else {
-            state.items.minByOrNull { it.startTime }?.let { parseToLocalDateTime(it.startTime).year } ?: LocalDate.now().year
+            itemState.items.minByOrNull { it.startTime }?.let { parseToLocalDateTime(it.startTime).year } ?: LocalDate.now().year
         }
     val yearsCount = LocalDate.now().year - firstYear
 
@@ -53,12 +53,12 @@ fun CalendarTabTopAppBar(
                         onClick = { yearDialogState.value = true },
                         modifier = Modifier.padding(horizontal = 8.dp),
                     ) {
-                        TextView(state.selectedYearCalendar.toString())
+                        TextView(itemState.selectedYearCalendar.toString())
                     }
                     if (yearDialogState.value) {
                         CalendarTabYearDialog(
                             firstYear = firstYear,
-                            onEvent = onEvent,
+                            itemEvent = itemEvent,
                             onClose = { yearDialogState.value = false },
                         )
                     }

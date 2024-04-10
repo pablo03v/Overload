@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
@@ -47,15 +48,16 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun CalendarTab(
     contentType: OverloadContentType,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {
-    val selectedYear by remember { mutableIntStateOf(state.selectedYearCalendar) }
+    val selectedYear by remember { mutableIntStateOf(itemState.selectedYearCalendar) }
 
     LaunchedEffect(selectedYear) {
-        if (state.selectedYearCalendar != LocalDate.now().year) {
-            onEvent(ItemEvent.SetSelectedYearCalendar(LocalDate.now().year))
+        if (itemState.selectedYearCalendar != LocalDate.now().year) {
+            itemEvent(ItemEvent.SetSelectedYearCalendar(LocalDate.now().year))
         }
     }
 
@@ -63,8 +65,9 @@ fun CalendarTab(
         topBar = {
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.CALENDAR,
-                state = state,
-                onEvent = onEvent,
+                categoryState = categoryState,
+                itemState = itemState,
+                itemEvent = itemEvent,
             )
         },
     ) { paddingValues ->
@@ -84,9 +87,9 @@ fun CalendarTab(
                                 }
 
                                 YearView(
-                                    onEvent = onEvent,
-                                    date = getLocalDate(state.selectedDayCalendar),
-                                    year = state.selectedYearCalendar,
+                                    itemEvent = itemEvent,
+                                    date = getLocalDate(itemState.selectedDayCalendar),
+                                    year = itemState.selectedYearCalendar,
                                     bottomPadding = 0.dp,
                                     highlightSelectedDay = true,
                                 )
@@ -96,13 +99,13 @@ fun CalendarTab(
                         Box(
                             modifier = Modifier.weight(1f),
                         ) {
-                            val selectedDay = getLocalDate(state.selectedDayCalendar)
+                            val selectedDay = getLocalDate(itemState.selectedDayCalendar)
 
                             val firstYear =
-                                if (state.items.isEmpty()) {
+                                if (itemState.items.isEmpty()) {
                                     LocalDate.now().year
                                 } else {
-                                    state.items.minByOrNull { it.startTime }
+                                    itemState.items.minByOrNull { it.startTime }
                                         ?.let { parseToLocalDateTime(it.startTime).year }
                                         ?: LocalDate.now().year
                                 }
@@ -122,7 +125,7 @@ fun CalendarTab(
 
                             LaunchedEffect(pagerState.currentPage) {
                                 scrollToPage = false
-                                onEvent(
+                                itemEvent(
                                     ItemEvent.SetSelectedDayCalendar(
                                         LocalDate.now()
                                             .minusDays((daysCount - pagerState.currentPage - 1).toLong())
@@ -131,14 +134,14 @@ fun CalendarTab(
                                 )
 
                                 if (selectedYear != selectedDay.year) {
-                                    onEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
+                                    itemEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
                                 }
                             }
 
-                            LaunchedEffect(state.selectedDayCalendar) {
+                            LaunchedEffect(itemState.selectedDayCalendar) {
                                 if (scrollToPage) {
                                     val highlightedDay = LocalDate.now().minusDays((daysCount - pagerState.currentPage - 1).toLong())
-                                    if (getLocalDate(state.selectedDayCalendar) != highlightedDay) {
+                                    if (getLocalDate(itemState.selectedDayCalendar) != highlightedDay) {
                                         pagerState.scrollToPage(ChronoUnit.DAYS.between(firstDay, selectedDay).toInt())
                                     }
                                 } else {
@@ -163,8 +166,9 @@ fun CalendarTab(
                                     DayScreenDayView(
                                         daysCount = daysCount,
                                         page = page,
-                                        state = state,
-                                        onEvent = onEvent,
+                                        categoryState = categoryState,
+                                        itemState = itemState,
+                                        itemEvent = itemEvent,
                                     )
                                 }
                             }
@@ -181,9 +185,9 @@ fun CalendarTab(
                         }
 
                         YearView(
-                            onEvent = onEvent,
-                            date = getLocalDate(state.selectedDayCalendar),
-                            year = state.selectedYearCalendar,
+                            itemEvent = itemEvent,
+                            date = getLocalDate(itemState.selectedDayCalendar),
+                            year = itemState.selectedYearCalendar,
                             onNavigate = onNavigate,
                         )
                     }

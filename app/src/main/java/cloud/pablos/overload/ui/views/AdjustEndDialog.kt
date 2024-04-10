@@ -49,8 +49,8 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun AdjustEndDialog(
     onClose: () -> Unit,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val context = LocalContext.current
     val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#spread-acorss-days".toUri()
@@ -58,7 +58,7 @@ fun AdjustEndDialog(
     val date = LocalDate.now()
 
     val itemsNotToday =
-        state.items.filter { item ->
+        itemState.items.filter { item ->
             val startTime = parseToLocalDateTime(item.startTime)
             extractDate(startTime) != date
         }
@@ -134,7 +134,7 @@ fun AdjustEndDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    DayViewItemOngoing(item = firstOngoingItem, showDate = true, hideEnd = true, state = state)
+                    DayViewItemOngoing(item = firstOngoingItem, showDate = true, hideEnd = true, itemState = itemState)
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -162,7 +162,7 @@ fun AdjustEndDialog(
             confirmButton = {
                 Button(
                     onClick = {
-                        onClose.save(onEvent, firstOngoingItem, endTime)
+                        onClose.save(itemEvent, firstOngoingItem, endTime)
                     },
                     colors =
                         ButtonDefaults.buttonColors(
@@ -195,18 +195,18 @@ fun AdjustEndDialog(
 }
 
 private fun (() -> Unit).save(
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     item: Item,
     newEnd: LocalDateTime,
 ) {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
-    onEvent(ItemEvent.SetId(item.id))
-    onEvent(ItemEvent.SetStart(item.startTime))
-    onEvent(ItemEvent.SetEnd(newEnd.format(formatter)))
-    onEvent(ItemEvent.SetOngoing(false))
-    onEvent(ItemEvent.SetPause(item.pause))
-    onEvent(ItemEvent.SaveItem)
+    itemEvent(ItemEvent.SetId(item.id))
+    itemEvent(ItemEvent.SetStart(item.startTime))
+    itemEvent(ItemEvent.SetEnd(newEnd.format(formatter)))
+    itemEvent(ItemEvent.SetOngoing(false))
+    itemEvent(ItemEvent.SetPause(item.pause))
+    itemEvent(ItemEvent.SaveItem)
 
     this()
 }

@@ -4,12 +4,15 @@ import java.time.LocalDateTime
 
 data class ItemState(
     val items: List<Item> = emptyList(),
+    // --
     val id: Int = 0,
     val start: String = LocalDateTime.now().toString(),
     val end: String = "",
     val ongoing: Boolean = false,
     val pause: Boolean = false,
     val isOngoing: Boolean = false,
+    val categoryId: Int = 0,
+    // --
     val selectedDayCalendar: String = "",
     val selectedYearCalendar: Int = 0,
     val isDeletingHome: Boolean = false,

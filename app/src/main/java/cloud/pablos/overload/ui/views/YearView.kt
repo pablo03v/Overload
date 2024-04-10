@@ -39,7 +39,7 @@ import java.util.Locale
 fun YearView(
     date: LocalDate,
     year: Int,
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     bottomPadding: Dp = 0.dp,
     onNavigate: () -> Unit = {},
     highlightSelectedDay: Boolean = false,
@@ -80,7 +80,7 @@ fun YearView(
                             if (isLastWeekInLastMonth) bottomPadding else 0.dp,
                         ),
                     ) {
-                        WeekRow(firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, onEvent, onNavigate)
+                        WeekRow(firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, itemEvent, onNavigate)
                     }
                 }
             }
@@ -107,7 +107,7 @@ fun WeekRow(
     weekOfMonth: Int,
     date: LocalDate,
     highlightSelectedDay: Boolean = false,
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {
     var startOfWeek = firstDayOfMonth.plusWeeks(weekOfMonth.toLong())
@@ -153,7 +153,7 @@ fun WeekRow(
 
             DayCell(
                 date = iterationDate,
-                onEvent = onEvent,
+                itemEvent = itemEvent,
                 backgroundColor = backgroundColor,
                 borderColor = borderColor,
                 number = number,
@@ -171,7 +171,7 @@ fun WeekRow(
 @Composable
 fun DayCell(
     date: LocalDate,
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     backgroundColor: Color,
     borderColor: Color,
     number: String,
@@ -187,8 +187,8 @@ fun DayCell(
                 .combinedClickable(
                     enabled = clickable,
                     onClick = {
-                        onEvent(ItemEvent.SetSelectedDayCalendar(getFormattedDate(date)))
-                        onEvent(ItemEvent.SetIsSelectedHome(true))
+                        itemEvent(ItemEvent.SetSelectedDayCalendar(getFormattedDate(date)))
+                        itemEvent(ItemEvent.SetIsSelectedHome(true))
                         onNavigate()
                     },
                     indication =

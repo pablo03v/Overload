@@ -6,16 +6,13 @@ import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.ui.tabs.home.getFormattedDate
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.ui.views.TextView
-import cloud.pablos.overload.ui.views.getLocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CategoryScreenTopAppBar(state: ItemState) {
-    val selectedDay = getLocalDate(state.selectedDayCalendar)
-    val title = getFormattedDate(selectedDay, true)
+fun CategoryScreenTopAppBar(categoryState: CategoryState) {
+    val selectedCategory = categoryState.categories.find { it.id == categoryState.selectedCategoryConfigurations }
 
     Surface(
         tonalElevation = NavigationBarDefaults.Elevation,
@@ -24,7 +21,7 @@ fun CategoryScreenTopAppBar(state: ItemState) {
         TopAppBar(
             title = {
                 TextView(
-                    text = title,
+                    text = selectedCategory?.name ?: "Unknown Category",
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 )
             },
