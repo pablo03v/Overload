@@ -24,6 +24,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertColorToLong
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.ui.views.TextView
 
@@ -65,7 +66,7 @@ fun ConfigurationsTabCreateCategoryDialog(
                 onClick = {
                     categoryEvent(CategoryEvent.SetName(name.text))
                     categoryEvent(CategoryEvent.SetEmoji("💙"))
-                    categoryEvent(CategoryEvent.SetColor(Color.Blue.toString()))
+                    categoryEvent(CategoryEvent.SetColor(convertColorToLong(Color.Blue)))
                     categoryEvent(CategoryEvent.SetIsDefault(false))
                     categoryEvent(CategoryEvent.SaveCategory)
                     onClose()

@@ -22,12 +22,15 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import cloud.pablos.overload.data.Helpers
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -51,6 +54,8 @@ fun HomeTab(
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
+    val backgroundColor = Helpers.decideBackground(categoryState)
+
     val pagerState =
         rememberPagerState(
             initialPage = 2,
@@ -102,6 +107,13 @@ fun HomeTab(
                     PrimaryTabRow(
                         selectedTabIndex = pagerState.currentPage,
                         divider = {},
+                        indicator = {
+                            TabRowDefaults.PrimaryIndicator(
+                                modifier = Modifier.tabIndicatorOffset(pagerState.currentPage, matchContentSize = true),
+                                width = Dp.Unspecified,
+                                color = backgroundColor,
+                            )
+                        },
                     ) {
                         homeTabItems.forEachIndexed { index, item ->
                             Tab(

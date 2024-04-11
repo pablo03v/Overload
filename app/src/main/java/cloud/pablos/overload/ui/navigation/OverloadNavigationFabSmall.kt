@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -44,6 +45,9 @@ fun OverloadNavigationFabSmall(
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
+    val backgroundColor = Helpers.decideBackground(categoryState)
+    val foregroundColor = Helpers.decideForeground(backgroundColor)
+
     val date = LocalDate.now()
 
     val itemsForToday = getItemsOfDay(date, categoryState, itemState)
@@ -88,8 +92,8 @@ fun OverloadNavigationFabSmall(
                     onClick = {
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    containerColor = backgroundColor,
+                    contentColor = foregroundColor,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
@@ -139,8 +143,8 @@ fun OverloadNavigationFabSmall(
                                 }
                             },
                             interactionSource = interactionSource,
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            containerColor = backgroundColor,
+                            contentColor = foregroundColor,
                         ) {
                             Icon(
                                 imageVector =

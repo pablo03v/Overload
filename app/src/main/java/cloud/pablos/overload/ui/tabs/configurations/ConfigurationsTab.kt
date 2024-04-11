@@ -53,6 +53,7 @@ import androidx.navigation.NavHostController
 import androidx.room.withTransaction
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Backup
+import cloud.pablos.overload.data.Converters.Companion.convertColorToLong
 import cloud.pablos.overload.data.OverloadDatabase
 import cloud.pablos.overload.data.category.Category
 import cloud.pablos.overload.data.category.CategoryEvent
@@ -102,12 +103,12 @@ fun ConfigurationsTab(
     val workGoalDialogState = remember { mutableStateOf(false) }
     val pauseGoalDialogState = remember { mutableStateOf(false) }
 
-    val color = MaterialTheme.colorScheme.onSurfaceVariant.toString()
+    val color = convertColorToLong(MaterialTheme.colorScheme.onSurfaceVariant)
 
     val categories = categoryState.categories
     LaunchedEffect(categories) {
         if (categories.isEmpty()) {
-            categoryEvent(CategoryEvent.SetId(0))
+            categoryEvent(CategoryEvent.SetId(1))
             categoryEvent(CategoryEvent.SetName("Default"))
             categoryEvent(CategoryEvent.SetColor(color))
             categoryEvent(CategoryEvent.SetEmoji("🕣"))
@@ -610,10 +611,11 @@ private fun importJsonData(
                         Log.d("import", "Importing categories")
                         val categoriesTable = databaseBackup.data["categories"] ?: emptyList()
                         categoriesTable.forEach { categoriesData ->
+                            Log.d("colorimport", categoriesData["color"].toString())
                             val category =
                                 Category(
                                     id = (categoriesData["id"] as? Double)?.toInt() ?: 0,
-                                    color = categoriesData["color"] as String,
+                                    color = (categoriesData["color"] as? Double)?.toLong() ?: 0,
                                     emoji = categoriesData["emoji"] as String,
                                     isDefault = categoriesData["isDefault"] as Boolean,
                                     name = categoriesData["name"] as String,

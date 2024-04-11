@@ -29,6 +29,8 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -49,6 +51,9 @@ fun OverloadNavigationFab(
     itemEvent: (ItemEvent) -> Unit,
     onDrawerClicked: () -> Unit = {},
 ) {
+    val backgroundColor = decideBackground(categoryState)
+    val foregroundColor = decideForeground(backgroundColor)
+
     val date = LocalDate.now()
 
     val itemsForToday = getItemsOfDay(date, categoryState, itemState)
@@ -94,8 +99,8 @@ fun OverloadNavigationFab(
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     interactionSource = interactionSource,
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    containerColor = backgroundColor,
+                    contentColor = foregroundColor,
                     modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
                 ) {
                     Column(
@@ -234,8 +239,8 @@ fun OverloadNavigationFab(
                                 }
                             },
                             interactionSource = interactionSource,
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            containerColor = backgroundColor,
+                            contentColor = foregroundColor,
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             Column(

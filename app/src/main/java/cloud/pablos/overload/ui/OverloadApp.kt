@@ -336,6 +336,7 @@ fun OverloadAppContent(
     if (adjustEndDialogState) {
         AdjustEndDialog(
             onClose = { itemEvent(ItemEvent.SetAdjustEndDialogShown(false)) },
+            categoryState,
             itemState,
             itemEvent,
         )
@@ -344,6 +345,7 @@ fun OverloadAppContent(
     if (spreadAcrossDaysDialogState) {
         SpreadAcrossDaysDialog(
             onClose = { itemEvent(ItemEvent.SetSpreadAcrossDaysDialogShown(false)) },
+            categoryState,
             itemState,
             itemEvent,
         )

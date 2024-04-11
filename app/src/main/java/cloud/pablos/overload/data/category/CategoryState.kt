@@ -8,7 +8,7 @@ data class CategoryState(
     val categoryWithItems: List<CategoryWithItems> = emptyList(),
     // --
     val id: Int = 1,
-    val color: String = Color.Unspecified.toString(),
+    val color: Long = Color.Unspecified.value.toLong(),
     val emoji: String = "🕣",
     val name: String = "Default",
     val isDefault: Boolean = true,

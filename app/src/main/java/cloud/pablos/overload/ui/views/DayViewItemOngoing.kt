@@ -38,6 +38,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemState
 import kotlinx.coroutines.delay
@@ -50,11 +52,15 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun DayViewItemOngoing(
     item: Item,
+    categoryState: CategoryState,
+    itemState: ItemState,
     isSelected: Boolean = false,
     showDate: Boolean = false,
     hideEnd: Boolean = false,
-    itemState: ItemState,
 ) {
+    val backgroundColorCategory = Helpers.decideBackground(categoryState)
+    val foregroundColorCategory = Helpers.decideForeground(backgroundColorCategory)
+
     var backgroundColor: Color
     var foregroundColor: Color
     var blink by remember { mutableStateOf(true) }
@@ -96,8 +102,8 @@ fun DayViewItemOngoing(
                     }
 
                     false -> {
-                        backgroundColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        foregroundColor = MaterialTheme.colorScheme.surfaceVariant
+                        backgroundColor = backgroundColorCategory
+                        foregroundColor = foregroundColorCategory
                     }
                 }
             }

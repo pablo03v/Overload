@@ -136,6 +136,7 @@ fun DayScreenDayView(
                                     categoryId = categoryState.selectedCategory,
                                 ),
                             isSelected = false,
+                            categoryState = categoryState,
                             itemState = itemState,
                         )
                     }
@@ -189,8 +190,8 @@ fun DayScreenDayView(
                             ),
                 ) {
                     when (item.ongoing.not() && item.endTime.isNotBlank()) {
-                        true -> DayViewItemNotOngoing(item, isSelected = isSelected, itemState)
-                        else -> DayViewItemOngoing(item, isSelected = isSelected, itemState = itemState)
+                        true -> DayViewItemNotOngoing(item, categoryState, itemState, isSelected)
+                        else -> DayViewItemOngoing(item, categoryState, itemState, isSelected)
                     }
                 }
             }

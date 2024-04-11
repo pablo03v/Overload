@@ -9,7 +9,7 @@ import cloud.pablos.overload.data.item.Item
 @Entity(tableName = "categories")
 data class Category(
     @PrimaryKey(autoGenerate = true) val id: Int = 1,
-    val color: String,
+    val color: Long,
     val emoji: String,
     val isDefault: Boolean,
     val name: String,

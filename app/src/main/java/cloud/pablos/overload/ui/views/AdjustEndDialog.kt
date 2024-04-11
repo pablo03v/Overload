@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
@@ -49,6 +50,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun AdjustEndDialog(
     onClose: () -> Unit,
+    categoryState: CategoryState,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
@@ -134,7 +136,13 @@ fun AdjustEndDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    DayViewItemOngoing(item = firstOngoingItem, showDate = true, hideEnd = true, itemState = itemState)
+                    DayViewItemOngoing(
+                        item = firstOngoingItem,
+                        showDate = true,
+                        hideEnd = true,
+                        categoryState = categoryState,
+                        itemState = itemState,
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 

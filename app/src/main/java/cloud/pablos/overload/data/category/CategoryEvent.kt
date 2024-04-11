@@ -5,7 +5,7 @@ sealed interface CategoryEvent {
 
     data class SetId(val id: Int) : CategoryEvent
 
-    data class SetColor(val color: String) : CategoryEvent
+    data class SetColor(val color: Long) : CategoryEvent
 
     data class SetEmoji(val emoji: String) : CategoryEvent
 
