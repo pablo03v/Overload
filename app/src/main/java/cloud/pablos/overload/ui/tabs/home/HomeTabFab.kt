@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertLongToColor
 import cloud.pablos.overload.data.Helpers
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
@@ -94,7 +95,9 @@ fun HomeTabFab(
     ) {
         when (itemState.isFabOpen) {
             true -> {
-                categoryState.categories.forEach { category ->
+                categoryState.categories.filter {
+                    categoryState.selectedCategory != it.id
+                }.forEach { category ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -111,20 +114,17 @@ fun HomeTabFab(
                             )
                         }
 
+                        val color = convertLongToColor(category.color)
                         SmallFloatingActionButton(
                             onClick = {
                                 categoryEvent(CategoryEvent.SetSelectedCategory(category.id))
 
                                 itemEvent(ItemEvent.SetIsFabOpen(false))
                             },
-                            containerColor = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.primaryContainer,
+                            containerColor = color,
+                            contentColor = Helpers.decideForeground(color),
                         ) {
                             TextView(text = category.emoji)
-                            /*Icon(
-                                imageVector = category.icon,
-                                contentDescription = category.name,
-                            )*/
                         }
                     }
                 }
