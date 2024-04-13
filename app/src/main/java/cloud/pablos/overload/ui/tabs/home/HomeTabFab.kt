@@ -39,7 +39,7 @@ import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.data.item.startOrStopPause
+import cloud.pablos.overload.data.item.fabPress
 import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -179,7 +179,7 @@ fun HomeTabFab(
                 FloatingActionButton(
                     onClick = {
                         if (isLongClick.not()) {
-                            startOrStopPause(categoryState, itemState, itemEvent)
+                            fabPress(categoryState, categoryEvent, itemState, itemEvent)
                         }
                     },
                     interactionSource = interactionSource,

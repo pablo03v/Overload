@@ -18,4 +18,6 @@ sealed interface CategoryEvent {
     data class SetSelectedCategoryConfigurations(val selectedCategoryConfigurations: Int) : CategoryEvent
 
     data class SetSelectedCategory(val selectedCategory: Int) : CategoryEvent
+
+    data class SetIsCreateCategoryDialogOpenHome(val isCreateCategoryDialogOpenHome: Boolean) : CategoryEvent
 }

@@ -11,6 +11,6 @@ data class Item(
     val endTime: String,
     val ongoing: Boolean,
     val pause: Boolean,
-    @ColumnInfo(defaultValue = "0")
+    @ColumnInfo(defaultValue = "1")
     val categoryId: Int,
 )

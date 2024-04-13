@@ -21,7 +21,7 @@ fun CategoryScreenTopAppBar(categoryState: CategoryState) {
         TopAppBar(
             title = {
                 TextView(
-                    text = selectedCategory?.name ?: "Unknown Category",
+                    text = "Category" + ": " + (selectedCategory?.name ?: "Unknown"),
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 )
             },

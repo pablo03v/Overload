@@ -35,7 +35,7 @@ import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.data.item.startOrStopPause
+import cloud.pablos.overload.data.item.fabPress
 import cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog
 import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import cloud.pablos.overload.ui.views.TextView
@@ -237,7 +237,7 @@ fun OverloadNavigationFab(
                         FloatingActionButton(
                             onClick = {
                                 if (isLongClick.not()) {
-                                    startOrStopPause(categoryState, itemState, itemEvent)
+                                    fabPress(categoryState, categoryEvent, itemState, itemEvent)
                                 }
                             },
                             interactionSource = interactionSource,

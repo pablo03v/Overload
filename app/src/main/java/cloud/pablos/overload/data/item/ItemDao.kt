@@ -1,9 +1,12 @@
 package cloud.pablos.overload.data.item
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
+import cloud.pablos.overload.data.Converters.Companion.convertColorToLong
+import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import cloud.pablos.overload.ui.views.extractDate
@@ -30,7 +33,31 @@ interface ItemDao {
     fun getAllItems(): Flow<List<Item>>
 }
 
-fun startOrStopPause(
+fun fabPress(
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
+) {
+    val categories = categoryState.categories
+
+    if (categories.isNotEmpty()) {
+        startOrStop(categoryState, itemState, itemEvent)
+    } else if (itemState.items.isNotEmpty()) {
+        categoryEvent(CategoryEvent.SetId(1))
+        categoryEvent(CategoryEvent.SetName("Default"))
+        categoryEvent(CategoryEvent.SetColor(convertColorToLong(Color(204, 230, 255))))
+        categoryEvent(CategoryEvent.SetEmoji("🕣"))
+        categoryEvent(CategoryEvent.SetIsDefault(true))
+        categoryEvent(CategoryEvent.SaveCategory)
+
+        startOrStop(categoryState, itemState, itemEvent)
+    } else {
+        categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
+    }
+}
+
+fun startOrStop(
     categoryState: CategoryState,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,

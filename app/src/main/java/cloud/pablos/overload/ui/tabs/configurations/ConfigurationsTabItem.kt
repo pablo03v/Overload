@@ -145,7 +145,7 @@ fun ConfigurationsTabItem(
                 }
             }
         } else {
-            Row(Modifier.padding(top = 16.dp)) {
+            Row {
                 ConfigurationLabel(title.replaceFirstChar { it.uppercase() })
             }
         }

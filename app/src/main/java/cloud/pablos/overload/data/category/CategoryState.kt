@@ -15,4 +15,5 @@ data class CategoryState(
     // --
     val selectedCategoryConfigurations: Int = 1,
     val selectedCategory: Int = 1,
+    val isCreateCategoryDialogOpenHome: Boolean = false,
 )

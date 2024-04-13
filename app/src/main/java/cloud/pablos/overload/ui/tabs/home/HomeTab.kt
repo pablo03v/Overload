@@ -37,6 +37,7 @@ import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
+import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabCreateCategoryDialog
 import cloud.pablos.overload.ui.utils.OverloadNavigationType
 import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.launch
@@ -141,6 +142,15 @@ fun HomeTab(
                 }
             }
         }
+    }
+
+    if (categoryState.isCreateCategoryDialogOpenHome) {
+        ConfigurationsTabCreateCategoryDialog(
+            onClose = {
+                categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(false))
+            },
+            categoryEvent,
+        )
     }
 }
 

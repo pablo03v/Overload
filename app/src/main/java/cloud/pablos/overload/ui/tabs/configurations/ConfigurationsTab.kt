@@ -36,7 +36,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -53,7 +52,6 @@ import androidx.navigation.NavHostController
 import androidx.room.withTransaction
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Backup
-import cloud.pablos.overload.data.Converters.Companion.convertColorToLong
 import cloud.pablos.overload.data.OverloadDatabase
 import cloud.pablos.overload.data.category.Category
 import cloud.pablos.overload.data.category.CategoryEvent
@@ -102,20 +100,6 @@ fun ConfigurationsTab(
     val createCategoryDialog = remember { mutableStateOf(false) }
     val workGoalDialogState = remember { mutableStateOf(false) }
     val pauseGoalDialogState = remember { mutableStateOf(false) }
-
-    val color = convertColorToLong(MaterialTheme.colorScheme.onSurfaceVariant)
-
-    val categories = categoryState.categories
-    LaunchedEffect(categories) {
-        if (categories.isEmpty()) {
-            categoryEvent(CategoryEvent.SetId(1))
-            categoryEvent(CategoryEvent.SetName("Default"))
-            categoryEvent(CategoryEvent.SetColor(color))
-            categoryEvent(CategoryEvent.SetEmoji("🕣"))
-            categoryEvent(CategoryEvent.SetIsDefault(true))
-            categoryEvent(CategoryEvent.SaveCategory)
-        }
-    }
 
     Scaffold(
         topBar = {
@@ -222,9 +206,7 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(title = stringResource(id = R.string.categories))
             }
 
-            categoryState.categories.filter {
-                categoryState.selectedCategory != it.id
-            }.forEach { category ->
+            categoryState.categories.forEach { category ->
                 item {
                     ConfigurationsTabItem(
                         title = category.emoji + " " + category.name,
@@ -245,16 +227,7 @@ fun ConfigurationsTab(
                             .fillMaxWidth(),
                 ) {
                     FilledTonalButton(onClick = {
-                        if (categoryState.categories.isEmpty()) {
-                            categoryEvent(CategoryEvent.SetId(1))
-                            categoryEvent(CategoryEvent.SetName("Default"))
-                            categoryEvent(CategoryEvent.SetColor(color))
-                            categoryEvent(CategoryEvent.SetEmoji("🕣"))
-                            categoryEvent(CategoryEvent.SetIsDefault(true))
-                            categoryEvent(CategoryEvent.SaveCategory)
-                        } else {
-                            createCategoryDialog.value = true
-                        }
+                        createCategoryDialog.value = true
                     }) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -276,9 +249,7 @@ fun ConfigurationsTab(
 
             // Categories Divider
             item {
-                Row {
-                    HorizontalDivider()
-                }
+                hDivider()
             }
 
             // Analytics Title
@@ -316,9 +287,7 @@ fun ConfigurationsTab(
 
             // Analytics Divider
             item {
-                Row {
-                    HorizontalDivider()
-                }
+                hDivider()
             }
 
             // Storage Title
@@ -346,9 +315,7 @@ fun ConfigurationsTab(
 
             // Storage Divider
             item {
-                Row {
-                    HorizontalDivider()
-                }
+                hDivider()
             }
 
             // About Title
@@ -398,9 +365,7 @@ fun ConfigurationsTab(
 
             // About Divider
             item {
-                Row {
-                    HorizontalDivider()
-                }
+                hDivider()
             }
 
             // Footer
@@ -539,7 +504,6 @@ private fun importCsvData(
                     val endTime = row[2].trim()
                     val ongoing = row[3].trim()
                     val pause = row[4].trim()
-                    val categoryId = row[5].trim()
 
                     val item =
                         Item(
@@ -547,7 +511,7 @@ private fun importCsvData(
                             endTime = endTime,
                             ongoing = ongoing.toBoolean(),
                             pause = pause.toBoolean(),
-                            categoryId = categoryId.toInt(),
+                            categoryId = 1,
                         )
 
                     val importResult = itemDao.upsertItem(item)
@@ -740,6 +704,11 @@ fun ConfigurationDescription(text: String) {
         fontSize = MaterialTheme.typography.bodyMedium.fontSize,
         color = MaterialTheme.colorScheme.onBackground,
     )
+}
+
+@Composable
+fun hDivider() {
+    HorizontalDivider(modifier = Modifier.padding(top = 20.dp))
 }
 
 class OlSharedPreferences(context: Context) {

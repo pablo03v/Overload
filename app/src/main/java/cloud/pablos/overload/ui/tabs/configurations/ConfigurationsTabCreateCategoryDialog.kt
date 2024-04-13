@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.AlertDialog
@@ -44,6 +45,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,74 +54,76 @@ import cloud.pablos.overload.data.Converters.Companion.convertColorToLong
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.ui.views.TextView
 
+val colorOptions: List<Color> =
+    listOf(
+        Color(255, 209, 220), // Pastel Pink
+        Color(255, 204, 204), // Pastel Red
+        Color(250, 223, 173), // Pastel Yellow
+        Color(255, 230, 204), // Light Orange
+        Color(204, 255, 229), // Pastel Green
+        Color(230, 255, 204), // Light Lime
+        Color(221, 204, 255), // Pastel Purple
+        Color(230, 204, 255), // Light Indigo
+        Color(204, 230, 255), // Pastel Blue
+        Color(204, 255, 255), // Light Cyan
+        Color(255, 204, 230), // Light Magenta
+        Color(255, 230, 255), // Light Lavender
+    )
+
+val emojiOptions: List<String> =
+    listOf(
+        "💼",
+        "👔",
+        "💻",
+        "🖋️",
+        "📚",
+        "🎓",
+        "📝",
+        "✏️",
+        "🏋️‍♂️",
+        "🚴",
+        "🏃",
+        "⛹️‍♀️",
+        "🎉",
+        "🍻",
+        "🎮",
+        "🍹",
+        "👨‍👩‍👧‍👦",
+        "👪",
+        "🏡",
+        "🎨",
+        "🎸",
+        "🎮",
+        "📷",
+        "🍳",
+        "🍔",
+        "🍕",
+        "🥗",
+        "✈️",
+        "🚗",
+        "🚢",
+        "🌍",
+        "💊",
+        "🧘",
+        "🏥",
+        "🌱",
+        "🛀",
+        "🌅",
+        "🛋️",
+        "📺",
+    )
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ConfigurationsTabCreateCategoryDialog(
     onClose: () -> Unit,
     categoryEvent: (CategoryEvent) -> Unit,
 ) {
-    val colorOptions: List<Color> =
-        listOf(
-            Color(255, 209, 220), // Pastel Pink
-            Color(255, 204, 204), // Pastel Red
-            Color(250, 223, 173), // Pastel Yellow
-            Color(255, 230, 204), // Light Orange
-            Color(204, 255, 229), // Pastel Green
-            Color(230, 255, 204), // Light Lime
-            Color(221, 204, 255), // Pastel Purple
-            Color(230, 204, 255), // Light Indigo
-            Color(204, 230, 255), // Pastel Blue
-            Color(204, 255, 255), // Light Cyan
-            Color(255, 204, 230), // Light Magenta
-            Color(255, 230, 255), // Light Lavender
-        )
-
-    val emojiOptions: List<String> =
-        listOf(
-            "💼",
-            "👔",
-            "💻",
-            "🖋️",
-            "📚",
-            "🎓",
-            "📝",
-            "✏️",
-            "🏋️‍♂️",
-            "🚴",
-            "🏃",
-            "⛹️‍♀️",
-            "🎉",
-            "🍻",
-            "🎮",
-            "🍹",
-            "👨‍👩‍👧‍👦",
-            "👪",
-            "🏡",
-            "🎨",
-            "🎸",
-            "🎮",
-            "📷",
-            "🍳",
-            "🍔",
-            "🍕",
-            "🥗",
-            "✈️",
-            "🚗",
-            "🚢",
-            "🌍",
-            "💊",
-            "🧘",
-            "🏥",
-            "🌱",
-            "🛀",
-            "🌅",
-            "🛋️",
-            "📺",
-        )
-
     var name by remember { mutableStateOf(TextFieldValue()) }
     var color by remember { mutableStateOf(colorOptions.first()) }
     var emoji by remember { mutableStateOf(emojiOptions.first()) }
+
+    var nameError by remember { mutableStateOf(false) }
 
     AlertDialog(
         onDismissRequest = onClose,
@@ -140,10 +144,24 @@ fun ConfigurationsTabCreateCategoryDialog(
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
+                    TextView(
+                        "Name",
+                        fontWeight = FontWeight.Bold,
+                        color = if (nameError) MaterialTheme.colorScheme.error else Color.Unspecified,
+                    )
                     OutlinedTextField(
                         value = name,
-                        onValueChange = { name = it },
-                        label = { Text(text = "Name") },
+                        onValueChange =
+                            {
+                                name = it
+                                if (it.text.isNotEmpty()) {
+                                    nameError = false
+                                }
+                            },
+                        singleLine = true,
+                        placeholder = { Text(text = "Name") },
+                        isError = nameError,
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
                     )
                 }
 
@@ -198,6 +216,13 @@ fun ConfigurationsTabCreateCategoryDialog(
         confirmButton = {
             Button(
                 onClick = {
+                    if (name.text.isEmpty()) {
+                        nameError = true
+                        return@Button
+                    } else {
+                        nameError = false
+                    }
+
                     categoryEvent(CategoryEvent.SetName(name.text.replaceFirstChar { it.uppercase() }))
                     categoryEvent(CategoryEvent.SetEmoji(emoji))
                     categoryEvent(CategoryEvent.SetColor(convertColorToLong(color)))
@@ -223,33 +248,11 @@ fun ConfigurationsTabCreateCategoryDialog(
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     ),
             ) {
-                Text(text = stringResource(R.string.cancel))
+                TextView(text = stringResource(R.string.cancel))
             }
         },
         modifier = Modifier.padding(16.dp),
     )
-}
-
-private fun (() -> Unit).save(
-    sharedPreferences: OlSharedPreferences,
-    hours: Int?,
-    minutes: Int?,
-    valid: Boolean,
-    isPause: Boolean,
-) {
-    if (valid) {
-        val hoursInMin = (hours ?: 0) * 60
-        val minutesInMin = minutes ?: 0
-        val goal = (hoursInMin + minutesInMin) * 60 * 1000
-
-        if (goal > 0) {
-            when (isPause) {
-                true -> sharedPreferences.savePauseGoal(goal)
-                false -> sharedPreferences.saveWorkGoal(goal)
-            }
-            this()
-        }
-    }
 }
 
 @Composable
@@ -258,11 +261,12 @@ fun SelectableColor(
     selected: Boolean,
     onClick: () -> Unit,
     color: Color,
+    surfaceColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
 ) {
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.inverseOnSurface,
+        color = surfaceColor,
     ) {
         Surface(
             modifier =
@@ -306,13 +310,13 @@ fun SelectableEmoji(
     onClick: () -> Unit,
     emoji: String,
     color: Color,
+    surfaceColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
 ) {
-    val surfaceColorUnselected = MaterialTheme.colorScheme.inverseOnSurface
     val surfaceColorSelected = MaterialTheme.colorScheme.primary
-    val surfaceColor = remember { Animatable(if (selected) surfaceColorSelected else surfaceColorUnselected) }
+    val surfaceColorBySelection = remember { Animatable(if (selected) surfaceColorSelected else surfaceColor) }
     LaunchedEffect(selected) {
-        surfaceColor.animateTo(
-            if (selected) surfaceColorSelected else surfaceColorUnselected,
+        surfaceColorBySelection.animateTo(
+            if (selected) surfaceColorSelected else surfaceColor,
             animationSpec = tween(250),
         )
     }
@@ -328,7 +332,7 @@ fun SelectableEmoji(
     Surface(
         modifier = modifier,
         shape = RoundedCornerShape(16.dp),
-        color = surfaceColor.value,
+        color = surfaceColorBySelection.value,
     ) {
         Surface(
             modifier =

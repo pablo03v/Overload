@@ -124,6 +124,14 @@ class CategoryViewModel(
                     )
                 }
             }
+
+            is CategoryEvent.SetIsCreateCategoryDialogOpenHome -> {
+                _state.update {
+                    it.copy(
+                        isCreateCategoryDialogOpenHome = event.isCreateCategoryDialogOpenHome,
+                    )
+                }
+            }
         }
     }
 }
