@@ -222,7 +222,9 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(title = stringResource(id = R.string.categories))
             }
 
-            categoryState.categories.forEach { category ->
+            categoryState.categories.filter {
+                categoryState.selectedCategory != it.id
+            }.forEach { category ->
                 item {
                     ConfigurationsTabItem(
                         title = category.emoji + " " + category.name,

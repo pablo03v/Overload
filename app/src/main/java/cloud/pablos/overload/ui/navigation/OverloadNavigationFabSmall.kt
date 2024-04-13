@@ -115,7 +115,9 @@ fun OverloadNavigationFabSmall(
                     )
                 }
 
-                categoryState.categories.forEach { category ->
+                categoryState.categories.filter {
+                    categoryState.selectedCategory != it.id
+                }.forEach { category ->
                     SmallFloatingActionButton(
                         onClick = {
                             categoryEvent(CategoryEvent.SetSelectedCategory(category.id))
