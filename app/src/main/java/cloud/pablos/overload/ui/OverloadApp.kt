@@ -319,6 +319,7 @@ fun OverloadAppContent(
                     selectedDestination = selectedDestination,
                     navigateToTopLevelDestination = navigateToTopLevelDestination,
                     categoryState = categoryState,
+                    categoryEvent = categoryEvent,
                     itemState = itemState,
                     itemEvent = itemEvent,
                     navController = navController,

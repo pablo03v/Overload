@@ -208,11 +208,13 @@ class BottomBarState private constructor() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun OverloadBottomNavigationBar(
     selectedDestination: String,
     navigateToTopLevelDestination: (OverloadTopLevelDestination) -> Unit,
     categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
     navController: NavHostController,
@@ -319,7 +321,7 @@ fun OverloadBottomNavigationBar(
                 }
 
                 BottomBarState.Category -> {
-                    CategoryScreenBottomAppBar(navController)
+                    CategoryScreenBottomAppBar(categoryState, categoryEvent, itemState, itemEvent, navController)
                 }
 
                 BottomBarState.Day -> {
