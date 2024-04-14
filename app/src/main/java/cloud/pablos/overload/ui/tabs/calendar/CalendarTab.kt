@@ -55,14 +55,6 @@ fun CalendarTab(
     itemEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {
-    val selectedYear by remember { mutableIntStateOf(itemState.selectedYearCalendar) }
-
-    LaunchedEffect(selectedYear) {
-        if (itemState.selectedYearCalendar != LocalDate.now().year) {
-            itemEvent(ItemEvent.SetSelectedYearCalendar(LocalDate.now().year))
-        }
-    }
-
     Scaffold(
         topBar = {
             OverloadTopAppBar(
@@ -77,6 +69,62 @@ fun CalendarTab(
         Box(modifier = Modifier.fillMaxSize()) {
             Column(modifier = Modifier.padding(paddingValues)) {
                 AnimatedVisibility(visible = contentType == OverloadContentType.DUAL_PANE) {
+                    val selectedYear by remember { mutableIntStateOf(itemState.selectedYearCalendar) }
+                    val selectedDay = getLocalDate(itemState.selectedDayCalendar)
+
+                    val firstYear =
+                        if (itemState.items.isEmpty()) {
+                            LocalDate.now().year
+                        } else {
+                            itemState.items.minByOrNull { it.startTime }
+                                ?.let { convertStringToLocalDateTime(it.startTime).year }
+                                ?: LocalDate.now().year
+                        }
+                    val firstDay = LocalDate.of(firstYear, 1, 1)
+                    val lastDay = LocalDate.now()
+
+                    val daysCount = ChronoUnit.DAYS.between(firstDay, lastDay).toInt() + 1
+
+                    var scrollToPage = true
+                    val pagerState =
+                        rememberPagerState(
+                            initialPage = daysCount,
+                            initialPageOffsetFraction = 0f,
+                            pageCount = { daysCount },
+                        )
+
+                    LaunchedEffect(selectedYear) {
+                        if (itemState.selectedYearCalendar != selectedDay.year) {
+                            itemEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
+                        }
+                    }
+
+                    LaunchedEffect(pagerState.currentPage) {
+                        scrollToPage = false
+                        itemEvent(
+                            ItemEvent.SetSelectedDayCalendar(
+                                LocalDate.now()
+                                    .minusDays((daysCount - pagerState.currentPage - 1).toLong())
+                                    .toString(),
+                            ),
+                        )
+                    }
+
+                    LaunchedEffect(itemState.selectedDayCalendar) {
+                        if (scrollToPage) {
+                            val highlightedDay = LocalDate.now().minusDays((daysCount - pagerState.currentPage - 1).toLong())
+                            if (getLocalDate(itemState.selectedDayCalendar) != highlightedDay) {
+                                pagerState.scrollToPage(ChronoUnit.DAYS.between(firstDay, selectedDay).toInt())
+                            }
+                        } else {
+                            scrollToPage = true
+                        }
+
+                        if (selectedYear != selectedDay.year) {
+                            itemEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
+                        }
+                    }
+
                     Row(modifier = Modifier.fillMaxSize()) {
                         Box(
                             modifier = Modifier.weight(1f),
@@ -103,56 +151,6 @@ fun CalendarTab(
                         Box(
                             modifier = Modifier.weight(1f),
                         ) {
-                            val selectedDay = getLocalDate(itemState.selectedDayCalendar)
-
-                            val firstYear =
-                                if (itemState.items.isEmpty()) {
-                                    LocalDate.now().year
-                                } else {
-                                    itemState.items.minByOrNull { it.startTime }
-                                        ?.let { convertStringToLocalDateTime(it.startTime).year }
-                                        ?: LocalDate.now().year
-                                }
-
-                            val firstDay = LocalDate.of(firstYear, 1, 1)
-                            val lastDay = LocalDate.now()
-                            val daysCount = ChronoUnit.DAYS.between(firstDay, lastDay).toInt() + 1
-
-                            var scrollToPage = true
-
-                            val pagerState =
-                                rememberPagerState(
-                                    initialPage = daysCount,
-                                    initialPageOffsetFraction = 0f,
-                                    pageCount = { daysCount },
-                                )
-
-                            LaunchedEffect(pagerState.currentPage) {
-                                scrollToPage = false
-                                itemEvent(
-                                    ItemEvent.SetSelectedDayCalendar(
-                                        LocalDate.now()
-                                            .minusDays((daysCount - pagerState.currentPage - 1).toLong())
-                                            .toString(),
-                                    ),
-                                )
-
-                                if (selectedYear != selectedDay.year) {
-                                    itemEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
-                                }
-                            }
-
-                            LaunchedEffect(itemState.selectedDayCalendar) {
-                                if (scrollToPage) {
-                                    val highlightedDay = LocalDate.now().minusDays((daysCount - pagerState.currentPage - 1).toLong())
-                                    if (getLocalDate(itemState.selectedDayCalendar) != highlightedDay) {
-                                        pagerState.scrollToPage(ChronoUnit.DAYS.between(firstDay, selectedDay).toInt())
-                                    }
-                                } else {
-                                    scrollToPage = true
-                                }
-                            }
-
                             HorizontalPager(
                                 state = pagerState,
                             ) { page ->
