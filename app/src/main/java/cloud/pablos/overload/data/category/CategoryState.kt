@@ -1,6 +1,5 @@
 package cloud.pablos.overload.data.category
 
-import androidx.compose.material.icons.filled.Category
 import androidx.compose.ui.graphics.Color
 
 data class CategoryState(

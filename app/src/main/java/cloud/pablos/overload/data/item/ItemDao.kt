@@ -42,7 +42,7 @@ fun fabPress(
     val categories = categoryState.categories
 
     if (categories.isNotEmpty()) {
-        startOrStop(categoryState, itemState, itemEvent)
+        startOrStop(categoryState, categoryEvent, itemState, itemEvent)
     } else if (itemState.items.isNotEmpty()) {
         categoryEvent(CategoryEvent.SetId(1))
         categoryEvent(CategoryEvent.SetName("Default"))
@@ -53,7 +53,7 @@ fun fabPress(
         categoryEvent(CategoryEvent.SetIsDefault(true))
         categoryEvent(CategoryEvent.SaveCategory)
 
-        startOrStop(categoryState, itemState, itemEvent)
+        startOrStop(categoryState, categoryEvent, itemState, itemEvent)
     } else {
         categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
     }
@@ -61,11 +61,27 @@ fun fabPress(
 
 fun startOrStop(
     categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
     val date = LocalDate.now()
-    val selectedCategoryId = categoryState.selectedCategory
+    val selectedCategory = categoryState.categories.find { it.id == categoryState.selectedCategory }
+    var selectedCategoryId: Int?
+
+    if (selectedCategory != null) {
+        selectedCategoryId = selectedCategory.id
+    } else if (categoryState.categories.isEmpty()) {
+        categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
+        return
+    } else {
+        selectedCategoryId = categoryState.categories.first().id
+        categoryEvent(CategoryEvent.SetSelectedCategory(selectedCategoryId))
+
+        if (categoryState.categories.count() > 1) {
+            return
+        }
+    }
 
     val itemsForToday = getItemsOfDay(date, categoryState, itemState)
     val isFirstToday = itemsForToday.isEmpty()

@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -81,9 +80,7 @@ private fun YearListContent(
     itemEvent: (ItemEvent) -> Unit,
     onClose: () -> Unit,
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxHeight(),
-    ) {
+    LazyColumn {
         val currentYear = LocalDate.now().year
         items((currentYear downTo firstYear).toList()) { year ->
             YearRow(year = year, itemEvent = itemEvent, onClose = onClose)

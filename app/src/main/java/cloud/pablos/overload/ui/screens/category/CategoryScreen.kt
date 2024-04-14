@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -230,17 +231,17 @@ fun CategoryScreen(
                     ConfigurationsTabItem(title = stringResource(id = R.string.goals))
                 }
 
-                // Work Goal
+                // Goal 1
                 item {
-                    val itemLabel =
-                        stringResource(id = R.string.work) + ": " + stringResource(id = R.string.work_goal_descr)
+                    val itemLabel = stringResource(id = R.string.work) + ": " + stringResource(id = R.string.work_goal_descr)
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier =
                             Modifier
+                                .padding(bottom = 16.dp)
                                 .clip(shape = RoundedCornerShape(15.dp))
                                 .clickable {
-                                    goalDialogState.value = true
+                                    pauseGoalDialogState.value = true
                                 }
                                 .clearAndSetSemantics {
                                     contentDescription = itemLabel
@@ -248,7 +249,10 @@ fun CategoryScreen(
                     ) {
                         Text(
                             selectedCategory.emoji,
-                            modifier = Modifier.padding(horizontal = 8.dp),
+                            modifier =
+                                Modifier
+                                    .width(40.dp)
+                                    .padding(horizontal = 8.dp),
                         )
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
@@ -263,10 +267,9 @@ fun CategoryScreen(
                     }
                 }
 
-                // Pause Goal
+                // Goal 2
                 item {
-                    val itemLabel =
-                        stringResource(id = R.string.pause) + ": " + stringResource(id = R.string.pause_goal_descr)
+                    val itemLabel = stringResource(id = R.string.pause) + ": " + stringResource(id = R.string.pause_goal_descr)
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -285,7 +288,10 @@ fun CategoryScreen(
                             imageVector = Icons.Filled.DarkMode,
                             contentDescription = stringResource(id = R.string.pause),
                             tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(horizontal = 8.dp),
+                            modifier =
+                                Modifier
+                                    .width(40.dp)
+                                    .padding(horizontal = 8.dp),
                         )
                         Row(
                             verticalAlignment = Alignment.CenterVertically,

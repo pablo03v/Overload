@@ -1,0 +1,52 @@
+package cloud.pablos.overload.ui.views
+
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import cloud.pablos.overload.data.Helpers
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
+import cloud.pablos.overload.ui.tabs.calendar.CalendarTabCategoryDialog
+
+@RequiresApi(Build.VERSION_CODES.S)
+@Composable
+fun ChangeCategoryButton(
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+) {
+    val categoryDialogState = remember { mutableStateOf(false) }
+
+    val categoriesCount = categoryState.categories.count()
+    val selectedCategory = categoryState.categories.find { it.id == categoryState.selectedCategory }
+
+    if (categoriesCount > 1 && selectedCategory != null) {
+        val backgroundColor = Helpers.decideBackground(categoryState)
+        val foregroundColor = Helpers.decideForeground(backgroundColor)
+
+        Button(
+            onClick = { categoryDialogState.value = true },
+            modifier = Modifier.padding(horizontal = 8.dp),
+            colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = backgroundColor,
+                    contentColor = foregroundColor,
+                ),
+        ) {
+            TextView(selectedCategory.emoji)
+        }
+        if (categoryDialogState.value) {
+            CalendarTabCategoryDialog(
+                categoryState,
+                categoryEvent,
+                onClose = { categoryDialogState.value = false },
+            )
+        }
+    }
+}

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.ui.tabs.home.getFormattedDate
@@ -145,7 +146,7 @@ fun WeekRow(
         val today = LocalDate.now()
 
         while (iterationDate < endDayOfWeek) {
-            val (backgroundColor, borderColor) =
+            val colors =
                 getColorOfDay(
                     categoryState = categoryState,
                     date = iterationDate,
@@ -159,8 +160,7 @@ fun WeekRow(
             DayCell(
                 date = iterationDate,
                 itemEvent = itemEvent,
-                backgroundColor = backgroundColor,
-                borderColor = borderColor,
+                colors = colors,
                 number = number,
                 clickable = clickable,
                 onNavigate = onNavigate,
@@ -177,8 +177,7 @@ fun WeekRow(
 fun DayCell(
     date: LocalDate,
     itemEvent: (ItemEvent) -> Unit,
-    backgroundColor: Color,
-    borderColor: Color,
+    colors: DayCellColors,
     number: String,
     clickable: Boolean,
     onNavigate: () -> Unit,
@@ -188,7 +187,7 @@ fun DayCell(
             Modifier
                 .padding()
                 .requiredSize(36.dp)
-                .background(backgroundColor, shape = CircleShape)
+                .background(colors.background, shape = CircleShape)
                 .combinedClickable(
                     enabled = clickable,
                     onClick = {
@@ -203,12 +202,13 @@ fun DayCell(
                     interactionSource = remember { MutableInteractionSource() },
                 )
                 .clip(CircleShape)
-                .border(3.dp, borderColor, CircleShape),
+                .border(3.dp, colors.borderColor, CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         TextView(
             text = number,
             fontSize = 14.sp,
+            color = colors.foreground,
         )
     }
 }
@@ -226,6 +226,8 @@ fun EmptyDayCell() {
     )
 }
 
+data class DayCellColors(val foreground: Color, val background: Color, val borderColor: Color)
+
 @Composable
 fun getColorOfDay(
     categoryState: CategoryState,
@@ -233,37 +235,29 @@ fun getColorOfDay(
     firstDayOfMonth: LocalDate,
     selected: Boolean,
     highlightSelectedDay: Boolean = false,
-): Pair<Color, Color> {
+): DayCellColors {
     val month = firstDayOfMonth.month
     val today = LocalDate.now()
 
     val backgroundColor =
-        if (date <= today && date.month == month) {
+        if (selected && highlightSelectedDay) {
+            decideBackground(categoryState)
+        } else if (date <= today && date.month == month) {
             MaterialTheme.colorScheme.surfaceVariant
         } else {
             Color.Transparent
         }
 
-    val borderColor =
-        when (highlightSelectedDay) {
-            true -> {
-                if (selected) {
-                    decideBackground(categoryState)
-                } else {
-                    Color.Transparent
-                }
-            }
+    val foregroundColor = decideForeground(backgroundColor)
 
-            false -> {
-                if (
-                    date == LocalDate.now()
-                ) {
-                    decideBackground(categoryState)
-                } else {
-                    Color.Transparent
-                }
-            }
+    val borderColor =
+        if (
+            date == LocalDate.now()
+        ) {
+            decideBackground(categoryState)
+        } else {
+            Color.Transparent
         }
 
-    return Pair(backgroundColor, borderColor)
+    return DayCellColors(foregroundColor, backgroundColor, borderColor)
 }

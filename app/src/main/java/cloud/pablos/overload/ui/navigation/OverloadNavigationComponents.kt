@@ -402,7 +402,7 @@ fun OverloadTopAppBar(
         if (topBarState == currentTopBarState) {
             when (topBarState) {
                 TopBarState.Home -> {
-                    HomeTabTopAppBar()
+                    HomeTabTopAppBar(categoryState, categoryEvent)
                 }
 
                 TopBarState.Calendar -> {

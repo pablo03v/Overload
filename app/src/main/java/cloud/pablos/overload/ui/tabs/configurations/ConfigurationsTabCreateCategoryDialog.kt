@@ -56,6 +56,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -139,6 +141,12 @@ fun ConfigurationsTabCreateCategoryDialog(
 
     var nameError by remember { mutableStateOf(false) }
 
+    val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     AlertDialog(
         onDismissRequest = onClose,
         title = {
@@ -157,6 +165,7 @@ fun ConfigurationsTabCreateCategoryDialog(
             ) {
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     TextView(
                         "Name",
@@ -176,11 +185,13 @@ fun ConfigurationsTabCreateCategoryDialog(
                         placeholder = { Text(text = "Name") },
                         isError = nameError,
                         keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
                     )
                 }
 
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     TextView(
                         "Color",
@@ -204,6 +215,7 @@ fun ConfigurationsTabCreateCategoryDialog(
 
                 Column(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     TextView(
                         "Emoji",
