@@ -38,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.Helpers
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
@@ -67,7 +68,7 @@ fun DayViewItemOngoing(
 
     LaunchedEffect(blink) {
         while (true) {
-            delay(500) // Blink every 500ms
+            delay(500)
             blink = blink.not()
         }
     }
@@ -76,7 +77,7 @@ fun DayViewItemOngoing(
     val parsedEndTime: LocalDateTime
 
     item.let {
-        parsedStartTime = parseToLocalDateTime(it.startTime)
+        parsedStartTime = convertStringToLocalDateTime(it.startTime)
         parsedEndTime = LocalDateTime.now()
 
         when (isSelected) {

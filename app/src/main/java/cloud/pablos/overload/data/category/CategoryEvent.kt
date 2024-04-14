@@ -9,6 +9,10 @@ sealed interface CategoryEvent {
 
     data class SetEmoji(val emoji: String) : CategoryEvent
 
+    data class SetGoal1(val goal1: Int) : CategoryEvent
+
+    data class SetGoal2(val goal2: Int) : CategoryEvent
+
     data class SetName(val name: String) : CategoryEvent
 
     data class SetIsDefault(val isDefault: Boolean) : CategoryEvent

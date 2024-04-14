@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "eec8bb3483c07bec27c31bf05a9b56e7",
+    "identityHash": "484ddb3056be6218a18539a4d1875f90",
     "entities": [
       {
         "tableName": "categories",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `color` INTEGER NOT NULL, `emoji` TEXT NOT NULL, `isDefault` INTEGER NOT NULL, `name` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `color` INTEGER NOT NULL, `emoji` TEXT NOT NULL, `goal1` INTEGER NOT NULL, `goal2` INTEGER NOT NULL, `isDefault` INTEGER NOT NULL, `name` TEXT NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -24,6 +24,18 @@
             "fieldPath": "emoji",
             "columnName": "emoji",
             "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goal1",
+            "columnName": "goal1",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goal2",
+            "columnName": "goal2",
+            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -103,7 +115,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'eec8bb3483c07bec27c31bf05a9b56e7')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '484ddb3056be6218a18539a4d1875f90')"
     ]
   }
 }

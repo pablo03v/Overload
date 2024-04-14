@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
@@ -23,7 +24,6 @@ import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
 import cloud.pablos.overload.ui.views.DayScreenDayView
 import cloud.pablos.overload.ui.views.getLocalDate
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -42,7 +42,7 @@ fun DayScreen(
             LocalDate.now().year
         } else {
             itemState.items.minByOrNull { it.startTime }
-                ?.let { parseToLocalDateTime(it.startTime).year }
+                ?.let { convertStringToLocalDateTime(it.startTime).year }
                 ?: LocalDate.now().year
         }
 

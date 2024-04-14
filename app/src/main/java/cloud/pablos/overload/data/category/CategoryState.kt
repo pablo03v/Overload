@@ -10,6 +10,8 @@ data class CategoryState(
     val id: Int = 1,
     val color: Long = Color.Unspecified.value.toLong(),
     val emoji: String = "🕣",
+    val goal1: Int = 0,
+    val goal2: Int = 0,
     val name: String = "Default",
     val isDefault: Boolean = true,
     // --

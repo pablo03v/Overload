@@ -16,12 +16,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -31,16 +29,12 @@ import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.ui.tabs.configurations.OlSharedPreferences
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeletePauseDialog
 import cloud.pablos.overload.ui.tabs.home.HomeTabEditItemDialog
 import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.time.format.DateTimeParseException
-import java.time.temporal.ChronoField
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
 @OptIn(ExperimentalFoundationApi::class)
@@ -52,6 +46,7 @@ fun DayView(
     itemEvent: (ItemEvent) -> Unit,
     date: LocalDate,
 ) {
+    val selectedCategory = categoryState.categories.find { it.id == categoryState.selectedCategory }
     val items = getItemsOfDay(date, categoryState, itemState)
 
     val itemsDesc = items.sortedByDescending { it.startTime }
@@ -59,13 +54,10 @@ fun DayView(
     val deletePauseDialogState = remember { mutableStateOf(false) }
     val editItemDialogState = remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
-    val sharedPreferences = remember { OlSharedPreferences(context) }
+    if (itemsDesc.isNotEmpty() && selectedCategory != null) {
+        val goal1 = selectedCategory.goal1
+        val goal2 = selectedCategory.goal2
 
-    val goalWork by remember { mutableIntStateOf(sharedPreferences.getWorkGoal()) }
-    val goalPause by remember { mutableIntStateOf(sharedPreferences.getPauseGoal()) }
-
-    if (itemsDesc.isNotEmpty()) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -77,20 +69,21 @@ fun DayView(
                             .padding(top = 10.dp, start = 10.dp, end = 10.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    if (goalWork > 0) {
+                    if (goal1 > 0) {
                         Box(
                             modifier = Modifier.weight(1f),
                         ) {
-                            DayViewProgress(goal = goalWork, items = items, isPause = false)
+                            DayViewProgress(category = selectedCategory, goal = goal1, items = items, isPause = false)
                         }
                     }
 
-                    if (goalPause > 0) {
+                    if (goal2 > 0) {
                         Box(
                             modifier = Modifier.weight(1f),
                         ) {
                             DayViewProgress(
-                                goal = goalPause,
+                                category = selectedCategory,
+                                goal = goal2,
                                 items = items,
                                 date = date,
                                 isPause = true,
@@ -235,22 +228,6 @@ fun DayView(
             itemState,
             itemEvent,
         )
-    }
-}
-
-fun parseToLocalDateTime(dateTimeString: String): LocalDateTime {
-    val formatter =
-        DateTimeFormatterBuilder()
-            .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
-            .optionalStart()
-            .appendFraction(ChronoField.MICRO_OF_SECOND, 0, 6, true)
-            .optionalEnd()
-            .toFormatter()
-
-    return try {
-        LocalDateTime.parse(dateTimeString, formatter)
-    } catch (e: DateTimeParseException) {
-        return LocalDateTime.now()
     }
 }
 

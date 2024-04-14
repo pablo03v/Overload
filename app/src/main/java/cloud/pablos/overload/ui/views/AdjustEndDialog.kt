@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
@@ -61,7 +62,7 @@ fun AdjustEndDialog(
 
     val itemsNotToday =
         itemState.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
+            val startTime = convertStringToLocalDateTime(item.startTime)
             extractDate(startTime) != date
         }
     val isOngoingNotToday = itemsNotToday.isNotEmpty() && itemsNotToday.any { it.ongoing }
@@ -70,7 +71,7 @@ fun AdjustEndDialog(
     var selectedTimeText by remember { mutableStateOf("") }
 
     if (isOngoingNotToday && firstOngoingItem != null) {
-        val startTime = parseToLocalDateTime(firstOngoingItem.startTime)
+        val startTime = convertStringToLocalDateTime(firstOngoingItem.startTime)
         var endTime by remember { mutableStateOf(startTime) }
 
         val timePicker =

@@ -36,11 +36,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.TextView
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -71,7 +71,7 @@ fun HomeTabManualDialog(
 
     selectedStart =
         if (itemsForToday.isNotEmpty() && itemsForToday.last().endTime.isNotBlank()) {
-            parseToLocalDateTime(itemsForToday.last().endTime)
+            convertStringToLocalDateTime(itemsForToday.last().endTime)
         } else {
             dateTime
         }
@@ -318,6 +318,7 @@ fun HomeTabManualDialog(
                     itemEvent(ItemEvent.SetEnd(selectedEnd.format(formatter)))
                     itemEvent(ItemEvent.SetOngoing(false))
                     itemEvent(ItemEvent.SetPause(selectedPause))
+                    itemEvent(ItemEvent.SetCategoryId(categoryState.selectedCategory))
                     itemEvent(ItemEvent.SaveItem)
 
                     onClose()

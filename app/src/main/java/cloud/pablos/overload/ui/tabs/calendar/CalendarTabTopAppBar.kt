@@ -14,10 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.TextView
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,7 +32,7 @@ fun CalendarTabTopAppBar(
         if (itemState.items.isEmpty()) {
             LocalDate.now().year
         } else {
-            itemState.items.minByOrNull { it.startTime }?.let { parseToLocalDateTime(it.startTime).year } ?: LocalDate.now().year
+            itemState.items.minByOrNull { it.startTime }?.let { convertStringToLocalDateTime(it.startTime).year } ?: LocalDate.now().year
         }
     val yearsCount = LocalDate.now().year - firstYear
 

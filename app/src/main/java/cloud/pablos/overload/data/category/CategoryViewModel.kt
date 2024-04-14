@@ -42,6 +42,8 @@ class CategoryViewModel(
                 val id = _state.value.id
                 val color = _state.value.color
                 val emoji = _state.value.emoji
+                val goal1 = _state.value.goal1
+                val goal2 = _state.value.goal2
                 val isDefault = _state.value.isDefault
                 val name = _state.value.name
 
@@ -50,6 +52,8 @@ class CategoryViewModel(
                         id = id,
                         color = color,
                         emoji = emoji,
+                        goal1 = goal1,
+                        goal2 = goal2,
                         isDefault = isDefault,
                         name = name,
                     )
@@ -63,6 +67,8 @@ class CategoryViewModel(
                         id = 0,
                         color = convertColorToLong(Color.Unspecified),
                         emoji = "🕣",
+                        goal1 = 0,
+                        goal2 = 0,
                         isDefault = false,
                         name = "",
                     )
@@ -129,6 +135,21 @@ class CategoryViewModel(
                 _state.update {
                     it.copy(
                         isCreateCategoryDialogOpenHome = event.isCreateCategoryDialogOpenHome,
+                    )
+                }
+            }
+
+            is CategoryEvent.SetGoal1 -> {
+                _state.update {
+                    it.copy(
+                        goal1 = event.goal1,
+                    )
+                }
+            }
+            is CategoryEvent.SetGoal2 -> {
+                _state.update {
+                    it.copy(
+                        goal2 = event.goal2,
                     )
                 }
             }

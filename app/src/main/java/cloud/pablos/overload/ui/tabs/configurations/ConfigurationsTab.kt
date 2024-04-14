@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.BugReport
@@ -98,8 +97,6 @@ fun ConfigurationsTab(
         }
 
     val createCategoryDialog = remember { mutableStateOf(false) }
-    val workGoalDialogState = remember { mutableStateOf(false) }
-    val pauseGoalDialogState = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -306,20 +303,6 @@ fun ConfigurationsTab(
                 categoryEvent = categoryEvent,
             )
         }
-
-        if (workGoalDialogState.value) {
-            ConfigurationsTabGoalDialog(
-                onClose = { workGoalDialogState.value = false },
-                isPause = false,
-            )
-        }
-
-        if (pauseGoalDialogState.value) {
-            ConfigurationsTabGoalDialog(
-                onClose = { pauseGoalDialogState.value = false },
-                isPause = true,
-            )
-        }
     }
 }
 
@@ -484,35 +467,30 @@ private fun importJsonData(
                                     categoryId = (itemData["categoryId"] as? Double)?.toInt() ?: 0,
                                 )
 
-                            Log.d("import", "Importing Item: $item")
-
                             val importResult = itemDao.upsertItem(item)
                             if (importResult != Unit) {
                                 allImportsSucceeded = false
                             }
                         }
 
-                        Log.d("import", "Importing categories")
                         val categoriesTable = databaseBackup.data["categories"] ?: emptyList()
                         categoriesTable.forEach { categoriesData ->
-                            Log.d("colorimport", categoriesData["color"].toString())
                             val category =
                                 Category(
                                     id = (categoriesData["id"] as? Double)?.toInt() ?: 0,
                                     color = (categoriesData["color"] as? Double)?.toLong() ?: 0,
                                     emoji = categoriesData["emoji"] as String,
+                                    goal1 = (categoriesData["goal1"] as? Double)?.toInt() ?: 0,
+                                    goal2 = (categoriesData["goal2"] as? Double)?.toInt() ?: 0,
                                     isDefault = categoriesData["isDefault"] as Boolean,
                                     name = categoriesData["name"] as String,
                                 )
-
-                            Log.d("import", "Importing Category: $category")
 
                             val importResult = categoryDao.upsertCategory(category)
                             if (importResult != Unit) {
                                 allImportsSucceeded = false
                             }
                         }
-                        Log.d("import", "Import done")
                     }
 
                     withContext(Dispatchers.Main) {

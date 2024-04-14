@@ -1,4 +1,4 @@
-package cloud.pablos.overload.ui.tabs.configurations
+package cloud.pablos.overload.ui.screens.category
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,13 +26,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.category.Category
+import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.ui.views.TextView
 
 @Composable
-fun ConfigurationsTabGoalDialog(
+fun CategoryScreenGoalDialog(
+    category: Category,
+    categoryEvent: (CategoryEvent) -> Unit,
     onClose: () -> Unit,
     isPause: Boolean,
 ) {
@@ -46,7 +49,7 @@ fun ConfigurationsTabGoalDialog(
     val minFocusRequest = remember { FocusRequester() }
 
     val context = LocalContext.current
-    val sharedPreferences = remember { OlSharedPreferences(context) }
+    // val sharedPreferences = remember { OlSharedPreferences(context) }
 
     LaunchedEffect(Unit) {
         hoursFocusRequest.requestFocus()
@@ -60,9 +63,7 @@ fun ConfigurationsTabGoalDialog(
                     if (isPause) {
                         stringResource(id = R.string.pick_pause_goal)
                     } else {
-                        stringResource(
-                            id = R.string.pick_work_goal,
-                        )
+                        "Set Goal"
                     },
                 fontWeight = FontWeight.Bold,
                 align = TextAlign.Center,
@@ -95,11 +96,12 @@ fun ConfigurationsTabGoalDialog(
             Button(
                 onClick = {
                     onClose.save(
-                        sharedPreferences = sharedPreferences,
                         hours = hours.toIntOrNull(),
                         minutes = minutes.toIntOrNull(),
                         valid = hoursValidator && minValidator,
                         isPause = isPause,
+                        category = category,
+                        categoryEvent = categoryEvent,
                     )
                 },
                 colors =
@@ -149,7 +151,8 @@ fun TimeInput(
 }
 
 private fun (() -> Unit).save(
-    sharedPreferences: OlSharedPreferences,
+    category: Category,
+    categoryEvent: (CategoryEvent) -> Unit,
     hours: Int?,
     minutes: Int?,
     valid: Boolean,
@@ -161,17 +164,31 @@ private fun (() -> Unit).save(
         val goal = (hoursInMin + minutesInMin) * 60 * 1000
 
         if (goal > 0) {
-            when (isPause) {
-                true -> sharedPreferences.savePauseGoal(goal)
-                false -> sharedPreferences.saveWorkGoal(goal)
-            }
+            saveGoal(category, categoryEvent, goal, isPause)
             this()
         }
     }
 }
 
-@Preview
-@Composable
-fun ConfigurationsTabPauseGoalPreview() {
-    ConfigurationsTabGoalDialog(onClose = {}, isPause = true)
+fun saveGoal(
+    category: Category,
+    categoryEvent: (CategoryEvent) -> Unit,
+    goal: Int,
+    isPause: Boolean,
+) {
+    categoryEvent(CategoryEvent.SetId(category.id))
+    categoryEvent(CategoryEvent.SetName(category.name))
+    categoryEvent(CategoryEvent.SetColor(category.color))
+    categoryEvent(CategoryEvent.SetEmoji(category.emoji))
+    categoryEvent(CategoryEvent.SetIsDefault(category.isDefault))
+
+    if (isPause) {
+        categoryEvent(CategoryEvent.SetGoal1(category.goal1))
+        categoryEvent(CategoryEvent.SetGoal2(goal))
+    } else {
+        categoryEvent(CategoryEvent.SetGoal1(goal))
+        categoryEvent(CategoryEvent.SetGoal2(category.goal2))
+    }
+
+    categoryEvent(CategoryEvent.SaveCategory)
 }

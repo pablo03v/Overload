@@ -1,7 +1,7 @@
 package cloud.pablos.overload.ui.screens.day
 
-import android.graphics.drawable.Icon
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -48,6 +48,7 @@ import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
+import cloud.pablos.overload.ui.screens.category.CategoryScreenGoalDialog
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationDescription
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationTitle
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabItem
@@ -74,29 +75,41 @@ fun CategoryScreen(
 
     LaunchedEffect(color, emoji) {
         if (selectedCategory != null) {
-            save(categoryEvent, selectedCategory.id, name.text, convertColorToLong(color), emoji, selectedCategory.isDefault)
+            save(
+                categoryEvent,
+                selectedCategory.id,
+                name.text,
+                selectedCategory.goal1,
+                selectedCategory.goal2,
+                convertColorToLong(color),
+                emoji,
+                selectedCategory.isDefault,
+            )
         }
     }
 
-    Scaffold(
-        topBar = {
-            OverloadTopAppBar(
-                selectedDestination = OverloadRoute.CATEGORY,
-                categoryState = categoryState,
-                itemState = itemState,
-                itemEvent = itemEvent,
-            )
-        },
-    ) { paddingValues ->
-        LazyColumn(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(6.dp),
-        ) {
-            if (selectedCategory != null) {
+    val goalDialogState = remember { mutableStateOf(false) }
+    val pauseGoalDialogState = remember { mutableStateOf(false) }
+
+    if (selectedCategory != null) {
+        Scaffold(
+            topBar = {
+                OverloadTopAppBar(
+                    selectedDestination = OverloadRoute.CATEGORY,
+                    categoryState = categoryState,
+                    itemState = itemState,
+                    itemEvent = itemEvent,
+                )
+            },
+        ) { paddingValues ->
+            LazyColumn(
+                modifier =
+                    Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp),
+            ) {
                 item {
                     ConfigurationsTabItem(title = "Name")
                 }
@@ -131,6 +144,8 @@ fun CategoryScreen(
                                             categoryEvent,
                                             selectedCategory.id,
                                             name.text,
+                                            selectedCategory.goal1,
+                                            selectedCategory.goal2,
                                             convertColorToLong(color),
                                             emoji,
                                             selectedCategory.isDefault,
@@ -224,7 +239,7 @@ fun CategoryScreen(
                             Modifier
                                 .clip(shape = RoundedCornerShape(15.dp))
                                 .clickable {
-                                    // workGoalDialogState.value = true
+                                    goalDialogState.value = true
                                 }
                                 .clearAndSetSemantics {
                                     contentDescription = itemLabel
@@ -259,7 +274,7 @@ fun CategoryScreen(
                                 .padding(bottom = 16.dp)
                                 .clip(shape = RoundedCornerShape(15.dp))
                                 .clickable {
-                                    // pauseGoalDialogState.value = true
+                                    pauseGoalDialogState.value = true
                                 }
                                 .clearAndSetSemantics {
                                     contentDescription = itemLabel
@@ -285,6 +300,24 @@ fun CategoryScreen(
                 }
             }
         }
+
+        if (goalDialogState.value) {
+            CategoryScreenGoalDialog(
+                onClose = { goalDialogState.value = false },
+                isPause = false,
+                category = selectedCategory,
+                categoryEvent = categoryEvent,
+            )
+        }
+
+        if (pauseGoalDialogState.value) {
+            CategoryScreenGoalDialog(
+                onClose = { pauseGoalDialogState.value = false },
+                isPause = true,
+                category = selectedCategory,
+                categoryEvent = categoryEvent,
+            )
+        }
     }
 }
 
@@ -292,6 +325,8 @@ fun save(
     categoryEvent: (CategoryEvent) -> Unit,
     id: Int,
     name: String,
+    goal1: Int,
+    goal2: Int,
     color: Long,
     emoji: String,
     isDefault: Boolean,
@@ -299,7 +334,11 @@ fun save(
     categoryEvent(CategoryEvent.SetId(id))
     categoryEvent(CategoryEvent.SetName(name))
     categoryEvent(CategoryEvent.SetColor(color))
+    categoryEvent(CategoryEvent.SetGoal1(goal1))
+    categoryEvent(CategoryEvent.SetGoal2(goal2))
     categoryEvent(CategoryEvent.SetEmoji(emoji))
     categoryEvent(CategoryEvent.SetIsDefault(isDefault))
     categoryEvent(CategoryEvent.SaveCategory)
+
+    Log.d("category save", "yeeeeah weird")
 }

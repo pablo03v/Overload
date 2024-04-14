@@ -12,13 +12,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.extractDate
 import cloud.pablos.overload.ui.views.getLocalDate
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import java.time.LocalDate
 
 @Composable
@@ -106,7 +106,7 @@ fun getItemsOfDay(
     itemState: ItemState,
 ): List<Item> {
     return itemState.items.filter { item ->
-        val startTime = parseToLocalDateTime(item.startTime)
+        val startTime = convertStringToLocalDateTime(item.startTime)
         val categoryId = categoryState.selectedCategory
 
         categoryId == item.categoryId &&

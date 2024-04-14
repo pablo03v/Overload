@@ -29,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.Helpers
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
@@ -54,8 +55,8 @@ fun DayViewItemNotOngoing(
     val parsedEndTime: LocalDateTime
 
     item.let {
-        parsedStartTime = parseToLocalDateTime(it.startTime)
-        parsedEndTime = parseToLocalDateTime(it.endTime)
+        parsedStartTime = convertStringToLocalDateTime(it.startTime)
+        parsedEndTime = convertStringToLocalDateTime(it.endTime)
         when (isSelected) {
             true -> {
                 when (itemState.isDeletingHome) {

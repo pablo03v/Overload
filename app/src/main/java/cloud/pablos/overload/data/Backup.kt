@@ -25,6 +25,8 @@ class Backup {
                         "id" to category.id,
                         "color" to category.color,
                         "emoji" to category.emoji,
+                        "goal1" to category.goal1,
+                        "goal2" to category.goal2,
                         "isDefault" to category.isDefault,
                         "name" to category.name,
                     )

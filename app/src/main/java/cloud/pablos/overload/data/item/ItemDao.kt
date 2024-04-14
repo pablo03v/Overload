@@ -6,11 +6,11 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import cloud.pablos.overload.data.Converters.Companion.convertColorToLong
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import cloud.pablos.overload.ui.views.extractDate
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -47,6 +47,8 @@ fun fabPress(
         categoryEvent(CategoryEvent.SetId(1))
         categoryEvent(CategoryEvent.SetName("Default"))
         categoryEvent(CategoryEvent.SetColor(convertColorToLong(Color(204, 230, 255))))
+        categoryEvent(CategoryEvent.SetGoal1(0))
+        categoryEvent(CategoryEvent.SetGoal2(0))
         categoryEvent(CategoryEvent.SetEmoji("🕣"))
         categoryEvent(CategoryEvent.SetIsDefault(true))
         categoryEvent(CategoryEvent.SaveCategory)
@@ -71,7 +73,7 @@ fun startOrStop(
 
     val itemsNotToday =
         itemState.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
+            val startTime = convertStringToLocalDateTime(item.startTime)
             extractDate(startTime) != date
         }
     val isOngoingNotToday = itemsNotToday.isNotEmpty() && itemsNotToday.any { it.ongoing }

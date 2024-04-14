@@ -11,6 +11,8 @@ data class Category(
     @PrimaryKey(autoGenerate = true) val id: Int = 1,
     val color: Long,
     val emoji: String,
+    val goal1: Int,
+    val goal2: Int,
     val isDefault: Boolean,
     val name: String,
 )

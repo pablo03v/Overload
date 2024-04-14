@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
@@ -53,7 +54,7 @@ fun SpreadAcrossDaysDialog(
 
     val itemsNotToday =
         itemState.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
+            val startTime = convertStringToLocalDateTime(item.startTime)
             extractDate(startTime) != date
         }
     val isOngoingNotToday = itemsNotToday.isNotEmpty() && itemsNotToday.any { it.ongoing }
@@ -157,7 +158,7 @@ private fun (() -> Unit).save(
 ) {
     val currentDate = LocalDate.now()
 
-    val startTime = parseToLocalDateTime(item.startTime)
+    val startTime = convertStringToLocalDateTime(item.startTime)
     val startDate = startTime.toLocalDate()
     var dateIterator = startTime.toLocalDate()
 
@@ -166,7 +167,7 @@ private fun (() -> Unit).save(
         val newStartTime = if (dateIterator == startDate) startTime else LocalDateTime.of(dateIterator, LocalTime.MIDNIGHT)
         val newEndTime =
             if (dateIterator == currentDate) {
-                parseToLocalDateTime(
+                convertStringToLocalDateTime(
                     LocalDateTime.now().toString(),
                 )
             } else {

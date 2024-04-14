@@ -1,6 +1,10 @@
 package cloud.pablos.overload.data
 
 import androidx.compose.ui.graphics.Color
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatterBuilder
+import java.time.format.DateTimeParseException
+import java.time.temporal.ChronoField
 
 class Converters {
     companion object {
@@ -18,6 +22,22 @@ class Converters {
             val green = (value shr 8 and 0xFF).toFloat() / 255f
             val blue = (value and 0xFF).toFloat() / 255f
             return Color(red, green, blue, alpha)
+        }
+
+        fun convertStringToLocalDateTime(dateTimeString: String): LocalDateTime {
+            val formatter =
+                DateTimeFormatterBuilder()
+                    .appendPattern("yyyy-MM-dd'T'HH:mm:ss")
+                    .optionalStart()
+                    .appendFraction(ChronoField.MICRO_OF_SECOND, 0, 6, true)
+                    .optionalEnd()
+                    .toFormatter()
+
+            return try {
+                LocalDateTime.parse(dateTimeString, formatter)
+            } catch (e: DateTimeParseException) {
+                return LocalDateTime.now()
+            }
         }
     }
 }
