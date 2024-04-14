@@ -349,6 +349,7 @@ class TopBarState private constructor() {
 fun OverloadTopAppBar(
     selectedDestination: String,
     categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
@@ -405,7 +406,7 @@ fun OverloadTopAppBar(
                 }
 
                 TopBarState.Calendar -> {
-                    CalendarTabTopAppBar(itemState, itemEvent)
+                    CalendarTabTopAppBar(categoryState, categoryEvent, itemState, itemEvent)
                 }
 
                 TopBarState.Configurations -> {

@@ -384,6 +384,7 @@ private fun OverloadNavHost(
             CalendarTab(
                 contentType = contentType,
                 categoryState = categoryState,
+                categoryEvent = categoryEvent,
                 itemState = itemState,
                 itemEvent = itemEvent,
                 onNavigate = { navController.navigate(OverloadRoute.DAY) },
@@ -400,6 +401,7 @@ private fun OverloadNavHost(
         composable(OverloadRoute.DAY) {
             DayScreen(
                 categoryState = categoryState,
+                categoryEvent = categoryEvent,
                 itemState = itemState,
                 itemEvent = itemEvent,
             )

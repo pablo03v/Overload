@@ -103,6 +103,7 @@ fun ConfigurationsTab(
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.CONFIGURATIONS,
                 categoryState = categoryState,
+                categoryEvent = categoryEvent,
                 itemState = itemState,
                 itemEvent = itemEvent,
             )

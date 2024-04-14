@@ -97,6 +97,7 @@ fun CategoryScreen(
                 OverloadTopAppBar(
                     selectedDestination = OverloadRoute.CATEGORY,
                     categoryState = categoryState,
+                    categoryEvent = categoryEvent,
                     itemState = itemState,
                     itemEvent = itemEvent,
                 )

@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
@@ -49,6 +50,7 @@ import java.time.temporal.ChronoUnit
 fun CalendarTab(
     contentType: OverloadContentType,
     categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
@@ -66,6 +68,7 @@ fun CalendarTab(
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.CALENDAR,
                 categoryState = categoryState,
+                categoryEvent = categoryEvent,
                 itemState = itemState,
                 itemEvent = itemEvent,
             )
@@ -87,6 +90,7 @@ fun CalendarTab(
                                 }
 
                                 YearView(
+                                    categoryState = categoryState,
                                     itemEvent = itemEvent,
                                     date = getLocalDate(itemState.selectedDayCalendar),
                                     year = itemState.selectedYearCalendar,
@@ -185,6 +189,7 @@ fun CalendarTab(
                         }
 
                         YearView(
+                            categoryState = categoryState,
                             itemEvent = itemEvent,
                             date = getLocalDate(itemState.selectedDayCalendar),
                             year = itemState.selectedYearCalendar,

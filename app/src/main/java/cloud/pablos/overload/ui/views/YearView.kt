@@ -27,6 +27,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.ui.tabs.home.getFormattedDate
 import java.time.LocalDate
@@ -39,6 +41,7 @@ import java.util.Locale
 fun YearView(
     date: LocalDate,
     year: Int,
+    categoryState: CategoryState,
     itemEvent: (ItemEvent) -> Unit,
     bottomPadding: Dp = 0.dp,
     onNavigate: () -> Unit = {},
@@ -80,7 +83,7 @@ fun YearView(
                             if (isLastWeekInLastMonth) bottomPadding else 0.dp,
                         ),
                     ) {
-                        WeekRow(firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, itemEvent, onNavigate)
+                        WeekRow(firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, categoryState, itemEvent, onNavigate)
                     }
                 }
             }
@@ -107,6 +110,7 @@ fun WeekRow(
     weekOfMonth: Int,
     date: LocalDate,
     highlightSelectedDay: Boolean = false,
+    categoryState: CategoryState,
     itemEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {
@@ -143,6 +147,7 @@ fun WeekRow(
         while (iterationDate < endDayOfWeek) {
             val (backgroundColor, borderColor) =
                 getColorOfDay(
+                    categoryState = categoryState,
                     date = iterationDate,
                     firstDayOfMonth = firstDayOfMonth,
                     selected = date == iterationDate,
@@ -198,7 +203,7 @@ fun DayCell(
                     interactionSource = remember { MutableInteractionSource() },
                 )
                 .clip(CircleShape)
-                .border(2.dp, borderColor, CircleShape),
+                .border(3.dp, borderColor, CircleShape),
         contentAlignment = Alignment.Center,
     ) {
         TextView(
@@ -217,12 +222,13 @@ fun EmptyDayCell() {
                 .requiredSize(36.dp)
                 .background(Color.Transparent, shape = CircleShape)
                 .clip(CircleShape)
-                .border(2.dp, Color.Transparent, CircleShape),
+                .border(3.dp, Color.Transparent, CircleShape),
     )
 }
 
 @Composable
 fun getColorOfDay(
+    categoryState: CategoryState,
     date: LocalDate,
     firstDayOfMonth: LocalDate,
     selected: Boolean,
@@ -242,7 +248,7 @@ fun getColorOfDay(
         when (highlightSelectedDay) {
             true -> {
                 if (selected) {
-                    MaterialTheme.colorScheme.primary
+                    decideBackground(categoryState)
                 } else {
                     Color.Transparent
                 }
@@ -252,7 +258,7 @@ fun getColorOfDay(
                 if (
                     date == LocalDate.now()
                 ) {
-                    MaterialTheme.colorScheme.primary
+                    decideBackground(categoryState)
                 } else {
                     Color.Transparent
                 }

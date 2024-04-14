@@ -82,6 +82,7 @@ fun HomeTab(
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.HOME,
                 categoryState = categoryState,
+                categoryEvent = categoryEvent,
                 itemState = itemState,
                 itemEvent = itemEvent,
             )

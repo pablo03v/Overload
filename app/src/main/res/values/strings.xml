@@ -114,6 +114,7 @@ Thanks for patience!</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">arrow forward from start to end</string>
     <string name="select_year">Select Year</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Translate</string>
     <string name="translate_descr">Want to translate the app? Thanks!</string>
     <string name="adjust">Adjust</string>

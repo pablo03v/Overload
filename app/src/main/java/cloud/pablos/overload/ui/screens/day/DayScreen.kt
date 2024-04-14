@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
@@ -32,6 +33,7 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun DayScreen(
     categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
@@ -82,6 +84,7 @@ fun DayScreen(
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.DAY,
                 categoryState = categoryState,
+                categoryEvent = categoryEvent,
                 itemState = itemState,
                 itemEvent = itemEvent,
             )
