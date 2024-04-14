@@ -1,3 +1,17 @@
+/*
+ * This portion of code is derived from the Read You app, which is licensed under GNU GPLv3.
+ * Original copyright (c) 2022 Ashinch.
+ *
+ * The portions of code are used under the terms of the GNU GPLv3 license.
+ * See https://www.gnu.org/licenses/gpl-3.0.html for more details.
+ *
+ * Modifications:
+ * - colors
+ * - size
+ * - layout
+ * - content
+ */
+
 package cloud.pablos.overload.ui.tabs.configurations
 
 import androidx.compose.animation.Animatable
