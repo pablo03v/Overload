@@ -27,7 +27,7 @@ import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 
 @Composable
-fun ChooseCategoryDialog(
+fun SwitchCategoryDialog(
     categoryState: CategoryState,
     categoryEvent: (CategoryEvent) -> Unit,
     onClose: () -> Unit,

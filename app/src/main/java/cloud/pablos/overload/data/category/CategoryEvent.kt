@@ -24,4 +24,6 @@ sealed interface CategoryEvent {
     data class SetSelectedCategory(val selectedCategory: Int) : CategoryEvent
 
     data class SetIsCreateCategoryDialogOpenHome(val isCreateCategoryDialogOpenHome: Boolean) : CategoryEvent
+
+    data class SetIsSwitchCategoryDialogOpenHome(val isSwitchCategoryDialogOpenHome: Boolean) : CategoryEvent
 }

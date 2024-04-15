@@ -39,7 +39,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
-import cloud.pablos.overload.data.Helpers
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemState
@@ -59,8 +60,8 @@ fun DayViewItemOngoing(
     showDate: Boolean = false,
     hideEnd: Boolean = false,
 ) {
-    val backgroundColorCategory = Helpers.decideBackground(categoryState)
-    val foregroundColorCategory = Helpers.decideForeground(backgroundColorCategory)
+    val backgroundColorCategory = decideBackground(categoryState)
+    val foregroundColorCategory = decideForeground(backgroundColorCategory)
 
     var backgroundColor: Color
     var foregroundColor: Color

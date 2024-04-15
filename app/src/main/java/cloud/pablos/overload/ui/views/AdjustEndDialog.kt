@@ -39,6 +39,8 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
 import cloud.pablos.overload.data.Helpers.Companion.getItemsPastDays
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
@@ -55,6 +57,9 @@ fun AdjustEndDialog(
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
+    val backgroundColor = decideBackground(categoryState)
+    val foregroundColor = decideForeground(backgroundColor)
+
     val context = LocalContext.current
     val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#spread-acorss-days".toUri()
 
@@ -169,8 +174,8 @@ fun AdjustEndDialog(
                     },
                     colors =
                         ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            containerColor = backgroundColor,
+                            contentColor = foregroundColor,
                         ),
                 ) {
                     TextView(stringResource(R.string.save))

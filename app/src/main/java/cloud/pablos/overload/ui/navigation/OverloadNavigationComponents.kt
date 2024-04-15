@@ -92,7 +92,7 @@ fun OverloadNavigationRail(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     AnimatedVisibility(
-                        visible = true, // state.isDeletingHome.not(),
+                        visible = true,
                     ) {
                         NavigationRailItem(
                             selected = false,

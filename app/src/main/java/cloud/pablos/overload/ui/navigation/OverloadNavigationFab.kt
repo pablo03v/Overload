@@ -163,7 +163,7 @@ fun OverloadNavigationFab(
                 SmallFloatingActionButton(
                     onClick = {
                         itemEvent(ItemEvent.SetIsFabOpen(false))
-                        categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
+                        categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
                         onDrawerClicked()
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,

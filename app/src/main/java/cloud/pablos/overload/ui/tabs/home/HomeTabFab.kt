@@ -34,8 +34,8 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
-import cloud.pablos.overload.data.Helpers
 import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
 import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
@@ -55,8 +55,8 @@ fun HomeTabFab(
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
-    val backgroundColor = Helpers.decideBackground(categoryState)
-    val foregroundColor = Helpers.decideForeground(backgroundColor)
+    val backgroundColor = decideBackground(categoryState)
+    val foregroundColor = decideForeground(backgroundColor)
 
     val date = LocalDate.now()
 
@@ -116,7 +116,7 @@ fun HomeTabFab(
                     SmallFloatingActionButton(
                         onClick = {
                             itemEvent(ItemEvent.SetIsFabOpen(false))
-                            categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
+                            categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
                         },
                         containerColor = MaterialTheme.colorScheme.primaryContainer,
                         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,

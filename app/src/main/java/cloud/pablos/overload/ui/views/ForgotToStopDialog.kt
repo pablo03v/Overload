@@ -27,13 +27,20 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 
 @Composable
 fun ForgotToStopDialog(
     onClose: () -> Unit,
+    categoryState: CategoryState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
+    val backgroundColor = decideBackground(categoryState)
+    val foregroundColor = decideForeground(backgroundColor)
+
     val context = LocalContext.current
     val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#spread-acorss-days".toUri()
 
@@ -90,8 +97,8 @@ fun ForgotToStopDialog(
                 },
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     ),
                 modifier =
                     Modifier
@@ -109,8 +116,8 @@ fun ForgotToStopDialog(
                 },
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        containerColor = backgroundColor,
+                        contentColor = foregroundColor,
                     ),
                 modifier = Modifier.fillMaxWidth(),
             ) {

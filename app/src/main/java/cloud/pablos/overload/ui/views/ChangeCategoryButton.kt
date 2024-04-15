@@ -10,7 +10,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import cloud.pablos.overload.data.Helpers
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
 import cloud.pablos.overload.data.Helpers.Companion.getSelectedCategory
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
@@ -27,8 +28,8 @@ fun ChangeCategoryButton(
     val selectedCategory = getSelectedCategory(categoryState)
 
     if (categoriesCount > 1 && selectedCategory != null) {
-        val backgroundColor = Helpers.decideBackground(categoryState)
-        val foregroundColor = Helpers.decideForeground(backgroundColor)
+        val backgroundColor = decideBackground(categoryState)
+        val foregroundColor = decideForeground(backgroundColor)
 
         Button(
             onClick = { categoryDialogState.value = true },
@@ -42,7 +43,7 @@ fun ChangeCategoryButton(
             TextView(selectedCategory.emoji)
         }
         if (categoryDialogState.value) {
-            ChooseCategoryDialog(
+            SwitchCategoryDialog(
                 categoryState,
                 categoryEvent,
                 onClose = { categoryDialogState.value = false },

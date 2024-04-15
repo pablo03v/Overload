@@ -153,6 +153,14 @@ class CategoryViewModel(
                     )
                 }
             }
+
+            is CategoryEvent.SetIsSwitchCategoryDialogOpenHome -> {
+                _state.update {
+                    it.copy(
+                        isSwitchCategoryDialogOpenHome = event.isSwitchCategoryDialogOpenHome,
+                    )
+                }
+            }
         }
     }
 }

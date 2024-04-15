@@ -30,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
-import cloud.pablos.overload.data.Helpers
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -39,6 +39,7 @@ import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabCreateCategoryDialog
 import cloud.pablos.overload.ui.utils.OverloadNavigationType
+import cloud.pablos.overload.ui.views.SwitchCategoryDialog
 import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -55,7 +56,7 @@ fun HomeTab(
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
-    val backgroundColor = Helpers.decideBackground(categoryState)
+    val backgroundColor = decideBackground(categoryState)
 
     val pagerState =
         rememberPagerState(
@@ -151,6 +152,16 @@ fun HomeTab(
                 categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(false))
             },
             categoryEvent,
+        )
+    }
+
+    if (categoryState.isSwitchCategoryDialogOpenHome) {
+        SwitchCategoryDialog(
+            categoryState,
+            categoryEvent,
+            onClose = {
+                categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(false))
+            },
         )
     }
 }

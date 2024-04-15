@@ -330,6 +330,7 @@ fun OverloadAppContent(
     if (forgotDialogState) {
         ForgotToStopDialog(
             onClose = { itemEvent(ItemEvent.SetForgotToStopDialogShown(false)) },
+            categoryState,
             itemEvent,
         )
     }
