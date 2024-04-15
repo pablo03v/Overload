@@ -50,6 +50,7 @@
     <string name="calendar">Kalender</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfigurationen</string>
+    <string name="categories">Kategorien</string>
     <string name="goals">Ziele</string>
     <string name="work">Arbeit</string>
     <string name="work_goal_descr">Setze für die Arbeit ein Ziel</string>

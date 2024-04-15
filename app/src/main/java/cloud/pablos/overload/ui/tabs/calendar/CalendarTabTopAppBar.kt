@@ -1,40 +1,32 @@
 package cloud.pablos.overload.ui.tabs.calendar
 
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
+import cloud.pablos.overload.ui.views.ChangeCategoryButton
+import cloud.pablos.overload.ui.views.ChangeYearButton
 import cloud.pablos.overload.ui.views.TextView
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
-import java.time.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalendarTabTopAppBar(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
-    val yearDialogState = remember { mutableStateOf(false) }
-
-    val firstYear = if (state.items.isEmpty()) {
-        LocalDate.now().year
-    } else {
-        state.items.minByOrNull { it.startTime }?.let { parseToLocalDateTime(it.startTime).year } ?: LocalDate.now().year
-    }
-    val yearsCount = LocalDate.now().year - firstYear
-
     Surface(
         tonalElevation = NavigationBarDefaults.Elevation,
         color = MaterialTheme.colorScheme.background,
@@ -47,21 +39,8 @@ fun CalendarTabTopAppBar(
                 )
             },
             actions = {
-                if (yearsCount > 0) {
-                    Button(
-                        onClick = { yearDialogState.value = true },
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    ) {
-                        TextView(state.selectedYearCalendar.toString())
-                    }
-                    if (yearDialogState.value) {
-                        CalendarTabYearDialog(
-                            firstYear = firstYear,
-                            onEvent = onEvent,
-                            onClose = { yearDialogState.value = false },
-                        )
-                    }
-                }
+                ChangeYearButton(itemState, itemEvent)
+                ChangeCategoryButton(categoryState, categoryEvent)
             },
         )
     }

@@ -20,11 +20,11 @@ import cloud.pablos.overload.data.item.ItemState
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeleteTopAppBar(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     BackHandler {
-        onEvent(ItemEvent.SetIsDeletingHome(false))
+        itemEvent(ItemEvent.SetIsDeletingHome(false))
     }
 
     Surface(
@@ -34,7 +34,7 @@ fun DeleteTopAppBar(
         TopAppBar(
             title = {
                 TextView(
-                    text = state.selectedItemsHome.size.toString() + " " + stringResource(id = R.string.itemCount_selected),
+                    text = itemState.selectedItemsHome.size.toString() + " " + stringResource(id = R.string.itemCount_selected),
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 )
             },
@@ -45,7 +45,7 @@ fun DeleteTopAppBar(
                 ),
             actions = {
                 IconButton(onClick = {
-                    onEvent(ItemEvent.SetIsDeletingHome(false))
+                    itemEvent(ItemEvent.SetIsDeletingHome(false))
                 }) {
                     Icon(
                         imageVector = Icons.Filled.Close,

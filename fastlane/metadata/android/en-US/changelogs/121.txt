@@ -1,7 +1,0 @@
-- code optimisations
-- fix issue that would not show the year switcher
-- fix low contrast
-- fix issues when importing backups
-- adds dutch translations by @Vistaus - thanks
-- adds polish translations by @mondstern - thanks
-- adds russian translations by @0que - thanks

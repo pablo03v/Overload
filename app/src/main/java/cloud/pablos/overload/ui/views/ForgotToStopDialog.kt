@@ -27,15 +27,22 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 
 @Composable
 fun ForgotToStopDialog(
     onClose: () -> Unit,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
+    val backgroundColor = decideBackground(categoryState)
+    val foregroundColor = decideForeground(backgroundColor)
+
     val context = LocalContext.current
-    val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#spread-acorss-days".toUri()
+    val learnMoreLink = "https://github.com/pabloscloud/Overload?tab=readme-ov-file#why-does-the-app-annoy-me-with-a-popup-to-adjust-the-end".toUri()
 
     AlertDialog(
         onDismissRequest = onClose,
@@ -68,7 +75,11 @@ fun ForgotToStopDialog(
                 val openLinkStr = stringResource(id = R.string.open_link_with)
                 ClickableText(
                     text = AnnotatedString(stringResource(id = R.string.learn_more)),
-                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center),
+                    style =
+                        MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center,
+                        ),
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, learnMoreLink)
                         val chooserIntent = Intent.createChooser(intent, openLinkStr)
@@ -81,16 +92,18 @@ fun ForgotToStopDialog(
         confirmButton = {
             Button(
                 onClick = {
-                    onEvent(ItemEvent.SetSpreadAcrossDaysDialogShown(true))
+                    itemEvent(ItemEvent.SetSpreadAcrossDaysDialogShown(true))
                     onClose()
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    ),
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
             ) {
                 TextView(stringResource(R.string.spread_across_days))
             }
@@ -98,13 +111,14 @@ fun ForgotToStopDialog(
         dismissButton = {
             Button(
                 onClick = {
-                    onEvent(ItemEvent.SetAdjustEndDialogShown(true))
+                    itemEvent(ItemEvent.SetAdjustEndDialogShown(true))
                     onClose()
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                ),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = backgroundColor,
+                        contentColor = foregroundColor,
+                    ),
                 modifier = Modifier.fillMaxWidth(),
             ) {
                 TextView(stringResource(id = R.string.adjust))

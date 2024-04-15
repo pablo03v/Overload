@@ -38,6 +38,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemState
 import kotlinx.coroutines.delay
@@ -50,18 +54,22 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun DayViewItemOngoing(
     item: Item,
+    categoryState: CategoryState,
+    itemState: ItemState,
     isSelected: Boolean = false,
     showDate: Boolean = false,
     hideEnd: Boolean = false,
-    state: ItemState,
 ) {
+    val backgroundColorCategory = decideBackground(categoryState)
+    val foregroundColorCategory = decideForeground(backgroundColorCategory)
+
     var backgroundColor: Color
     var foregroundColor: Color
     var blink by remember { mutableStateOf(true) }
 
     LaunchedEffect(blink) {
         while (true) {
-            delay(500) // Blink every 500ms
+            delay(500)
             blink = blink.not()
         }
     }
@@ -70,12 +78,12 @@ fun DayViewItemOngoing(
     val parsedEndTime: LocalDateTime
 
     item.let {
-        parsedStartTime = parseToLocalDateTime(it.startTime)
+        parsedStartTime = convertStringToLocalDateTime(it.startTime)
         parsedEndTime = LocalDateTime.now()
 
         when (isSelected) {
             true -> {
-                when (state.isDeletingHome) {
+                when (itemState.isDeletingHome) {
                     true -> {
                         backgroundColor = MaterialTheme.colorScheme.errorContainer
                         foregroundColor = MaterialTheme.colorScheme.onErrorContainer
@@ -96,8 +104,8 @@ fun DayViewItemOngoing(
                     }
 
                     false -> {
-                        backgroundColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        foregroundColor = MaterialTheme.colorScheme.surfaceVariant
+                        backgroundColor = backgroundColorCategory
+                        foregroundColor = foregroundColorCategory
                     }
                 }
             }
