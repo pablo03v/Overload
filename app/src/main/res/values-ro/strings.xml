@@ -50,6 +50,7 @@
     <string name="calendar">Calendarul</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Configurații</string>
+    <string name="categories">Categories</string>
     <string name="goals">Obiective</string>
     <string name="work">Muncă</string>
     <string name="work_goal_descr">Stabiliți un obiectiv de lucru</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Import</string>
     <string name="import_descr">Importați dintr-o copie de rezervă</string>
-    <string name="import_backup">Import Backup</string>
-    <string name="import_backup_descr">Pentru a importa date în aplicație, vă rugăm să folosiți Sharesheet din alte aplicații. Acest lucru permite aplicației să acceseze în siguranță datele partajate și să le importe în baza dvs.</string>
     <string name="import_success">Copie de siguranță importată cu succes</string>
     <string name="import_failure">Importul copiei de rezervă a eșuat</string>
     <string name="analytics">analiză</string>
@@ -101,18 +100,17 @@ Frecvență - Cât de des apare această eroare?\n
 Vă mulțumim pentru răbdare!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Salvați</string>
-    <string name="pick_work_goal">Setați obiectivul de lucru</string>
     <string name="hours">ore</string>
     <string name="minutes">minute</string>
     <string name="cancel">Anulează</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
     <string name="pick_pause_goal">Setați obiectivul pauzei</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Muncă rămasă</string>
     <string name="pause_left">Pauză la stânga</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">săgeată înainte care descrie direcția ambelor timpi de la început până la sfârșit</string>
     <string name="select_year">Selectați anul</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Traducere</string>
     <string name="translate_descr">Doriți să traduceți aplicația? Vă mulțumim!</string>
     <string name="adjust">Ajustați</string>
@@ -131,4 +129,7 @@ Vă mulțumim pentru răbdare!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>
