@@ -5,10 +5,12 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.shrinkOut
@@ -44,7 +46,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavHostController
@@ -68,6 +69,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun ConfigurationsTab(
     categoryState: CategoryState,
@@ -165,7 +167,7 @@ fun ConfigurationsTab(
 
             // Categories Divider
             item {
-                hDivider()
+                HoDivider()
             }
 
             // Analytics Title
@@ -203,7 +205,7 @@ fun ConfigurationsTab(
 
             // Analytics Divider
             item {
-                hDivider()
+                HoDivider()
             }
 
             // Storage Title
@@ -231,7 +233,7 @@ fun ConfigurationsTab(
 
             // Storage Divider
             item {
-                hDivider()
+                HoDivider()
             }
 
             // About Title
@@ -281,7 +283,7 @@ fun ConfigurationsTab(
 
             // About Divider
             item {
-                hDivider()
+                HoDivider()
             }
 
             // Footer
@@ -604,24 +606,12 @@ fun ConfigurationDescription(text: String) {
 }
 
 @Composable
-fun hDivider() {
+fun HoDivider() {
     HorizontalDivider(modifier = Modifier.padding(top = 20.dp))
 }
 
 class OlSharedPreferences(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("ol_prefs", Context.MODE_PRIVATE)
-
-    fun saveWorkGoal(goal: Int) {
-        sharedPreferences.edit { putInt("workGoal", goal) }
-    }
-
-    fun savePauseGoal(goal: Int) {
-        sharedPreferences.edit { putInt("pauseGoal", goal) }
-    }
-
-    fun getWorkGoal(): Int = sharedPreferences.getInt("workGoal", 0)
-
-    fun getPauseGoal(): Int = sharedPreferences.getInt("pauseGoal", 0)
 }
 
 fun restartApp(context: Context) {

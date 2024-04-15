@@ -1,4 +1,4 @@
-package cloud.pablos.overload.ui.screens.day
+package cloud.pablos.overload.ui.screens.category
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -22,7 +22,6 @@ import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
-import cloud.pablos.overload.ui.screens.category.CategoryScreenDeleteCategoryDialog
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable

@@ -84,12 +84,8 @@ I used portions of the code of the lovely material you style RSS reader [ReadYou
 
 ## FAQ
 
-### How do I import a backup?
+### How do I import a .csv backup?
 Open your files app, choose the backup file, and locate the share icon or text. Tapping this icon will bring up a menu displaying various apps for sharing. From the list, select Overload to initiate the import. Wait until the import is finished, indicated by a completion message.
-
-### Why does Overload rely on the Systems Sharesheet to import a backup?
-Overload utilises the Systems Sharesheet for importing backups instead of requesting broad access to all files on your device. This approach avoids the need to seek permissions that could undermine trust in the project. Moreover, Overload's reliance on the Sharesheet ensures that the app only gains access to the specific file it requires, eliminating the necessity for extensive permissions.
-
 
 ### What are ongoing pauses?
 By showing the duration between the last item and the current time you can determine how long you stopped or paused working since then. You can plan how much longer your pause is at any given moment as the duration updates in real time.

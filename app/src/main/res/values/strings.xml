@@ -62,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Import</string>
     <string name="import_descr">Import from a backup</string>
-    <string name="import_backup">Import Backup</string>
-    <string name="import_backup_descr">To import data into the app, please use the Sharesheet from other apps. This allows the app to securely access the shared data and import it into your database.</string>
     <string name="import_success">Backup successfully imported</string>
     <string name="import_failure">Importing the backup failed</string>
     <string name="analytics">analytics</string>
@@ -102,14 +100,12 @@ Frequency - How often does this crash occur?\n
 Thanks for patience!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Save</string>
-    <string name="pick_work_goal">Set Work Goal</string>
     <string name="hours">hours</string>
     <string name="minutes">minutes</string>
     <string name="cancel">Cancel</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
     <string name="pick_pause_goal">Set Pause Goal</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Work left</string>
     <string name="pause_left">Pause left</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">arrow forward from start to end</string>

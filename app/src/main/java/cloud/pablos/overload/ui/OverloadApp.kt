@@ -46,7 +46,7 @@ import cloud.pablos.overload.ui.navigation.OverloadNavigationActions
 import cloud.pablos.overload.ui.navigation.OverloadNavigationRail
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopLevelDestination
-import cloud.pablos.overload.ui.screens.day.CategoryScreen
+import cloud.pablos.overload.ui.screens.category.CategoryScreen
 import cloud.pablos.overload.ui.screens.day.DayScreen
 import cloud.pablos.overload.ui.tabs.calendar.CalendarTab
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab

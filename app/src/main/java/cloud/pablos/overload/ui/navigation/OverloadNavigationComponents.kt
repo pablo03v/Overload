@@ -55,8 +55,8 @@ import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.ui.screens.day.CategoryScreenBottomAppBar
-import cloud.pablos.overload.ui.screens.day.CategoryScreenTopAppBar
+import cloud.pablos.overload.ui.screens.category.CategoryScreenBottomAppBar
+import cloud.pablos.overload.ui.screens.category.CategoryScreenTopAppBar
 import cloud.pablos.overload.ui.screens.day.DayScreenBottomAppBar
 import cloud.pablos.overload.ui.screens.day.DayScreenTopAppBar
 import cloud.pablos.overload.ui.tabs.calendar.CalendarTabTopAppBar

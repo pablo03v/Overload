@@ -67,7 +67,7 @@ fun startOrStop(
 ) {
     val date = LocalDate.now()
     val selectedCategory = getSelectedCategory(categoryState)
-    var selectedCategoryId: Int?
+    val selectedCategoryId: Int?
 
     if (selectedCategory != null) {
         selectedCategoryId = selectedCategory.id

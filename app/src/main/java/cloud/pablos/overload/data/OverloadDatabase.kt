@@ -24,15 +24,9 @@ abstract class OverloadDatabase : RoomDatabase() {
     abstract fun itemDao(): ItemDao
 
     companion object {
-        const val DATABASE_NAME = "items"
+        private const val DATABASE_NAME = "items"
 
         @Volatile private var instance: OverloadDatabase? = null
-
-        fun getInstance(context: Context): OverloadDatabase =
-            instance
-                ?: synchronized(this) {
-                    instance ?: buildDatabase(context).also { instance = it }
-                }
 
         private fun buildDatabase(context: Context) =
             Room.databaseBuilder(

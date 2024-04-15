@@ -1,4 +1,4 @@
-package cloud.pablos.overload.ui.screens.day
+package cloud.pablos.overload.ui.screens.category
 
 import android.os.Build
 import android.util.Log
@@ -49,15 +49,14 @@ import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
-import cloud.pablos.overload.ui.screens.category.CategoryScreenGoalDialog
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationDescription
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationTitle
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabItem
+import cloud.pablos.overload.ui.tabs.configurations.HoDivider
 import cloud.pablos.overload.ui.tabs.configurations.SelectableColor
 import cloud.pablos.overload.ui.tabs.configurations.SelectableEmoji
 import cloud.pablos.overload.ui.tabs.configurations.colorOptions
 import cloud.pablos.overload.ui.tabs.configurations.emojiOptions
-import cloud.pablos.overload.ui.tabs.configurations.hDivider
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -162,7 +161,7 @@ fun CategoryScreen(
 
                 if (selectedCategory.isDefault.not()) {
                     item {
-                        hDivider()
+                        HoDivider()
                     }
 
                     item {
@@ -193,7 +192,7 @@ fun CategoryScreen(
                 }
 
                 item {
-                    hDivider()
+                    HoDivider()
                 }
 
                 item {
@@ -224,7 +223,7 @@ fun CategoryScreen(
                 }
 
                 item {
-                    hDivider()
+                    HoDivider()
                 }
 
                 item {

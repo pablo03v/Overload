@@ -1,4 +1,4 @@
-package cloud.pablos.overload.ui.screens.day
+package cloud.pablos.overload.ui.screens.category
 
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
