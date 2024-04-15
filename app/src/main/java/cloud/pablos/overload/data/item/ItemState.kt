@@ -11,7 +11,7 @@ data class ItemState(
     val ongoing: Boolean = false,
     val pause: Boolean = false,
     val isOngoing: Boolean = false,
-    val categoryId: Int = 0,
+    val categoryId: Int = 1,
     // --
     val selectedDayCalendar: String = "",
     val selectedYearCalendar: Int = 0,
