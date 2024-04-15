@@ -12,6 +12,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertLongToColor
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.category.Category
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.ui.tabs.home.HomeTabProgress
 import cloud.pablos.overload.ui.tabs.home.ProgressData
@@ -23,6 +26,7 @@ import java.time.LocalDateTime
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DayViewProgress(
+    category: Category,
     items: List<Item>,
     goal: Int,
     date: LocalDate = LocalDate.now(),
@@ -47,12 +51,12 @@ fun DayViewProgress(
 
     // Count duration
     itemsFiltered.forEach {
-        val parsedStartTime = parseToLocalDateTime(it.startTime)
+        val parsedStartTime = convertStringToLocalDateTime(it.startTime)
         val parsedEndTime =
             if (it.ongoing) {
                 LocalDateTime.now()
             } else {
-                parseToLocalDateTime(it.endTime)
+                convertStringToLocalDateTime(it.endTime)
             }
 
         count += Duration.between(parsedStartTime, parsedEndTime).toMillis()
@@ -64,7 +68,7 @@ fun DayViewProgress(
         items.last().pause.not() &&
         date == LocalDate.now()
     ) {
-        val parsedStartTime = parseToLocalDateTime(items.last().endTime)
+        val parsedStartTime = convertStringToLocalDateTime(items.last().endTime)
         val parsedEndTime = LocalDateTime.now()
 
         count += Duration.between(parsedStartTime, parsedEndTime).toMillis()
@@ -101,7 +105,7 @@ fun DayViewProgress(
             if (progress.value < 360f) {
                 MaterialTheme.colorScheme.error
             } else {
-                MaterialTheme.colorScheme.primary
+                convertLongToColor(category.color)
             }
         }
 
@@ -113,7 +117,7 @@ fun DayViewProgress(
             }
 
             false -> {
-                stringResource(id = R.string.work_left)
+                "Time left"
             }
         }
     val subtitle = getDurationString(Duration.ofMillis(goal - duration))

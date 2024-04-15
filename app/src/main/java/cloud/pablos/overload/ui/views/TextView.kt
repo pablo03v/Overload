@@ -15,7 +15,7 @@ fun TextView(
     text: String,
     modifier: Modifier = Modifier,
     fontSize: TextUnit = TextUnit.Unspecified,
-    fontWeight: FontWeight = FontWeight.Normal,
+    fontWeight: FontWeight? = null,
     color: Color = Color.Unspecified,
     align: TextAlign = TextAlign.Left,
     maxLines: Int = 1,

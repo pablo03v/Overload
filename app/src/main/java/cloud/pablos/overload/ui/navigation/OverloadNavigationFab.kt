@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.PlayArrow
@@ -29,11 +30,15 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.data.item.startOrStopPause
+import cloud.pablos.overload.data.item.fabPress
 import cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog
-import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -41,13 +46,18 @@ import java.time.LocalDate
 
 @Composable
 fun OverloadNavigationFab(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryEvent: (CategoryEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
     onDrawerClicked: () -> Unit = {},
 ) {
+    val backgroundColor = decideBackground(categoryState)
+    val foregroundColor = decideForeground(backgroundColor)
+
     val date = LocalDate.now()
 
-    val itemsForToday = getItemsOfDay(date, state)
+    val itemsForToday = getItems(categoryState, itemState, date)
 
     val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
 
@@ -67,8 +77,8 @@ fun OverloadNavigationFab(
                     delay(viewConfiguration.longPressTimeoutMillis)
                     isLongClick = true
 
-                    onEvent(ItemEvent.SetIsFabOpen(true))
-                    onEvent(ItemEvent.SetIsDeletingHome(false))
+                    itemEvent(ItemEvent.SetIsFabOpen(true))
+                    itemEvent(ItemEvent.SetIsDeletingHome(false))
                 }
                 is PressInteraction.Release -> {
                 }
@@ -83,11 +93,11 @@ fun OverloadNavigationFab(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        when (state.isFabOpen) {
+        when (itemState.isFabOpen) {
             true -> {
                 FloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(false))
+                        itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     interactionSource = interactionSource,
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -119,12 +129,12 @@ fun OverloadNavigationFab(
 
                 SmallFloatingActionButton(
                     onClick = {
-                        onEvent(ItemEvent.SetIsFabOpen(false))
+                        itemEvent(ItemEvent.SetIsFabOpen(false))
                         manualDialogState.value = true
                         onDrawerClicked()
                     },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = backgroundColor,
+                    contentColor = foregroundColor,
                     modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
                 ) {
                     Column(
@@ -138,7 +148,7 @@ fun OverloadNavigationFab(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
-                                contentDescription = stringResource(id = R.string.close),
+                                contentDescription = stringResource(id = R.string.manual_entry),
                                 modifier = Modifier.padding(8.dp),
                             )
 
@@ -149,13 +159,46 @@ fun OverloadNavigationFab(
                         }
                     }
                 }
+
+                SmallFloatingActionButton(
+                    onClick = {
+                        itemEvent(ItemEvent.SetIsFabOpen(false))
+                        categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
+                        onDrawerClicked()
+                    },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start,
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier.padding(8.dp),
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Category,
+                                contentDescription = stringResource(id = R.string.switch_category),
+                                modifier = Modifier.padding(8.dp),
+                            )
+
+                            TextView(
+                                text = stringResource(id = R.string.switch_category),
+                                modifier = Modifier.padding(end = 8.dp),
+                            )
+                        }
+                    }
+                }
             }
             false -> {
-                when (state.isDeletingHome) {
+                when (itemState.isDeletingHome) {
                     true -> {
                         FloatingActionButton(
                             onClick = {
-                                onEvent(ItemEvent.DeleteItems(state.selectedItemsHome))
+                                itemEvent(ItemEvent.DeleteItems(itemState.selectedItemsHome))
                             },
                             interactionSource = interactionSource,
                             containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -189,12 +232,12 @@ fun OverloadNavigationFab(
                         FloatingActionButton(
                             onClick = {
                                 if (isLongClick.not()) {
-                                    startOrStopPause(state, onEvent)
+                                    fabPress(categoryState, categoryEvent, itemState, itemEvent)
                                 }
                             },
                             interactionSource = interactionSource,
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            containerColor = backgroundColor,
+                            contentColor = foregroundColor,
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             Column(
@@ -240,6 +283,6 @@ fun OverloadNavigationFab(
     }
 
     if (manualDialogState.value) {
-        HomeTabManualDialog(onClose = { manualDialogState.value = false }, state, onEvent)
+        HomeTabManualDialog(onClose = { manualDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

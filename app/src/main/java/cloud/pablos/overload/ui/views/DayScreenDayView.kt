@@ -15,25 +15,23 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.Helpers.Companion.getSelectedCategory
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.ui.tabs.configurations.OlSharedPreferences
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeletePauseDialog
 import cloud.pablos.overload.ui.tabs.home.HomeTabEditItemDialog
-import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import java.time.LocalDate
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
@@ -43,27 +41,26 @@ import java.time.LocalDate
 fun DayScreenDayView(
     daysCount: Int,
     page: Int,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val date =
         LocalDate.now()
             .minusDays((daysCount - page - 1).toLong())
 
-    val items = getItemsOfDay(date, state)
-
+    val items = getItems(categoryState, itemState, date)
     val itemsDesc = items.sortedByDescending { it.startTime }
 
     val deletePauseDialogState = remember { mutableStateOf(false) }
     val editItemDialogState = remember { mutableStateOf(false) }
 
-    val context = LocalContext.current
-    val sharedPreferences = remember { OlSharedPreferences(context) }
+    val selectedCategory = getSelectedCategory(categoryState)
 
-    val goalWork by remember { mutableIntStateOf(sharedPreferences.getWorkGoal()) }
-    val goalPause by remember { mutableIntStateOf(sharedPreferences.getPauseGoal()) }
+    if (itemsDesc.isNotEmpty() && selectedCategory != null) {
+        val goal1 = selectedCategory.goal1
+        val goal2 = selectedCategory.goal2
 
-    if (itemsDesc.isNotEmpty()) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
         ) {
@@ -75,20 +72,26 @@ fun DayScreenDayView(
                             .padding(top = 10.dp, start = 10.dp, end = 10.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    if (goalWork > 0) {
-                        Box(
-                            modifier = Modifier.weight(1f),
-                        ) {
-                            DayViewProgress(goal = goalWork, items = items, isPause = false)
-                        }
-                    }
-
-                    if (goalPause > 0) {
+                    if (goal1 > 0) {
                         Box(
                             modifier = Modifier.weight(1f),
                         ) {
                             DayViewProgress(
-                                goal = goalPause,
+                                category = selectedCategory,
+                                goal = goal1,
+                                items = items,
+                                isPause = false,
+                            )
+                        }
+                    }
+
+                    if (goal2 > 0) {
+                        Box(
+                            modifier = Modifier.weight(1f),
+                        ) {
+                            DayViewProgress(
+                                category = selectedCategory,
+                                goal = goal2,
                                 items = items,
                                 date = date,
                                 isPause = true,
@@ -114,10 +117,10 @@ fun DayScreenDayView(
                                         deletePauseDialogState.value = true
                                     },
                                     onClick = {
-                                        if (state.isDeletingHome) {
+                                        if (itemState.isDeletingHome) {
                                             deletePauseDialogState.value = true
                                         } else {
-                                            onEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
+                                            itemEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
                                             editItemDialogState.value = true
                                         }
                                     },
@@ -131,9 +134,11 @@ fun DayScreenDayView(
                                     endTime = LocalDate.now().toString(),
                                     ongoing = true,
                                     pause = true,
+                                    categoryId = categoryState.selectedCategory,
                                 ),
                             isSelected = false,
-                            state = state,
+                            categoryState = categoryState,
+                            itemState = itemState,
                         )
                     }
                 }
@@ -144,7 +149,7 @@ fun DayScreenDayView(
                 val isLastItem = index == itemSize - 1
 
                 val item = itemsDesc[index]
-                val isSelected = state.selectedItemsHome.contains(item)
+                val isSelected = itemState.selectedItemsHome.contains(item)
                 Box(
                     modifier =
                         Modifier
@@ -156,22 +161,22 @@ fun DayScreenDayView(
                             )
                             .combinedClickable(
                                 onLongClick = {
-                                    onEvent(ItemEvent.SetIsDeletingHome(true))
-                                    onEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
-                                    onEvent(ItemEvent.SetIsFabOpen(false))
+                                    itemEvent(ItemEvent.SetIsDeletingHome(true))
+                                    itemEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
+                                    itemEvent(ItemEvent.SetIsFabOpen(false))
                                 },
                                 onClick = {
-                                    if (state.isDeletingHome) {
+                                    if (itemState.isDeletingHome) {
                                         when (isSelected) {
                                             true ->
-                                                onEvent(
-                                                    ItemEvent.SetSelectedItemsHome(state.selectedItemsHome.filterNot { it == item }),
+                                                itemEvent(
+                                                    ItemEvent.SetSelectedItemsHome(itemState.selectedItemsHome.filterNot { it == item }),
                                                 )
 
                                             else ->
-                                                onEvent(
+                                                itemEvent(
                                                     ItemEvent.SetSelectedItemsHome(
-                                                        state.selectedItemsHome +
+                                                        itemState.selectedItemsHome +
                                                             listOf(
                                                                 item,
                                                             ),
@@ -179,15 +184,15 @@ fun DayScreenDayView(
                                                 )
                                         }
                                     } else {
-                                        onEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
+                                        itemEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
                                         editItemDialogState.value = true
                                     }
                                 },
                             ),
                 ) {
                     when (item.ongoing.not() && item.endTime.isNotBlank()) {
-                        true -> DayViewItemNotOngoing(item, isSelected = isSelected, state)
-                        else -> DayViewItemOngoing(item, isSelected = isSelected, state = state)
+                        true -> DayViewItemNotOngoing(item, categoryState, itemState, isSelected)
+                        else -> DayViewItemOngoing(item, categoryState, itemState, isSelected)
                     }
                 }
             }
@@ -224,11 +229,12 @@ fun DayScreenDayView(
     if (editItemDialogState.value) {
         HomeTabEditItemDialog(
             onClose = {
-                onEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
+                itemEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
                 editItemDialogState.value = false
             },
-            state,
-            onEvent,
+            categoryState,
+            itemState,
+            itemEvent,
         )
     }
 }

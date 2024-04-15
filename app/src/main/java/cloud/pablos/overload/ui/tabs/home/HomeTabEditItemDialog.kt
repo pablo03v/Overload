@@ -36,11 +36,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.TextView
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -49,8 +51,9 @@ import java.util.Calendar
 @Composable
 fun HomeTabEditItemDialog(
     onClose: () -> Unit,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -68,17 +71,17 @@ fun HomeTabEditItemDialog(
 
     var selectedItem: Item? = null
 
-    if (state.selectedItemsHome.size == 1) {
-        selectedItem = state.selectedItemsHome.first()
+    if (itemState.selectedItemsHome.size == 1) {
+        selectedItem = itemState.selectedItemsHome.first()
 
-        selectedStart = parseToLocalDateTime(selectedItem.startTime)
-        selectedEnd = parseToLocalDateTime(selectedItem.endTime)
+        selectedStart = convertStringToLocalDateTime(selectedItem.startTime)
+        selectedEnd = convertStringToLocalDateTime(selectedItem.endTime)
     } else {
-        val itemsForToday = getItemsOfDay(date, state)
+        val itemsForToday = getItems(categoryState, itemState, date)
 
         selectedStart =
             if (itemsForToday.isNotEmpty() && itemsForToday.last().endTime.isNotBlank()) {
-                parseToLocalDateTime(itemsForToday.last().endTime)
+                convertStringToLocalDateTime(itemsForToday.last().endTime)
             } else {
                 dateTime
             }
@@ -331,13 +334,15 @@ fun HomeTabEditItemDialog(
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
                     if (selectedItem != null) {
-                        onEvent(ItemEvent.SetId(selectedItem.id))
+                        itemEvent(ItemEvent.SetId(selectedItem.id))
+                        itemEvent(ItemEvent.SetCategoryId(selectedItem.categoryId))
                     }
-                    onEvent(ItemEvent.SetStart(selectedStart.format(formatter)))
-                    onEvent(ItemEvent.SetEnd(selectedEnd.format(formatter)))
-                    onEvent(ItemEvent.SetOngoing(false))
-                    onEvent(ItemEvent.SetPause(selectedPause))
-                    onEvent(ItemEvent.SaveItem)
+                    itemEvent(ItemEvent.SetStart(selectedStart.format(formatter)))
+                    itemEvent(ItemEvent.SetEnd(selectedEnd.format(formatter)))
+                    itemEvent(ItemEvent.SetOngoing(false))
+                    itemEvent(ItemEvent.SetPause(selectedPause))
+
+                    itemEvent(ItemEvent.SaveItem)
 
                     onClose()
                 },

@@ -29,6 +29,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemState
 import java.time.LocalDateTime
@@ -38,9 +42,13 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun DayViewItemNotOngoing(
     item: Item,
+    categoryState: CategoryState,
+    itemState: ItemState,
     isSelected: Boolean,
-    state: ItemState,
 ) {
+    val backgroundColorCategory = decideBackground(categoryState)
+    val foregroundColorCategory = decideForeground(backgroundColorCategory)
+
     var backgroundColor: Color
     var foregroundColor: Color
 
@@ -48,11 +56,11 @@ fun DayViewItemNotOngoing(
     val parsedEndTime: LocalDateTime
 
     item.let {
-        parsedStartTime = parseToLocalDateTime(it.startTime)
-        parsedEndTime = parseToLocalDateTime(it.endTime)
+        parsedStartTime = convertStringToLocalDateTime(it.startTime)
+        parsedEndTime = convertStringToLocalDateTime(it.endTime)
         when (isSelected) {
             true -> {
-                when (state.isDeletingHome) {
+                when (itemState.isDeletingHome) {
                     true -> {
                         backgroundColor = MaterialTheme.colorScheme.errorContainer
                         foregroundColor = MaterialTheme.colorScheme.onErrorContainer
@@ -73,8 +81,8 @@ fun DayViewItemNotOngoing(
                     }
 
                     false -> {
-                        backgroundColor = MaterialTheme.colorScheme.onSurfaceVariant
-                        foregroundColor = MaterialTheme.colorScheme.surfaceVariant
+                        backgroundColor = backgroundColorCategory
+                        foregroundColor = foregroundColorCategory
                     }
                 }
             }

@@ -21,7 +21,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
 import cloud.pablos.overload.R
-import cloud.pablos.overload.data.item.ItemDatabase
+import cloud.pablos.overload.data.OverloadDatabase
+import cloud.pablos.overload.data.category.CategoryViewModel
 import cloud.pablos.overload.data.item.ItemViewModel
 import cloud.pablos.overload.ui.tabs.configurations.handleIntent
 import cloud.pablos.overload.ui.tabs.configurations.importJsonFile
@@ -34,12 +35,22 @@ class MainActivity : ComponentActivity() {
     private val db by lazy {
         Room.databaseBuilder(
             applicationContext,
-            ItemDatabase::class.java,
+            OverloadDatabase::class.java,
             "items",
         ).build()
     }
 
-    private val viewModel by viewModels<ItemViewModel>(
+    private val categoryViewModel by viewModels<CategoryViewModel>(
+        factoryProducer = {
+            object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    return CategoryViewModel(db.categoryDao()) as T
+                }
+            }
+        },
+    )
+
+    private val itemViewModel by viewModels<ItemViewModel>(
         factoryProducer = {
             object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -85,14 +96,19 @@ class MainActivity : ComponentActivity() {
                 val windowSize = calculateWindowSizeClass(this)
                 val displayFeatures = calculateDisplayFeatures(this)
 
-                val state by viewModel.state.collectAsState()
-                val onEvent = viewModel::onEvent
+                val categoryState by categoryViewModel.state.collectAsState()
+                val categoryEvent = categoryViewModel::categoryEvent
+
+                val itemState by itemViewModel.state.collectAsState()
+                val itemEvent = itemViewModel::itemEvent
 
                 OverloadApp(
                     windowSize = windowSize,
                     displayFeatures = displayFeatures,
-                    state = state,
-                    onEvent = onEvent,
+                    categoryState = categoryState,
+                    categoryEvent = categoryEvent,
+                    itemState = itemState,
+                    itemEvent = itemEvent,
                     filePickerLauncher = filePickerLauncher,
                 )
             }

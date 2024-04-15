@@ -47,8 +47,9 @@ fun HomeTabProgress(
         tonalElevation = NavigationBarDefaults.Elevation,
         color = MaterialTheme.colorScheme.background,
         shape = RoundedCornerShape(30.dp),
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier =
+            Modifier
+                .fillMaxWidth(),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -84,6 +85,7 @@ fun HomeTabProgress(
         }
     }
 }
+
 class ProgressData(
     progress: State<Float>,
     color: State<Color>,
@@ -104,32 +106,35 @@ fun HomeTabProgressPreview() {
     val transition = updateTransition(targetState = duration, label = "progress")
 
     // Progress
-    val progress = transition.animateFloat(
-        transitionSpec = { tween(800) },
-        label = "progress",
-    ) { remTime ->
-        val calculatedProgress = if (remTime < 0) {
-            360f
-        } else {
-            360f - ((360f / goal) * (goal - remTime))
-        }
+    val progress =
+        transition.animateFloat(
+            transitionSpec = { tween(800) },
+            label = "progress",
+        ) { remTime ->
+            val calculatedProgress =
+                if (remTime < 0) {
+                    360f
+                } else {
+                    360f - ((360f / goal) * (goal - remTime))
+                }
 
-        calculatedProgress.coerceAtMost(360f)
-    }
+            calculatedProgress.coerceAtMost(360f)
+        }
 
     // Color
-    val color = transition.animateColor(
-        transitionSpec = {
-            tween(800, easing = LinearEasing)
-        },
-        label = "Color transition",
-    ) {
-        if (progress.value < 360f) {
-            MaterialTheme.colorScheme.error
-        } else {
-            MaterialTheme.colorScheme.primary
+    val color =
+        transition.animateColor(
+            transitionSpec = {
+                tween(800, easing = LinearEasing)
+            },
+            label = "Color transition",
+        ) {
+            if (progress.value < 360f) {
+                MaterialTheme.colorScheme.error
+            } else {
+                MaterialTheme.colorScheme.primary
+            }
         }
-    }
 
     // Text
     val title = stringResource(id = R.string.pause_left)

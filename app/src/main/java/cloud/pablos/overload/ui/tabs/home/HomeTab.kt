@@ -22,17 +22,24 @@ import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRowDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
+import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabCreateCategoryDialog
 import cloud.pablos.overload.ui.utils.OverloadNavigationType
+import cloud.pablos.overload.ui.views.SwitchCategoryDialog
 import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -44,9 +51,13 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HomeTab(
     navigationType: OverloadNavigationType,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryEvent: (CategoryEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
+    val backgroundColor = decideBackground(categoryState)
+
     val pagerState =
         rememberPagerState(
             initialPage = 2,
@@ -64,27 +75,29 @@ fun HomeTab(
                 2 -> getFormattedDate()
                 else -> getFormattedDate()
             }
-        onEvent(ItemEvent.SetSelectedDayCalendar(selectedDayString))
+        itemEvent(ItemEvent.SetSelectedDayCalendar(selectedDayString))
     }
 
     Scaffold(
         topBar = {
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.HOME,
-                state = state,
-                onEvent = onEvent,
+                categoryState = categoryState,
+                categoryEvent = categoryEvent,
+                itemState = itemState,
+                itemEvent = itemEvent,
             )
         },
         floatingActionButton = {
             AnimatedVisibility(
                 visible =
                     navigationType == OverloadNavigationType.BOTTOM_NAVIGATION &&
-                        state.selectedDayCalendar == LocalDate.now().toString() &&
-                        state.isDeletingHome.not(),
-                enter = if (state.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
-                exit = if (state.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
+                        itemState.selectedDayCalendar == LocalDate.now().toString() &&
+                        itemState.isDeletingHome.not(),
+                enter = if (itemState.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
+                exit = if (itemState.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
             ) {
-                HomeTabFab(state = state, onEvent = onEvent)
+                HomeTabFab(categoryEvent = categoryEvent, categoryState = categoryState, itemState = itemState, itemEvent = itemEvent)
             }
         },
     ) { paddingValues ->
@@ -97,6 +110,13 @@ fun HomeTab(
                     PrimaryTabRow(
                         selectedTabIndex = pagerState.currentPage,
                         divider = {},
+                        indicator = {
+                            TabRowDefaults.PrimaryIndicator(
+                                modifier = Modifier.tabIndicatorOffset(pagerState.currentPage, matchContentSize = true),
+                                width = Dp.Unspecified,
+                                color = backgroundColor,
+                            )
+                        },
                     ) {
                         homeTabItems.forEachIndexed { index, item ->
                             Tab(
@@ -120,10 +140,29 @@ fun HomeTab(
                     state = pagerState,
                 ) { page ->
                     val item = homeTabItems[page]
-                    item.screen(state, onEvent)
+                    item.screen(categoryState, itemState, itemEvent)
                 }
             }
         }
+    }
+
+    if (categoryState.isCreateCategoryDialogOpenHome) {
+        ConfigurationsTabCreateCategoryDialog(
+            onClose = {
+                categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(false))
+            },
+            categoryEvent,
+        )
+    }
+
+    if (categoryState.isSwitchCategoryDialogOpenHome) {
+        SwitchCategoryDialog(
+            categoryState,
+            categoryEvent,
+            onClose = {
+                categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(false))
+            },
+        )
     }
 }
 

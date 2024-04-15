@@ -38,10 +38,14 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.Helpers.Companion.getItemsPastDays
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -49,26 +53,24 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun AdjustEndDialog(
     onClose: () -> Unit,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
+    val backgroundColor = decideBackground(categoryState)
+    val foregroundColor = decideForeground(backgroundColor)
+
     val context = LocalContext.current
-    val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#spread-acorss-days".toUri()
+    val learnMoreLink = "https://github.com/pabloscloud/Overload?tab=readme-ov-file#why-does-the-app-annoy-me-with-a-popup-to-adjust-the-end".toUri()
 
-    val date = LocalDate.now()
-
-    val itemsNotToday =
-        state.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
-            extractDate(startTime) != date
-        }
+    val itemsNotToday = getItemsPastDays(categoryState, itemState)
     val isOngoingNotToday = itemsNotToday.isNotEmpty() && itemsNotToday.any { it.ongoing }
     val firstOngoingItem = itemsNotToday.find { it.ongoing }
 
     var selectedTimeText by remember { mutableStateOf("") }
 
     if (isOngoingNotToday && firstOngoingItem != null) {
-        val startTime = parseToLocalDateTime(firstOngoingItem.startTime)
+        val startTime = convertStringToLocalDateTime(firstOngoingItem.startTime)
         var endTime by remember { mutableStateOf(startTime) }
 
         val timePicker =
@@ -134,7 +136,13 @@ fun AdjustEndDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    DayViewItemOngoing(item = firstOngoingItem, showDate = true, hideEnd = true, state = state)
+                    DayViewItemOngoing(
+                        item = firstOngoingItem,
+                        showDate = true,
+                        hideEnd = true,
+                        categoryState = categoryState,
+                        itemState = itemState,
+                    )
 
                     Spacer(modifier = Modifier.height(16.dp))
 
@@ -162,12 +170,12 @@ fun AdjustEndDialog(
             confirmButton = {
                 Button(
                     onClick = {
-                        onClose.save(onEvent, firstOngoingItem, endTime)
+                        onClose.save(itemEvent, firstOngoingItem, endTime)
                     },
                     colors =
                         ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            containerColor = backgroundColor,
+                            contentColor = foregroundColor,
                         ),
                 ) {
                     TextView(stringResource(R.string.save))
@@ -195,18 +203,18 @@ fun AdjustEndDialog(
 }
 
 private fun (() -> Unit).save(
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     item: Item,
     newEnd: LocalDateTime,
 ) {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
-    onEvent(ItemEvent.SetId(item.id))
-    onEvent(ItemEvent.SetStart(item.startTime))
-    onEvent(ItemEvent.SetEnd(newEnd.format(formatter)))
-    onEvent(ItemEvent.SetOngoing(false))
-    onEvent(ItemEvent.SetPause(item.pause))
-    onEvent(ItemEvent.SaveItem)
+    itemEvent(ItemEvent.SetId(item.id))
+    itemEvent(ItemEvent.SetStart(item.startTime))
+    itemEvent(ItemEvent.SetEnd(newEnd.format(formatter)))
+    itemEvent(ItemEvent.SetOngoing(false))
+    itemEvent(ItemEvent.SetPause(item.pause))
+    itemEvent(ItemEvent.SaveItem)
 
     this()
 }

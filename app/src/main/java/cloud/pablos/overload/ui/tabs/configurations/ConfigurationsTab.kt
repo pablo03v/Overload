@@ -5,22 +5,23 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.preference.PreferenceManager
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
 import androidx.compose.animation.shrinkOut
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Code
@@ -29,7 +30,7 @@ import androidx.compose.material.icons.rounded.EmojiNature
 import androidx.compose.material.icons.rounded.PestControl
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.icons.rounded.Unarchive
-import androidx.compose.material.icons.rounded.Work
+import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,23 +41,24 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
-import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.navigation.NavHostController
 import androidx.room.withTransaction
 import cloud.pablos.overload.R
-import cloud.pablos.overload.data.item.DatabaseBackup
+import cloud.pablos.overload.data.Backup
+import cloud.pablos.overload.data.OverloadDatabase
+import cloud.pablos.overload.data.category.Category
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
-import cloud.pablos.overload.data.item.ItemDatabase
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.data.item.backupItemsToJson
 import cloud.pablos.overload.ui.MainActivity
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
@@ -67,11 +69,15 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun ConfigurationsTab(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
     filePickerLauncher: ActivityResultLauncher<Intent>,
+    navController: NavHostController,
 ) {
     val context = LocalContext.current
     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
@@ -92,15 +98,16 @@ fun ConfigurationsTab(
             mutableStateOf(sharedPreferences.getBoolean(acraSysLogsEnabledKey, true))
         }
 
-    val workGoalDialogState = remember { mutableStateOf(false) }
-    val pauseGoalDialogState = remember { mutableStateOf(false) }
+    val createCategoryDialog = remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.CONFIGURATIONS,
-                state = state,
-                onEvent = onEvent,
+                categoryState = categoryState,
+                categoryEvent = categoryEvent,
+                itemState = itemState,
+                itemEvent = itemEvent,
             )
         },
     ) { paddingValues ->
@@ -110,87 +117,57 @@ fun ConfigurationsTab(
                     .fillMaxSize()
                     .padding(paddingValues)
                     .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+            verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            // Goals Title
+            // Categories Title
             item {
-                ConfigurationsTabItem(title = stringResource(id = R.string.goals))
+                ConfigurationsTabItem(title = stringResource(id = R.string.categories))
             }
 
-            // Work Goal
+            categoryState.categories.forEach { category ->
+                item {
+                    ConfigurationsTabItem(
+                        title = category.emoji + " " + category.name,
+                        action = {
+                            categoryEvent(CategoryEvent.SetSelectedCategoryConfigurations(category.id))
+                            navController.navigate(OverloadRoute.CATEGORY)
+                        },
+                        background = true,
+                    )
+                }
+            }
+
             item {
-                val itemLabel =
-                    stringResource(id = R.string.work) + ": " + stringResource(id = R.string.work_goal_descr)
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center,
                     modifier =
                         Modifier
-                            .clickable {
-                                workGoalDialogState.value = true
-                            }
-                            .clearAndSetSemantics {
-                                contentDescription = itemLabel
-                            },
+                            .fillMaxWidth(),
                 ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Work,
-                        contentDescription = stringResource(id = R.string.work),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Column {
-                            ConfigurationTitle(stringResource(id = R.string.work))
-                            ConfigurationDescription(stringResource(id = R.string.work_goal_descr))
+                    FilledTonalButton(onClick = {
+                        createCategoryDialog.value = true
+                    }) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Add,
+                                contentDescription = stringResource(id = R.string.select_year),
+                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                            )
+                            TextView(
+                                text = stringResource(id = R.string.add_category),
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                            )
                         }
                     }
                 }
             }
 
-            // Pause Goal
+            // Categories Divider
             item {
-                val itemLabel =
-                    stringResource(id = R.string.pause) + ": " + stringResource(id = R.string.pause_goal_descr)
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier =
-                        Modifier
-                            .clickable {
-                                pauseGoalDialogState.value = true
-                            }
-                            .clearAndSetSemantics {
-                                contentDescription = itemLabel
-                            },
-                ) {
-                    Icon(
-                        imageVector = Icons.Filled.DarkMode,
-                        contentDescription = stringResource(id = R.string.pause),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Column {
-                            ConfigurationTitle(stringResource(id = R.string.pause))
-                            ConfigurationDescription(stringResource(id = R.string.pause_goal_descr))
-                        }
-                    }
-                }
-            }
-
-            // Goals Divider
-            item {
-                Row {
-                    HorizontalDivider()
-                }
+                HoDivider()
             }
 
             // Analytics Title
@@ -228,9 +205,7 @@ fun ConfigurationsTab(
 
             // Analytics Divider
             item {
-                Row {
-                    HorizontalDivider()
-                }
+                HoDivider()
             }
 
             // Storage Title
@@ -238,81 +213,27 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(title = stringResource(id = R.string.storage))
             }
 
-            // Storage Backup
             item {
-                val itemLabel =
-                    stringResource(id = R.string.backup) + ": " + stringResource(id = R.string.backup_descr)
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier =
-                        Modifier
-                            .clickable {
-                                backup(state, context)
-                            }
-                            .clearAndSetSemantics {
-                                contentDescription = itemLabel
-                            },
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Archive,
-                        contentDescription = stringResource(id = R.string.backup),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Column {
-                            ConfigurationTitle(stringResource(id = R.string.backup))
-                            ConfigurationDescription(stringResource(id = R.string.backup_descr))
-                        }
-                    }
-                }
+                ConfigurationsTabItem(
+                    title = stringResource(id = R.string.backup),
+                    description = stringResource(id = R.string.backup_descr),
+                    icon = Icons.Rounded.Archive,
+                    action = { backup(categoryState, itemState, context) },
+                )
             }
 
-            // Storage Import
             item {
-                val itemLabel =
-                    stringResource(id = R.string.import_ol) + ": " + stringResource(id = R.string.import_descr)
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier =
-                        Modifier
-                            .clickable {
-                                launchFilePicker(filePickerLauncher)
-                            }
-                            .clearAndSetSemantics {
-                                contentDescription = itemLabel
-                            },
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Unarchive,
-                        contentDescription = stringResource(id = R.string.import_ol),
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth(),
-                    ) {
-                        Column {
-                            ConfigurationTitle(stringResource(id = R.string.import_ol))
-                            ConfigurationDescription(stringResource(id = R.string.import_descr))
-                        }
-                    }
-                }
+                ConfigurationsTabItem(
+                    title = stringResource(id = R.string.import_ol),
+                    description = stringResource(id = R.string.import_descr),
+                    icon = Icons.Rounded.Unarchive,
+                    action = { launchFilePicker(filePickerLauncher) },
+                )
             }
 
             // Storage Divider
             item {
-                Row {
-                    HorizontalDivider()
-                }
+                HoDivider()
             }
 
             // About Title
@@ -325,7 +246,7 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(
                     title = stringResource(id = R.string.sourcecode),
                     description = stringResource(id = R.string.sourcecode_descr),
-                    link = "https://codeberg.org/pabloscloud/Overload".toUri(),
+                    link = "https://github.com/pabloscloud/Overload".toUri(),
                     icon = Icons.Rounded.Code,
                 )
             }
@@ -335,7 +256,7 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(
                     title = stringResource(id = R.string.issue_reports),
                     description = stringResource(id = R.string.issue_reports_descr),
-                    link = "https://codeberg.org/pabloscloud/Overload/issues".toUri(),
+                    link = "https://github.com/pabloscloud/Overload/issues".toUri(),
                     icon = Icons.Rounded.EmojiNature,
                 )
             }
@@ -345,7 +266,7 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(
                     title = stringResource(id = R.string.translate),
                     description = stringResource(id = R.string.translate_descr),
-                    link = "https://translate.codeberg.org/engage/overload".toUri(),
+                    link = "https://crowdin.com/project/overload".toUri(),
                     icon = Icons.Rounded.Translate,
                 )
             }
@@ -355,16 +276,14 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(
                     title = stringResource(id = R.string.license),
                     description = stringResource(id = R.string.license_descr),
-                    link = "https://codeberg.org/pabloscloud/Overload/raw/branch/main/LICENSE".toUri(),
+                    link = "https://github.com/pabloscloud/Overload/blob/main/LICENSE".toUri(),
                     icon = Icons.Rounded.Copyright,
                 )
             }
 
             // About Divider
             item {
-                Row {
-                    HorizontalDivider()
-                }
+                HoDivider()
             }
 
             // Footer
@@ -374,35 +293,29 @@ fun ConfigurationsTab(
                     modifier =
                         Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp),
+                            .padding(horizontal = 5.dp),
                 ) {
                     ConfigurationDescription(stringResource(id = R.string.footer))
                 }
             }
         }
 
-        if (workGoalDialogState.value) {
-            ConfigurationsTabGoalDialog(
-                onClose = { workGoalDialogState.value = false },
-                isPause = false,
-            )
-        }
-
-        if (pauseGoalDialogState.value) {
-            ConfigurationsTabGoalDialog(
-                onClose = { pauseGoalDialogState.value = false },
-                isPause = true,
+        if (createCategoryDialog.value) {
+            ConfigurationsTabCreateCategoryDialog(
+                onClose = { createCategoryDialog.value = false },
+                categoryEvent = categoryEvent,
             )
         }
     }
 }
 
 fun backup(
-    state: ItemState,
+    categoryState: CategoryState,
+    itemState: ItemState,
     context: Context,
 ) {
     try {
-        val exportedData = backupItemsToJson(state)
+        val exportedData = Backup.backupToJson(categoryState, itemState)
         val cachePath = File(context.cacheDir, "backup.json")
 
         cachePath.writeText(exportedData)
@@ -442,7 +355,7 @@ fun launchFilePicker(filePickerLauncher: ActivityResultLauncher<Intent>) {
 fun handleIntent(
     intent: Intent?,
     lifecycleScope: LifecycleCoroutineScope,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     context: Context,
     contentResolver: ContentResolver,
 ) {
@@ -478,7 +391,7 @@ fun handleIntent(
 private fun importCsvData(
     csvData: String,
     lifecycleScope: LifecycleCoroutineScope,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     context: Context,
 ) {
     val parsedData = parseCsvData(csvData)
@@ -502,6 +415,7 @@ private fun importCsvData(
                             endTime = endTime,
                             ongoing = ongoing.toBoolean(),
                             pause = pause.toBoolean(),
+                            categoryId = 1,
                         )
 
                     val importResult = itemDao.upsertItem(item)
@@ -526,21 +440,24 @@ private fun importCsvData(
 private fun importJsonData(
     jsonData: String,
     lifecycleScope: LifecycleCoroutineScope,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     context: Context,
 ) {
     lifecycleScope.launch(Dispatchers.IO) {
         try {
             val gson = Gson()
-            val databaseBackup = gson.fromJson(jsonData, DatabaseBackup::class.java)
+            val databaseBackup = gson.fromJson(jsonData, Backup.DatabaseBackup::class.java)
 
             when (databaseBackup.backupVersion) {
                 2 -> {
+                    Log.d("import", "Import started")
                     val itemDao = db.itemDao()
+                    val categoryDao = db.categoryDao()
 
                     var allImportsSucceeded = true
 
                     db.withTransaction {
+                        Log.d("import", "Importing items")
                         val itemsTable = databaseBackup.data["items"] ?: emptyList()
                         itemsTable.forEach { itemData ->
                             val item =
@@ -550,9 +467,29 @@ private fun importJsonData(
                                     endTime = itemData["endTime"] as String,
                                     ongoing = itemData["ongoing"] as Boolean,
                                     pause = itemData["pause"] as Boolean,
+                                    categoryId = (itemData["categoryId"] as? Double)?.toInt() ?: 0,
                                 )
 
                             val importResult = itemDao.upsertItem(item)
+                            if (importResult != Unit) {
+                                allImportsSucceeded = false
+                            }
+                        }
+
+                        val categoriesTable = databaseBackup.data["categories"] ?: emptyList()
+                        categoriesTable.forEach { categoriesData ->
+                            val category =
+                                Category(
+                                    id = (categoriesData["id"] as? Double)?.toInt() ?: 0,
+                                    color = (categoriesData["color"] as? Double)?.toLong() ?: 0,
+                                    emoji = categoriesData["emoji"] as String,
+                                    goal1 = (categoriesData["goal1"] as? Double)?.toInt() ?: 0,
+                                    goal2 = (categoriesData["goal2"] as? Double)?.toInt() ?: 0,
+                                    isDefault = categoriesData["isDefault"] as Boolean,
+                                    name = categoriesData["name"] as String,
+                                )
+
+                            val importResult = categoryDao.upsertCategory(category)
                             if (importResult != Unit) {
                                 allImportsSucceeded = false
                             }
@@ -575,6 +512,7 @@ private fun importJsonData(
                 }
             }
         } catch (e: Exception) {
+            Log.d("import", e.toString())
             withContext(Dispatchers.Main) {
                 showImportFailedToast(context)
             }
@@ -608,7 +546,7 @@ fun importCsvFile(
     uri: Uri,
     contentResolver: ContentResolver,
     context: Context,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     lifecycleScope: LifecycleCoroutineScope,
 ) {
     uri.let {
@@ -624,7 +562,7 @@ fun importJsonFile(
     uri: Uri,
     contentResolver: ContentResolver,
     context: Context,
-    db: ItemDatabase,
+    db: OverloadDatabase,
     lifecycleScope: LifecycleCoroutineScope,
 ) {
     uri.let {
@@ -642,15 +580,19 @@ fun ConfigurationLabel(text: String) {
         text = text,
         fontSize = MaterialTheme.typography.titleLarge.fontSize,
         color = MaterialTheme.colorScheme.onBackground,
+        modifier = Modifier.padding(vertical = 15.dp),
     )
 }
 
 @Composable
-fun ConfigurationTitle(text: String) {
+fun ConfigurationTitle(
+    text: String,
+    color: Color = MaterialTheme.colorScheme.onBackground,
+) {
     TextView(
         text = text,
         fontSize = MaterialTheme.typography.titleMedium.fontSize,
-        color = MaterialTheme.colorScheme.onBackground,
+        color = color,
     )
 }
 
@@ -663,20 +605,13 @@ fun ConfigurationDescription(text: String) {
     )
 }
 
+@Composable
+fun HoDivider() {
+    HorizontalDivider(modifier = Modifier.padding(top = 20.dp))
+}
+
 class OlSharedPreferences(context: Context) {
     private val sharedPreferences = context.getSharedPreferences("ol_prefs", Context.MODE_PRIVATE)
-
-    fun saveWorkGoal(goal: Int) {
-        sharedPreferences.edit { putInt("workGoal", goal) }
-    }
-
-    fun savePauseGoal(goal: Int) {
-        sharedPreferences.edit { putInt("pauseGoal", goal) }
-    }
-
-    fun getWorkGoal(): Int = sharedPreferences.getInt("workGoal", 0)
-
-    fun getPauseGoal(): Int = sharedPreferences.getInt("pauseGoal", 0)
 }
 
 fun restartApp(context: Context) {

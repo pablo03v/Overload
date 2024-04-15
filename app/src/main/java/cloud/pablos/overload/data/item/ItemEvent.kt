@@ -3,6 +3,8 @@ package cloud.pablos.overload.data.item
 sealed interface ItemEvent {
     data object SaveItem : ItemEvent
 
+    data class SetCategoryId(val categoryId: Int) : ItemEvent
+
     data class SetId(val id: Int) : ItemEvent
 
     data class SetStart(val start: String) : ItemEvent

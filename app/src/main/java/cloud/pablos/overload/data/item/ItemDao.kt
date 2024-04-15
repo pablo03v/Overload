@@ -1,13 +1,16 @@
 package cloud.pablos.overload.data.item
 
+import androidx.compose.ui.graphics.Color
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
-import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
-import cloud.pablos.overload.ui.views.extractDate
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
-import com.google.gson.Gson
+import cloud.pablos.overload.data.Converters.Companion.convertColorToLong
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.Helpers.Companion.getItemsPastDays
+import cloud.pablos.overload.data.Helpers.Companion.getSelectedCategory
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -30,93 +33,96 @@ interface ItemDao {
     fun getAllItems(): Flow<List<Item>>
 }
 
-data class DatabaseBackup(
-    val data: Map<String, List<Map<String, Any>>>,
-    val backupVersion: Int,
-    val backupDate: String,
-)
+fun fabPress(
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
+) {
+    val categories = categoryState.categories
 
-// Export function
-fun backupItemsToJson(state: ItemState): String {
-    val gson = Gson()
+    if (categories.isNotEmpty()) {
+        startOrStop(categoryState, categoryEvent, itemState, itemEvent)
+    } else if (itemState.items.isNotEmpty()) {
+        categoryEvent(CategoryEvent.SetId(1))
+        categoryEvent(CategoryEvent.SetName("Default"))
+        categoryEvent(CategoryEvent.SetColor(convertColorToLong(Color(204, 230, 255))))
+        categoryEvent(CategoryEvent.SetGoal1(0))
+        categoryEvent(CategoryEvent.SetGoal2(0))
+        categoryEvent(CategoryEvent.SetEmoji("🕣"))
+        categoryEvent(CategoryEvent.SetIsDefault(true))
+        categoryEvent(CategoryEvent.SaveCategory)
 
-    val itemsTable =
-        state.items.map { item ->
-            mapOf(
-                "id" to item.id,
-                "startTime" to item.startTime,
-                "endTime" to item.endTime,
-                "ongoing" to item.ongoing,
-                "pause" to item.pause,
-            )
-        }
-
-    val data =
-        mapOf(
-            "items" to itemsTable,
-        )
-
-    val backup =
-        DatabaseBackup(
-            data,
-            2,
-            LocalDateTime.now().toString(),
-        )
-
-    return try {
-        val json = gson.toJson(backup)
-        json
-    } catch (e: Exception) {
-        "{}"
+        startOrStop(categoryState, categoryEvent, itemState, itemEvent)
+    } else {
+        categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
     }
 }
 
-fun startOrStopPause(
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+fun startOrStop(
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     val date = LocalDate.now()
+    val selectedCategory = getSelectedCategory(categoryState)
+    val selectedCategoryId: Int?
 
-    val itemsForToday = getItemsOfDay(date, state)
-    val isFirstToday = itemsForToday.isEmpty()
-    val isOngoingToday = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
-
-    val itemsNotToday =
-        state.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
-            extractDate(startTime) != date
-        }
-    val isOngoingNotToday = itemsNotToday.isNotEmpty() && itemsNotToday.any { it.ongoing }
-
-    if (isOngoingNotToday) {
-        onEvent(ItemEvent.SetForgotToStopDialogShown(true))
-    } else if (isFirstToday) {
-        onEvent(ItemEvent.SetStart(LocalDateTime.now().toString()))
-        onEvent(ItemEvent.SetOngoing(true))
-        onEvent(ItemEvent.SetPause(false))
-        onEvent(ItemEvent.SaveItem)
-
-        onEvent(ItemEvent.SetIsOngoing(true))
-    } else if (isOngoingToday) {
-        onEvent(ItemEvent.SetId(itemsForToday.last().id))
-        onEvent(ItemEvent.SetStart(itemsForToday.last().startTime))
-        onEvent(ItemEvent.SetEnd(LocalDateTime.now().toString()))
-        onEvent(ItemEvent.SetOngoing(false))
-        onEvent(ItemEvent.SaveItem)
-
-        onEvent(ItemEvent.SetIsOngoing(false))
+    if (selectedCategory != null) {
+        selectedCategoryId = selectedCategory.id
+    } else if (categoryState.categories.isEmpty()) {
+        categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
+        return
     } else {
-        onEvent(ItemEvent.SetStart(itemsForToday.last().endTime))
-        onEvent(ItemEvent.SetEnd(LocalDateTime.now().toString()))
-        onEvent(ItemEvent.SetOngoing(false))
-        onEvent(ItemEvent.SetPause(true))
-        onEvent(ItemEvent.SaveItem)
+        selectedCategoryId = categoryState.categories.first().id
+        categoryEvent(CategoryEvent.SetSelectedCategory(selectedCategoryId))
 
-        onEvent(ItemEvent.SetStart(LocalDateTime.now().toString()))
-        onEvent(ItemEvent.SetOngoing(true))
-        onEvent(ItemEvent.SetPause(false))
-        onEvent(ItemEvent.SaveItem)
+        if (categoryState.categories.count() > 1) {
+            return
+        }
+    }
 
-        onEvent(ItemEvent.SetIsOngoing(true))
+    val itemsToday = getItems(categoryState, itemState, date)
+    val isFirstToday = itemsToday.isEmpty()
+    val isOngoingToday = itemsToday.isNotEmpty() && itemsToday.last().ongoing
+
+    val itemsPastDays = getItemsPastDays(categoryState, itemState)
+    val itemsOngoingNotToday = itemsPastDays.isNotEmpty() && itemsPastDays.any { it.ongoing }
+
+    if (itemsOngoingNotToday) {
+        itemEvent(ItemEvent.SetForgotToStopDialogShown(true))
+    } else if (isFirstToday) {
+        itemEvent(ItemEvent.SetCategoryId(selectedCategoryId))
+        itemEvent(ItemEvent.SetStart(LocalDateTime.now().toString()))
+        itemEvent(ItemEvent.SetOngoing(true))
+        itemEvent(ItemEvent.SetPause(false))
+        itemEvent(ItemEvent.SaveItem)
+
+        itemEvent(ItemEvent.SetIsOngoing(true))
+    } else if (isOngoingToday) {
+        itemEvent(ItemEvent.SetCategoryId(selectedCategoryId))
+        itemEvent(ItemEvent.SetId(itemsToday.last().id))
+        itemEvent(ItemEvent.SetStart(itemsToday.last().startTime))
+        itemEvent(ItemEvent.SetEnd(LocalDateTime.now().toString()))
+        itemEvent(ItemEvent.SetOngoing(false))
+        itemEvent(ItemEvent.SaveItem)
+
+        itemEvent(ItemEvent.SetIsOngoing(false))
+    } else {
+        itemEvent(ItemEvent.SetCategoryId(selectedCategoryId))
+        itemEvent(ItemEvent.SetStart(itemsToday.last().endTime))
+        itemEvent(ItemEvent.SetEnd(LocalDateTime.now().toString()))
+        itemEvent(ItemEvent.SetOngoing(false))
+        itemEvent(ItemEvent.SetPause(true))
+        itemEvent(ItemEvent.SaveItem)
+
+        itemEvent(ItemEvent.SetCategoryId(selectedCategoryId))
+        itemEvent(ItemEvent.SetStart(LocalDateTime.now().toString()))
+        itemEvent(ItemEvent.SetOngoing(true))
+        itemEvent(ItemEvent.SetPause(false))
+        itemEvent(ItemEvent.SaveItem)
+
+        itemEvent(ItemEvent.SetIsOngoing(true))
     }
 }

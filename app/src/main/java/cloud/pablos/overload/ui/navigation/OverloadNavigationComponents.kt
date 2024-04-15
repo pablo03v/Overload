@@ -47,17 +47,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
+import androidx.navigation.NavHostController
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.Helpers.Companion.getSelectedDay
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
+import cloud.pablos.overload.ui.screens.category.CategoryScreenBottomAppBar
+import cloud.pablos.overload.ui.screens.category.CategoryScreenTopAppBar
 import cloud.pablos.overload.ui.screens.day.DayScreenBottomAppBar
 import cloud.pablos.overload.ui.screens.day.DayScreenTopAppBar
 import cloud.pablos.overload.ui.tabs.calendar.CalendarTabTopAppBar
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabTopAppBar
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeleteBottomAppBar
 import cloud.pablos.overload.ui.tabs.home.HomeTabTopAppBar
-import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
-import cloud.pablos.overload.ui.tabs.home.getSelectedDay
 import cloud.pablos.overload.ui.utils.OverloadNavigationContentPosition
 import cloud.pablos.overload.ui.views.DeleteTopAppBar
 import cloud.pablos.overload.ui.views.TextView
@@ -69,8 +74,10 @@ fun OverloadNavigationRail(
     navigationContentPosition: OverloadNavigationContentPosition,
     navigateToTopLevelDestination: (OverloadTopLevelDestination) -> Unit,
     onDrawerClicked: () -> Unit = {},
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryEvent: (CategoryEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     NavigationRail(
         modifier = Modifier.fillMaxHeight(),
@@ -85,7 +92,7 @@ fun OverloadNavigationRail(
                     verticalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     AnimatedVisibility(
-                        visible = true, // state.isDeletingHome.not(),
+                        visible = true,
                     ) {
                         NavigationRailItem(
                             selected = false,
@@ -99,13 +106,18 @@ fun OverloadNavigationRail(
                         )
                     }
 
-                    OverloadNavigationFabSmall(state = state, onEvent = onEvent)
+                    OverloadNavigationFabSmall(
+                        categoryEvent = categoryEvent,
+                        categoryState = categoryState,
+                        itemState = itemState,
+                        itemEvent = itemEvent,
+                    )
                 }
                 Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
-                    when (state.isDeletingHome) {
+                    when (itemState.isDeletingHome) {
                         true -> {
-                            val date = getSelectedDay(state)
-                            val items = getItemsOfDay(date, state)
+                            val date = getSelectedDay(itemState)
+                            val items = getItems(categoryState, itemState, date)
 
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -114,11 +126,11 @@ fun OverloadNavigationRail(
                                 NavigationRailItem(
                                     selected = false,
                                     onClick = {
-                                        onEvent(
+                                        itemEvent(
                                             ItemEvent.SetSelectedItemsHome(
-                                                state.selectedItemsHome +
+                                                itemState.selectedItemsHome +
                                                     items.filterNot {
-                                                        state.selectedItemsHome.contains(
+                                                        itemState.selectedItemsHome.contains(
                                                             it,
                                                         )
                                                     },
@@ -136,7 +148,7 @@ fun OverloadNavigationRail(
                                 NavigationRailItem(
                                     selected = false,
                                     onClick = {
-                                        onEvent(ItemEvent.SetSelectedItemsHome(state.selectedItemsHome - items.toSet()))
+                                        itemEvent(ItemEvent.SetSelectedItemsHome(itemState.selectedItemsHome - items.toSet()))
                                     },
                                     icon = {
                                         Icon(
@@ -149,7 +161,7 @@ fun OverloadNavigationRail(
                         }
 
                         false -> {
-                            AnimatedVisibility(visible = state.isFabOpen.not()) {
+                            AnimatedVisibility(visible = itemState.isFabOpen.not()) {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                     verticalArrangement = Arrangement.spacedBy(4.dp),
@@ -190,32 +202,41 @@ class BottomBarState private constructor() {
     companion object {
         val Normal = BottomBarState()
         val Deleting = BottomBarState()
+
+        val Category = BottomBarState()
         val Day = BottomBarState()
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun OverloadBottomNavigationBar(
     selectedDestination: String,
     navigateToTopLevelDestination: (OverloadTopLevelDestination) -> Unit,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
-    onNavigate: () -> Unit,
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
+    navController: NavHostController,
 ) {
     var currentBottomBarState by remember { mutableStateOf(BottomBarState.Normal) }
 
-    DisposableEffect(state.isDeletingHome, selectedDestination) {
+    DisposableEffect(itemState.isDeletingHome, selectedDestination) {
         currentBottomBarState =
             when (selectedDestination) {
                 OverloadRoute.HOME -> {
-                    when (state.isDeletingHome) {
+                    when (itemState.isDeletingHome) {
                         true -> BottomBarState.Deleting
                         false -> BottomBarState.Normal
                     }
                 }
 
+                OverloadRoute.CATEGORY -> {
+                    BottomBarState.Category
+                }
+
                 OverloadRoute.DAY -> {
-                    when (state.isDeletingHome) {
+                    when (itemState.isDeletingHome) {
                         true -> BottomBarState.Deleting
                         false -> BottomBarState.Day
                     }
@@ -230,8 +251,9 @@ fun OverloadBottomNavigationBar(
 
     for (bottomBarState in listOf(
         BottomBarState.Normal,
-        BottomBarState.Deleting,
+        BottomBarState.Category,
         BottomBarState.Day,
+        BottomBarState.Deleting,
     )) {
         AnimatedVisibility(
             visible = bottomBarState == currentBottomBarState,
@@ -295,11 +317,15 @@ fun OverloadBottomNavigationBar(
                 }
 
                 BottomBarState.Deleting -> {
-                    HomeTabDeleteBottomAppBar(state, onEvent)
+                    HomeTabDeleteBottomAppBar(categoryState, itemState, itemEvent)
+                }
+
+                BottomBarState.Category -> {
+                    CategoryScreenBottomAppBar(categoryState, categoryEvent, itemState, itemEvent, navController)
                 }
 
                 BottomBarState.Day -> {
-                    DayScreenBottomAppBar(onNavigate)
+                    DayScreenBottomAppBar(navController)
                 }
             }
         }
@@ -312,35 +338,43 @@ class TopBarState private constructor() {
         val Calendar = TopBarState()
         val Configurations = TopBarState()
 
+        val Category = TopBarState()
         val Day = TopBarState()
 
         val Deleting = TopBarState()
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun OverloadTopAppBar(
     selectedDestination: String,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     var currentTopBarState by remember { mutableStateOf(TopBarState.Home) }
 
-    DisposableEffect(state.isDeletingHome, selectedDestination) {
+    DisposableEffect(itemState.isDeletingHome, selectedDestination) {
         currentTopBarState =
             when (selectedDestination) {
                 OverloadRoute.HOME -> {
-                    when (state.isDeletingHome) {
+                    when (itemState.isDeletingHome) {
                         true -> TopBarState.Deleting
                         false -> TopBarState.Home
                     }
                 }
 
                 OverloadRoute.CALENDAR -> {
-                    when (state.isDeletingHome) {
+                    when (itemState.isDeletingHome) {
                         true -> TopBarState.Deleting
                         false -> TopBarState.Calendar
                     }
+                }
+
+                OverloadRoute.CATEGORY -> {
+                    TopBarState.Category
                 }
 
                 OverloadRoute.CONFIGURATIONS -> {
@@ -348,7 +382,7 @@ fun OverloadTopAppBar(
                 }
 
                 OverloadRoute.DAY -> {
-                    when (state.isDeletingHome) {
+                    when (itemState.isDeletingHome) {
                         true -> TopBarState.Deleting
                         false -> TopBarState.Day
                     }
@@ -369,11 +403,11 @@ fun OverloadTopAppBar(
         if (topBarState == currentTopBarState) {
             when (topBarState) {
                 TopBarState.Home -> {
-                    HomeTabTopAppBar()
+                    HomeTabTopAppBar(categoryState, categoryEvent)
                 }
 
                 TopBarState.Calendar -> {
-                    CalendarTabTopAppBar(state, onEvent)
+                    CalendarTabTopAppBar(categoryState, categoryEvent, itemState, itemEvent)
                 }
 
                 TopBarState.Configurations -> {
@@ -384,6 +418,7 @@ fun OverloadTopAppBar(
     }
 
     for (topBarState in listOf(
+        TopBarState.Category,
         TopBarState.Day,
         TopBarState.Deleting,
     )) {
@@ -393,12 +428,16 @@ fun OverloadTopAppBar(
             exit = slideOutVertically(targetOffsetY = { -it }),
         ) {
             when (topBarState) {
+                TopBarState.Category -> {
+                    CategoryScreenTopAppBar(categoryState)
+                }
+
                 TopBarState.Day -> {
-                    DayScreenTopAppBar(state)
+                    DayScreenTopAppBar(itemState)
                 }
 
                 TopBarState.Deleting -> {
-                    DeleteTopAppBar(state, onEvent)
+                    DeleteTopAppBar(itemState, itemEvent)
                 }
             }
         }
@@ -411,8 +450,10 @@ fun ModalNavigationDrawerContent(
     navigationContentPosition: OverloadNavigationContentPosition,
     navigateToTopLevelDestination: (OverloadTopLevelDestination) -> Unit,
     onDrawerClicked: () -> Unit = {},
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryEvent: (CategoryEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
     ModalDrawerSheet {
         Layout(
@@ -446,14 +487,14 @@ fun ModalNavigationDrawerContent(
                         }
                     }
 
-                    OverloadNavigationFab(state, onEvent, onDrawerClicked)
+                    OverloadNavigationFab(categoryEvent, categoryState, itemState, itemEvent, onDrawerClicked)
                 }
 
                 Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
-                    when (state.isDeletingHome) {
+                    when (itemState.isDeletingHome) {
                         true -> {
-                            val date = getSelectedDay(state)
-                            val items = getItemsOfDay(date, state)
+                            val date = getSelectedDay(itemState)
+                            val items = getItems(categoryState, itemState, date)
 
                             Column(
                                 modifier = Modifier.verticalScroll(rememberScrollState()),
@@ -462,11 +503,11 @@ fun ModalNavigationDrawerContent(
                                 NavigationDrawerItem(
                                     selected = false,
                                     onClick = {
-                                        onEvent(
+                                        itemEvent(
                                             ItemEvent.SetSelectedItemsHome(
-                                                state.selectedItemsHome +
+                                                itemState.selectedItemsHome +
                                                     items.filterNot {
-                                                        state.selectedItemsHome.contains(
+                                                        itemState.selectedItemsHome.contains(
                                                             it,
                                                         )
                                                     },
@@ -494,7 +535,7 @@ fun ModalNavigationDrawerContent(
                                 NavigationDrawerItem(
                                     selected = false,
                                     onClick = {
-                                        onEvent(ItemEvent.SetSelectedItemsHome(state.selectedItemsHome - items.toSet()))
+                                        itemEvent(ItemEvent.SetSelectedItemsHome(itemState.selectedItemsHome - items.toSet()))
                                     },
                                     label = {
                                         TextView(
@@ -517,7 +558,7 @@ fun ModalNavigationDrawerContent(
                             }
                         }
                         false -> {
-                            AnimatedVisibility(visible = state.isFabOpen.not()) {
+                            AnimatedVisibility(visible = itemState.isFabOpen.not()) {
                                 Column(
                                     modifier = Modifier.verticalScroll(rememberScrollState()),
                                     horizontalAlignment = Alignment.CenterHorizontally,

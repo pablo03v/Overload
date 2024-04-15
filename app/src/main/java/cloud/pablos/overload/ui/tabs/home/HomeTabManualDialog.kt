@@ -36,10 +36,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.TextView
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
@@ -48,9 +52,13 @@ import java.util.Calendar
 @Composable
 fun HomeTabManualDialog(
     onClose: () -> Unit,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
+    val backgroundColor = decideBackground(categoryState)
+    val foregroundColor = decideForeground(backgroundColor)
+
     val context = LocalContext.current
 
     val date = LocalDate.now()
@@ -65,11 +73,11 @@ fun HomeTabManualDialog(
     var selectedEndDateText by remember { mutableStateOf("") }
     var selectedEndTimeText by remember { mutableStateOf("") }
 
-    val itemsForToday = getItemsOfDay(date, state)
+    val itemsForToday = getItems(categoryState, itemState, date)
 
     selectedStart =
         if (itemsForToday.isNotEmpty() && itemsForToday.last().endTime.isNotBlank()) {
-            parseToLocalDateTime(itemsForToday.last().endTime)
+            convertStringToLocalDateTime(itemsForToday.last().endTime)
         } else {
             dateTime
         }
@@ -203,26 +211,26 @@ fun HomeTabManualDialog(
                 ) {
                     TextView(
                         text = selectedStartDateText,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        color = foregroundColor,
                         modifier =
                             Modifier
                                 .clip(RoundedCornerShape(12.dp))
                                 .clickable {
                                     startDatePicker.show()
                                 }
-                                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+                                .background(color = backgroundColor)
                                 .padding(horizontal = 10.dp, vertical = 6.dp),
                     )
                     TextView(
                         text = selectedStartTimeText,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        color = foregroundColor,
                         modifier =
                             Modifier
                                 .clip(RoundedCornerShape(12.dp))
                                 .clickable {
                                     startTimePicker.show()
                                 }
-                                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+                                .background(color = backgroundColor)
                                 .padding(horizontal = 10.dp, vertical = 6.dp),
                     )
                 }
@@ -236,26 +244,26 @@ fun HomeTabManualDialog(
                 ) {
                     TextView(
                         text = selectedEndDateText,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        color = foregroundColor,
                         modifier =
                             Modifier
                                 .clip(RoundedCornerShape(12.dp))
                                 .clickable {
                                     endDatePicker.show()
                                 }
-                                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+                                .background(color = backgroundColor)
                                 .padding(horizontal = 10.dp, vertical = 6.dp),
                     )
                     TextView(
                         text = selectedEndTimeText,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                        color = foregroundColor,
                         modifier =
                             Modifier
                                 .clip(RoundedCornerShape(12.dp))
                                 .clickable {
                                     endTimePicker.show()
                                 }
-                                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
+                                .background(color = backgroundColor)
                                 .padding(horizontal = 10.dp, vertical = 6.dp),
                     )
                 }
@@ -268,6 +276,18 @@ fun HomeTabManualDialog(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     FilterChip(
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = backgroundColor,
+                                labelColor = foregroundColor,
+                                iconColor = foregroundColor,
+                            ),
+                        border =
+                            FilterChipDefaults.filterChipBorder(
+                                enabled = true,
+                                selected = selectedPause,
+                                borderColor = backgroundColor,
+                            ),
                         onClick = { selectedPause = true },
                         label = {
                             TextView(
@@ -287,6 +307,18 @@ fun HomeTabManualDialog(
                     )
 
                     FilterChip(
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                selectedContainerColor = backgroundColor,
+                                labelColor = foregroundColor,
+                                iconColor = foregroundColor,
+                            ),
+                        border =
+                            FilterChipDefaults.filterChipBorder(
+                                enabled = true,
+                                selected = selectedPause,
+                                borderColor = backgroundColor,
+                            ),
                         onClick = { selectedPause = false },
                         label = {
                             TextView(
@@ -312,18 +344,19 @@ fun HomeTabManualDialog(
                 onClick = {
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
-                    onEvent(ItemEvent.SetStart(selectedStart.format(formatter)))
-                    onEvent(ItemEvent.SetEnd(selectedEnd.format(formatter)))
-                    onEvent(ItemEvent.SetOngoing(false))
-                    onEvent(ItemEvent.SetPause(selectedPause))
-                    onEvent(ItemEvent.SaveItem)
+                    itemEvent(ItemEvent.SetStart(selectedStart.format(formatter)))
+                    itemEvent(ItemEvent.SetEnd(selectedEnd.format(formatter)))
+                    itemEvent(ItemEvent.SetOngoing(false))
+                    itemEvent(ItemEvent.SetPause(selectedPause))
+                    itemEvent(ItemEvent.SetCategoryId(categoryState.selectedCategory))
+                    itemEvent(ItemEvent.SaveItem)
 
                     onClose()
                 },
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        containerColor = backgroundColor,
+                        contentColor = foregroundColor,
                     ),
             ) {
                 TextView(stringResource(id = R.string.save))

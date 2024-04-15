@@ -24,11 +24,14 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.category.CategoryEvent
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
@@ -39,7 +42,6 @@ import cloud.pablos.overload.ui.views.DayScreenDayView
 import cloud.pablos.overload.ui.views.TextView
 import cloud.pablos.overload.ui.views.YearView
 import cloud.pablos.overload.ui.views.getLocalDate
-import cloud.pablos.overload.ui.views.parseToLocalDateTime
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
@@ -48,30 +50,83 @@ import java.time.temporal.ChronoUnit
 @Composable
 fun CalendarTab(
     contentType: OverloadContentType,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    categoryEvent: (CategoryEvent) -> Unit,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {
-    val selectedYear by remember { mutableIntStateOf(state.selectedYearCalendar) }
-
-    LaunchedEffect(selectedYear) {
-        if (state.selectedYearCalendar != LocalDate.now().year) {
-            onEvent(ItemEvent.SetSelectedYearCalendar(LocalDate.now().year))
-        }
-    }
-
     Scaffold(
         topBar = {
             OverloadTopAppBar(
                 selectedDestination = OverloadRoute.CALENDAR,
-                state = state,
-                onEvent = onEvent,
+                categoryState = categoryState,
+                categoryEvent = categoryEvent,
+                itemState = itemState,
+                itemEvent = itemEvent,
             )
         },
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
+            val selectedYear by remember { mutableIntStateOf(itemState.selectedYearCalendar) }
+            val selectedDay = getLocalDate(itemState.selectedDayCalendar)
+            val items = getItems(categoryState, itemState)
+
+            LaunchedEffect(selectedYear) {
+                if (itemState.selectedYearCalendar != selectedDay.year) {
+                    itemEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
+                }
+            }
+
             Column(modifier = Modifier.padding(paddingValues)) {
                 AnimatedVisibility(visible = contentType == OverloadContentType.DUAL_PANE) {
+                    val firstYear =
+                        if (items.isEmpty()) {
+                            LocalDate.now().year
+                        } else {
+                            items.minByOrNull { it.startTime }
+                                ?.let { convertStringToLocalDateTime(it.startTime).year }
+                                ?: LocalDate.now().year
+                        }
+                    val firstDay = LocalDate.of(firstYear, 1, 1)
+                    val lastDay = LocalDate.now()
+
+                    val daysCount = ChronoUnit.DAYS.between(firstDay, lastDay).toInt() + 1
+
+                    var scrollToPage = true
+                    val pagerState =
+                        rememberPagerState(
+                            initialPage = daysCount,
+                            initialPageOffsetFraction = 0f,
+                            pageCount = { daysCount },
+                        )
+
+                    LaunchedEffect(pagerState.currentPage) {
+                        scrollToPage = false
+                        itemEvent(
+                            ItemEvent.SetSelectedDayCalendar(
+                                LocalDate.now()
+                                    .minusDays((daysCount - pagerState.currentPage - 1).toLong())
+                                    .toString(),
+                            ),
+                        )
+                    }
+
+                    LaunchedEffect(itemState.selectedDayCalendar) {
+                        if (scrollToPage) {
+                            val highlightedDay = LocalDate.now().minusDays((daysCount - pagerState.currentPage - 1).toLong())
+                            if (getLocalDate(itemState.selectedDayCalendar) != highlightedDay) {
+                                pagerState.scrollToPage(ChronoUnit.DAYS.between(firstDay, selectedDay).toInt())
+                            }
+                        } else {
+                            scrollToPage = true
+                        }
+
+                        if (selectedYear != selectedDay.year) {
+                            itemEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
+                        }
+                    }
+
                     Row(modifier = Modifier.fillMaxSize()) {
                         Box(
                             modifier = Modifier.weight(1f),
@@ -85,9 +140,10 @@ fun CalendarTab(
                                 }
 
                                 YearView(
-                                    onEvent = onEvent,
-                                    date = getLocalDate(state.selectedDayCalendar),
-                                    year = state.selectedYearCalendar,
+                                    categoryState = categoryState,
+                                    itemEvent = itemEvent,
+                                    date = getLocalDate(itemState.selectedDayCalendar),
+                                    year = itemState.selectedYearCalendar,
                                     bottomPadding = 0.dp,
                                     highlightSelectedDay = true,
                                 )
@@ -97,56 +153,6 @@ fun CalendarTab(
                         Box(
                             modifier = Modifier.weight(1f),
                         ) {
-                            val selectedDay = getLocalDate(state.selectedDayCalendar)
-
-                            val firstYear =
-                                if (state.items.isEmpty()) {
-                                    LocalDate.now().year
-                                } else {
-                                    state.items.minByOrNull { it.startTime }
-                                        ?.let { parseToLocalDateTime(it.startTime).year }
-                                        ?: LocalDate.now().year
-                                }
-
-                            val firstDay = LocalDate.of(firstYear, 1, 1)
-                            val lastDay = LocalDate.now()
-                            val daysCount = ChronoUnit.DAYS.between(firstDay, lastDay).toInt() + 1
-
-                            var scrollToPage = true
-
-                            val pagerState =
-                                rememberPagerState(
-                                    initialPage = daysCount,
-                                    initialPageOffsetFraction = 0f,
-                                    pageCount = { daysCount },
-                                )
-
-                            LaunchedEffect(pagerState.currentPage) {
-                                scrollToPage = false
-                                onEvent(
-                                    ItemEvent.SetSelectedDayCalendar(
-                                        LocalDate.now()
-                                            .minusDays((daysCount - pagerState.currentPage - 1).toLong())
-                                            .toString(),
-                                    ),
-                                )
-
-                                if (selectedYear != selectedDay.year) {
-                                    onEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
-                                }
-                            }
-
-                            LaunchedEffect(state.selectedDayCalendar) {
-                                if (scrollToPage) {
-                                    val highlightedDay = LocalDate.now().minusDays((daysCount - pagerState.currentPage - 1).toLong())
-                                    if (getLocalDate(state.selectedDayCalendar) != highlightedDay) {
-                                        pagerState.scrollToPage(ChronoUnit.DAYS.between(firstDay, selectedDay).toInt())
-                                    }
-                                } else {
-                                    scrollToPage = true
-                                }
-                            }
-
                             HorizontalPager(
                                 state = pagerState,
                             ) { page ->
@@ -164,8 +170,9 @@ fun CalendarTab(
                                     DayScreenDayView(
                                         daysCount = daysCount,
                                         page = page,
-                                        state = state,
-                                        onEvent = onEvent,
+                                        categoryState = categoryState,
+                                        itemState = itemState,
+                                        itemEvent = itemEvent,
                                     )
                                 }
                             }
@@ -182,9 +189,11 @@ fun CalendarTab(
                         }
 
                         YearView(
-                            onEvent = onEvent,
-                            date = getLocalDate(state.selectedDayCalendar),
-                            year = state.selectedYearCalendar,
+                            categoryState = categoryState,
+                            itemEvent = itemEvent,
+                            date = getLocalDate(itemState.selectedDayCalendar),
+                            year = itemState.selectedYearCalendar,
+                            bottomPadding = 16.dp,
                             onNavigate = onNavigate,
                         )
                     }
