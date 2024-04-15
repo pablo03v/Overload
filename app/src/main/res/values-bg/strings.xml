@@ -50,6 +50,7 @@
     <string name="calendar">Календар</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Конфигурации</string>
+    <string name="categories">Categories</string>
     <string name="goals">Цели</string>
     <string name="work">Работа</string>
     <string name="work_goal_descr">Поставяне на цел за работа</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Внос</string>
     <string name="import_descr">Импортиране от резервно копие</string>
-    <string name="import_backup">Импортиране на резервно копие</string>
-    <string name="import_backup_descr">За да импортирате данни в приложението, използвайте Sharesheet от други приложения. Това позволява на приложението да получи сигурен достъп до споделените данни и да ги импортира във вашата база данни.</string>
     <string name="import_success">Резервното копие е успешно импортирано</string>
     <string name="import_failure">Импортирането на резервното копие е неуспешно</string>
     <string name="analytics">анализ</string>
@@ -101,18 +100,17 @@
 Благодаря за търпението!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Запазете</string>
-    <string name="pick_work_goal">Задайте работна цел</string>
     <string name="hours">часове</string>
     <string name="minutes">минути</string>
     <string name="cancel">Отмени</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
     <string name="pick_pause_goal">Задайте цел за пауза</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Работа вляво</string>
     <string name="pause_left">Пауза наляво</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">стрелка напред, описваща посоката на двете времена от началото до края</string>
     <string name="select_year">Изберете година</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Превод</string>
     <string name="translate_descr">Искате да преведете приложението? Благодаря!</string>
     <string name="adjust">Настройте</string>
@@ -131,4 +129,7 @@
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>
