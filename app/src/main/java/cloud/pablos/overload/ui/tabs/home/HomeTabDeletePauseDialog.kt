@@ -33,7 +33,7 @@ import cloud.pablos.overload.ui.views.TextView
 @Composable
 fun HomeTabDeletePauseDialog(onClose: () -> Unit) {
     val context = LocalContext.current
-    val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#delete-pause".toUri()
+    val learnMoreLink = "https://github.com/pabloscloud/Overload?tab=readme-ov-file#why-cant-i-delete-an-ongoing-pause".toUri()
 
     AlertDialog(
         onDismissRequest = onClose,
@@ -65,7 +65,11 @@ fun HomeTabDeletePauseDialog(onClose: () -> Unit) {
                 val openLinkStr = stringResource(id = R.string.open_link_with)
                 ClickableText(
                     text = AnnotatedString(stringResource(id = R.string.learn_more)),
-                    style = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.primary, textAlign = TextAlign.Center),
+                    style =
+                        MaterialTheme.typography.bodyMedium.copy(
+                            color = MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center,
+                        ),
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, learnMoreLink)
                         val chooserIntent = Intent.createChooser(intent, openLinkStr)
@@ -79,10 +83,11 @@ fun HomeTabDeletePauseDialog(onClose: () -> Unit) {
             Button(
                 onClick = { onClose() },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ),
             ) {
                 TextView(stringResource(id = R.string.close))
             }

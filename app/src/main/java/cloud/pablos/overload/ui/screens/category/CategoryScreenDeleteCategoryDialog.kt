@@ -52,7 +52,11 @@ fun CategoryScreenDeleteCategoryDialog(
         text = {
             Column {
                 Text(
-                    text = "Are you sure you want to delete" + " " + category.name + "?",
+                    text =
+                        stringResource(
+                            R.string.delete_category_warning,
+                            category.name,
+                        ),
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxWidth(),
                     overflow = TextOverflow.Ellipsis,

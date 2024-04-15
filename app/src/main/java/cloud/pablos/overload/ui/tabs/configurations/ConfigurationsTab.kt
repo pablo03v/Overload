@@ -244,7 +244,7 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(
                     title = stringResource(id = R.string.sourcecode),
                     description = stringResource(id = R.string.sourcecode_descr),
-                    link = "https://codeberg.org/pabloscloud/Overload".toUri(),
+                    link = "https://github.com/pabloscloud/Overload".toUri(),
                     icon = Icons.Rounded.Code,
                 )
             }
@@ -254,7 +254,7 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(
                     title = stringResource(id = R.string.issue_reports),
                     description = stringResource(id = R.string.issue_reports_descr),
-                    link = "https://codeberg.org/pabloscloud/Overload/issues".toUri(),
+                    link = "https://github.com/pabloscloud/Overload/issues".toUri(),
                     icon = Icons.Rounded.EmojiNature,
                 )
             }
@@ -264,7 +264,7 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(
                     title = stringResource(id = R.string.translate),
                     description = stringResource(id = R.string.translate_descr),
-                    link = "https://translate.codeberg.org/engage/overload".toUri(),
+                    link = "https://crowdin.com/project/overload".toUri(),
                     icon = Icons.Rounded.Translate,
                 )
             }
@@ -274,7 +274,7 @@ fun ConfigurationsTab(
                 ConfigurationsTabItem(
                     title = stringResource(id = R.string.license),
                     description = stringResource(id = R.string.license_descr),
-                    link = "https://codeberg.org/pabloscloud/Overload/raw/branch/main/LICENSE".toUri(),
+                    link = "https://github.com/pabloscloud/Overload/blob/main/LICENSE".toUri(),
                     icon = Icons.Rounded.Copyright,
                 )
             }

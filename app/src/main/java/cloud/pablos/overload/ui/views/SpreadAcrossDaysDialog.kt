@@ -53,7 +53,7 @@ fun SpreadAcrossDaysDialog(
     val foregroundColor = decideForeground(backgroundColor)
 
     val context = LocalContext.current
-    val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#spread-acorss-days".toUri()
+    val learnMoreLink = "https://github.com/pabloscloud/Overload?tab=readme-ov-file#why-does-the-app-annoy-me-with-a-popup-to-adjust-the-end".toUri()
 
     val date = LocalDate.now()
 
