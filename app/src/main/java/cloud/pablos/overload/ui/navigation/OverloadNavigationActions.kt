@@ -15,6 +15,7 @@ import cloud.pablos.overload.R
 object OverloadRoute {
     const val HOME = "Home"
     const val CALENDAR = "Calendar"
+    const val CATEGORY = "Category"
     const val DAY = "Day"
     const val CONFIGURATIONS = "Configurations"
 }

@@ -1,4 +1,0 @@
-- replaces bottom-sheet with separate screen
-- accessibility improvements
-- fix minor annoyances
-- adds and updates translations (thanks to all translators!)

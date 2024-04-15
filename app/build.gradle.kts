@@ -12,15 +12,15 @@ android {
         applicationId = "cloud.pablos.overload"
         minSdk = 26
         targetSdk = 34
-        versionCode = 160
-        versionName = "0.16.0"
+        versionCode = 170
+        versionName = "0.17.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         kapt {
             arguments {
-                arg("room.schemaLocation", "")
-                arg("room.exportSchema", "false")
+                arg("room.schemaLocation", "$projectDir/schemas")
+                arg("room.exportSchema", "true")
             }
         }
     }

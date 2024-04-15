@@ -1,5 +1,0 @@
-- fix navigationDrawer available all the time
-- fix imports and deletions taking forever to be done
-- fix sheet being gone when swiped away
-- fix sheet not opening on same day selection
-- fix calling click action on empty day cells

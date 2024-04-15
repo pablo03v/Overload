@@ -29,6 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
@@ -41,17 +45,21 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun SpreadAcrossDaysDialog(
     onClose: () -> Unit,
-    state: ItemState,
-    onEvent: (ItemEvent) -> Unit,
+    categoryState: CategoryState,
+    itemState: ItemState,
+    itemEvent: (ItemEvent) -> Unit,
 ) {
+    val backgroundColor = decideBackground(categoryState)
+    val foregroundColor = decideForeground(backgroundColor)
+
     val context = LocalContext.current
-    val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#spread-acorss-days".toUri()
+    val learnMoreLink = "https://github.com/pabloscloud/Overload?tab=readme-ov-file#why-does-the-app-annoy-me-with-a-popup-to-adjust-the-end".toUri()
 
     val date = LocalDate.now()
 
     val itemsNotToday =
-        state.items.filter { item ->
-            val startTime = parseToLocalDateTime(item.startTime)
+        itemState.items.filter { item ->
+            val startTime = convertStringToLocalDateTime(item.startTime)
             extractDate(startTime) != date
         }
     val isOngoingNotToday = itemsNotToday.isNotEmpty() && itemsNotToday.any { it.ongoing }
@@ -105,7 +113,13 @@ fun SpreadAcrossDaysDialog(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    DayViewItemOngoing(item = firstOngoingItem, showDate = true, hideEnd = true, state = state)
+                    DayViewItemOngoing(
+                        item = firstOngoingItem,
+                        showDate = true,
+                        hideEnd = true,
+                        categoryState = categoryState,
+                        itemState = itemState,
+                    )
                 }
             },
             confirmButton = {
@@ -115,8 +129,8 @@ fun SpreadAcrossDaysDialog(
                     },
                     colors =
                         ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            containerColor = backgroundColor,
+                            contentColor = foregroundColor,
                         ),
                 ) {
                     TextView(stringResource(R.string.no))
@@ -125,12 +139,12 @@ fun SpreadAcrossDaysDialog(
             dismissButton = {
                 Button(
                     onClick = {
-                        onClose.save(onEvent, firstOngoingItem)
+                        onClose.save(itemEvent, firstOngoingItem)
                     },
                     colors =
                         ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                         ),
                 ) {
                     TextView(stringResource(R.string.yes))
@@ -144,12 +158,12 @@ fun SpreadAcrossDaysDialog(
 }
 
 private fun (() -> Unit).save(
-    onEvent: (ItemEvent) -> Unit,
+    itemEvent: (ItemEvent) -> Unit,
     item: Item,
 ) {
     val currentDate = LocalDate.now()
 
-    val startTime = parseToLocalDateTime(item.startTime)
+    val startTime = convertStringToLocalDateTime(item.startTime)
     val startDate = startTime.toLocalDate()
     var dateIterator = startTime.toLocalDate()
 
@@ -158,7 +172,7 @@ private fun (() -> Unit).save(
         val newStartTime = if (dateIterator == startDate) startTime else LocalDateTime.of(dateIterator, LocalTime.MIDNIGHT)
         val newEndTime =
             if (dateIterator == currentDate) {
-                parseToLocalDateTime(
+                convertStringToLocalDateTime(
                     LocalDateTime.now().toString(),
                 )
             } else {
@@ -166,13 +180,13 @@ private fun (() -> Unit).save(
             }
 
         if (dateIterator == startDate) {
-            onEvent(ItemEvent.SetId(item.id))
+            itemEvent(ItemEvent.SetId(item.id))
         }
-        onEvent(ItemEvent.SetStart(newStartTime.format(formatter)))
-        onEvent(ItemEvent.SetEnd(newEndTime.format(formatter)))
-        onEvent(ItemEvent.SetOngoing(false))
-        onEvent(ItemEvent.SetPause(item.pause))
-        onEvent(ItemEvent.SaveItem)
+        itemEvent(ItemEvent.SetStart(newStartTime.format(formatter)))
+        itemEvent(ItemEvent.SetEnd(newEndTime.format(formatter)))
+        itemEvent(ItemEvent.SetOngoing(false))
+        itemEvent(ItemEvent.SetPause(item.pause))
+        itemEvent(ItemEvent.SaveItem)
         dateIterator = dateIterator.plusDays(1)
     }
 

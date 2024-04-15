@@ -13,8 +13,8 @@ import cloud.pablos.overload.ui.views.getLocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DayScreenTopAppBar(state: ItemState) {
-    val selectedDay = getLocalDate(state.selectedDayCalendar)
+fun DayScreenTopAppBar(itemState: ItemState) {
+    val selectedDay = getLocalDate(itemState.selectedDayCalendar)
     val title = getFormattedDate(selectedDay, true)
 
     Surface(
