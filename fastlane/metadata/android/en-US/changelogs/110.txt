@@ -1,4 +1,0 @@
-- add goals
-- performance improvements
-- fix fab shown on past days
-- fix weekdays not visible while scrolling

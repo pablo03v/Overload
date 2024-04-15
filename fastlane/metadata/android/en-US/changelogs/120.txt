@@ -1,7 +1,0 @@
-- adds tracking over multiple days
-- adds themed icon
-- adds indonesian translations by @mondstern
-- adds slovenian translations by @mondstern
-- potential crash fix
-- fix all years showing up in year-picker
-- fix issue that would create events out of nowhere

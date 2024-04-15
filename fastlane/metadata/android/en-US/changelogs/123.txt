@@ -1,6 +1,0 @@
-- adds possibility to manually add items
-- code optimisations
-- updates german translations 
-- updates dutch translations by @Vistaus - thanks
-- updates polish translations by @ewm - thanks
-- updates polish translations by @SomeTr - thanks
