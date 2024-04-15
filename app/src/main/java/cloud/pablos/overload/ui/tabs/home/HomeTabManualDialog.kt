@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
@@ -67,7 +68,7 @@ fun HomeTabManualDialog(
     var selectedEndDateText by remember { mutableStateOf("") }
     var selectedEndTimeText by remember { mutableStateOf("") }
 
-    val itemsForToday = getItemsOfDay(date, categoryState, itemState)
+    val itemsForToday = getItems(categoryState, itemState, date)
 
     selectedStart =
         if (itemsForToday.isNotEmpty() && itemsForToday.last().endTime.isNotBlank()) {

@@ -24,13 +24,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.Helpers.Companion.getSelectedCategory
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeletePauseDialog
 import cloud.pablos.overload.ui.tabs.home.HomeTabEditItemDialog
-import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import java.time.LocalDate
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
@@ -48,14 +49,13 @@ fun DayScreenDayView(
         LocalDate.now()
             .minusDays((daysCount - page - 1).toLong())
 
-    val items = getItemsOfDay(date, categoryState, itemState)
-
+    val items = getItems(categoryState, itemState, date)
     val itemsDesc = items.sortedByDescending { it.startTime }
 
     val deletePauseDialogState = remember { mutableStateOf(false) }
     val editItemDialogState = remember { mutableStateOf(false) }
 
-    val selectedCategory = categoryState.categories.find { it.id == categoryState.selectedCategory }
+    val selectedCategory = getSelectedCategory(categoryState)
 
     if (itemsDesc.isNotEmpty() && selectedCategory != null) {
         val goal1 = selectedCategory.goal1

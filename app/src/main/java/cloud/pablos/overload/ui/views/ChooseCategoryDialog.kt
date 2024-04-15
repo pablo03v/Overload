@@ -1,4 +1,4 @@
-package cloud.pablos.overload.ui.tabs.calendar
+package cloud.pablos.overload.ui.views
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,10 +25,9 @@ import cloud.pablos.overload.R
 import cloud.pablos.overload.data.category.Category
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
-import cloud.pablos.overload.ui.views.TextView
 
 @Composable
-fun CalendarTabCategoryDialog(
+fun ChooseCategoryDialog(
     categoryState: CategoryState,
     categoryEvent: (CategoryEvent) -> Unit,
     onClose: () -> Unit,

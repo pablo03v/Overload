@@ -84,7 +84,7 @@ fun YearView(
                             if (isLastWeekInLastMonth) bottomPadding else 0.dp,
                         ),
                     ) {
-                        WeekRow(firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, categoryState, itemEvent, onNavigate)
+                        WeekRow(month, firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, categoryState, itemEvent, onNavigate)
                     }
                 }
             }
@@ -107,6 +107,7 @@ fun MonthNameHeader(month: Month) {
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun WeekRow(
+    month: Month,
     firstDayOfMonth: LocalDate,
     weekOfMonth: Int,
     date: LocalDate,
@@ -146,25 +147,29 @@ fun WeekRow(
         val today = LocalDate.now()
 
         while (iterationDate < endDayOfWeek) {
-            val colors =
-                getColorOfDay(
-                    categoryState = categoryState,
-                    date = iterationDate,
-                    firstDayOfMonth = firstDayOfMonth,
-                    selected = date == iterationDate,
-                    highlightSelectedDay = highlightSelectedDay,
-                )
-            val number = iterationDate.dayOfMonth.toString()
-            val clickable = iterationDate <= today
+            if (iterationDate.month == month) {
+                val colors =
+                    getColorOfDay(
+                        categoryState = categoryState,
+                        date = iterationDate,
+                        firstDayOfMonth = firstDayOfMonth,
+                        selected = date == iterationDate,
+                        highlightSelectedDay = highlightSelectedDay,
+                    )
+                val number = iterationDate.dayOfMonth.toString()
+                val clickable = iterationDate <= today
 
-            DayCell(
-                date = iterationDate,
-                itemEvent = itemEvent,
-                colors = colors,
-                number = number,
-                clickable = clickable,
-                onNavigate = onNavigate,
-            )
+                DayCell(
+                    date = iterationDate,
+                    itemEvent = itemEvent,
+                    colors = colors,
+                    number = number,
+                    clickable = clickable,
+                    onNavigate = onNavigate,
+                )
+            } else {
+                EmptyDayCell()
+            }
 
             iterationDate = iterationDate.plusDays(1)
         }
@@ -239,25 +244,20 @@ fun getColorOfDay(
     val month = firstDayOfMonth.month
     val today = LocalDate.now()
 
-    val backgroundColor =
-        if (selected && highlightSelectedDay) {
-            decideBackground(categoryState)
-        } else if (date <= today && date.month == month) {
-            MaterialTheme.colorScheme.surfaceVariant
-        } else {
-            Color.Transparent
-        }
+    var backgroundColor = Color.Transparent
+    var foregroundColor = Color.Unspecified
+    var borderColor = Color.Transparent
 
-    val foregroundColor = decideForeground(backgroundColor)
+    if (selected && highlightSelectedDay) {
+        backgroundColor = decideBackground(categoryState)
+        foregroundColor = decideForeground(backgroundColor)
+    } else if (date <= today && date.month == month) {
+        backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+    }
 
-    val borderColor =
-        if (
-            date == LocalDate.now()
-        ) {
-            decideBackground(categoryState)
-        } else {
-            Color.Transparent
-        }
+    if (date == LocalDate.now()) {
+        borderColor = decideBackground(categoryState)
+    }
 
     return DayCellColors(foregroundColor, backgroundColor, borderColor)
 }

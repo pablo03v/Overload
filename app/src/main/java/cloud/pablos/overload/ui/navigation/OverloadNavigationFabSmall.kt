@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
@@ -25,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Helpers
+import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -32,8 +34,6 @@ import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.fabPress
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeleteFAB
 import cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog
-import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
-import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
@@ -50,7 +50,7 @@ fun OverloadNavigationFabSmall(
 
     val date = LocalDate.now()
 
-    val itemsForToday = getItemsOfDay(date, categoryState, itemState)
+    val itemsForToday = getItems(categoryState, itemState, date)
 
     val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
 
@@ -92,8 +92,8 @@ fun OverloadNavigationFabSmall(
                     onClick = {
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
-                    containerColor = backgroundColor,
-                    contentColor = foregroundColor,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,
@@ -106,8 +106,8 @@ fun OverloadNavigationFabSmall(
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                         manualDialogState.value = true
                     },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = backgroundColor,
+                    contentColor = foregroundColor,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
@@ -115,20 +115,18 @@ fun OverloadNavigationFabSmall(
                     )
                 }
 
-                categoryState.categories.filter {
-                    categoryState.selectedCategory != it.id
-                }.forEach { category ->
-                    SmallFloatingActionButton(
-                        onClick = {
-                            categoryEvent(CategoryEvent.SetSelectedCategory(category.id))
-
-                            itemEvent(ItemEvent.SetIsFabOpen(false))
-                        },
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.primaryContainer,
-                    ) {
-                        TextView(text = category.emoji)
-                    }
+                SmallFloatingActionButton(
+                    onClick = {
+                        itemEvent(ItemEvent.SetIsFabOpen(false))
+                        categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
+                    },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Category,
+                        contentDescription = stringResource(id = R.string.switch_category),
+                    )
                 }
             }
             false -> {

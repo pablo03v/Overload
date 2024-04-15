@@ -11,9 +11,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.data.Helpers
+import cloud.pablos.overload.data.Helpers.Companion.getSelectedCategory
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
-import cloud.pablos.overload.ui.tabs.calendar.CalendarTabCategoryDialog
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -24,7 +24,7 @@ fun ChangeCategoryButton(
     val categoryDialogState = remember { mutableStateOf(false) }
 
     val categoriesCount = categoryState.categories.count()
-    val selectedCategory = categoryState.categories.find { it.id == categoryState.selectedCategory }
+    val selectedCategory = getSelectedCategory(categoryState)
 
     if (categoriesCount > 1 && selectedCategory != null) {
         val backgroundColor = Helpers.decideBackground(categoryState)
@@ -42,7 +42,7 @@ fun ChangeCategoryButton(
             TextView(selectedCategory.emoji)
         }
         if (categoryDialogState.value) {
-            CalendarTabCategoryDialog(
+            ChooseCategoryDialog(
                 categoryState,
                 categoryEvent,
                 onClose = { categoryDialogState.value = false },

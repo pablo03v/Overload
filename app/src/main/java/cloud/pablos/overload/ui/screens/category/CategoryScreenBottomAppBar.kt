@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -64,10 +65,7 @@ fun CategoryScreenBottomAppBar(
             onConfirm = {
                 categoryEvent(CategoryEvent.DeleteCategory(selectedCategory))
 
-                val items =
-                    itemState.items.filter { item ->
-                        selectedCategory.id == item.categoryId
-                    }
+                val items = getItems(categoryState, itemState)
                 itemEvent(ItemEvent.DeleteItems(items))
 
                 deleteCategoryDialog.value = false

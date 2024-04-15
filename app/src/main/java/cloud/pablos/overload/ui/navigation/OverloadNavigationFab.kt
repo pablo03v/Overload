@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DeleteForever
 import androidx.compose.material.icons.filled.PlayArrow
@@ -31,13 +32,13 @@ import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Helpers.Companion.decideBackground
 import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.fabPress
 import cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog
-import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
 import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -56,7 +57,7 @@ fun OverloadNavigationFab(
 
     val date = LocalDate.now()
 
-    val itemsForToday = getItemsOfDay(date, categoryState, itemState)
+    val itemsForToday = getItems(categoryState, itemState, date)
 
     val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
 
@@ -99,8 +100,8 @@ fun OverloadNavigationFab(
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     interactionSource = interactionSource,
-                    containerColor = backgroundColor,
-                    contentColor = foregroundColor,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
                 ) {
                     Column(
@@ -132,8 +133,8 @@ fun OverloadNavigationFab(
                         manualDialogState.value = true
                         onDrawerClicked()
                     },
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.primaryContainer,
+                    containerColor = backgroundColor,
+                    contentColor = foregroundColor,
                     modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
                 ) {
                     Column(
@@ -147,7 +148,7 @@ fun OverloadNavigationFab(
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Add,
-                                contentDescription = stringResource(id = R.string.close),
+                                contentDescription = stringResource(id = R.string.manual_entry),
                                 modifier = Modifier.padding(8.dp),
                             )
 
@@ -159,41 +160,35 @@ fun OverloadNavigationFab(
                     }
                 }
 
-                categoryState.categories.filter {
-                    categoryState.selectedCategory != it.id
-                }.forEach { category ->
-                    SmallFloatingActionButton(
-                        onClick = {
-                            categoryEvent(CategoryEvent.SetSelectedCategory(category.id))
-
-                            itemEvent(ItemEvent.SetIsFabOpen(false))
-
-                            onDrawerClicked()
-                        },
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.primaryContainer,
-                        modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+                SmallFloatingActionButton(
+                    onClick = {
+                        itemEvent(ItemEvent.SetIsFabOpen(false))
+                        categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
+                        onDrawerClicked()
+                    },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start,
                     ) {
-                        Column(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.Start,
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                            modifier = Modifier.padding(8.dp),
                         ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.Start,
+                            Icon(
+                                imageVector = Icons.Default.Category,
+                                contentDescription = stringResource(id = R.string.switch_category),
                                 modifier = Modifier.padding(8.dp),
-                            ) {
-                                /*Icon(
-                                    imageVector = category.icon,
-                                    contentDescription = category.name,
-                                    modifier = Modifier.padding(8.dp),
-                                )*/
+                            )
 
-                                TextView(
-                                    text = "Switch to " + category.name,
-                                    modifier = Modifier.padding(end = 8.dp),
-                                )
-                            }
+                            TextView(
+                                text = stringResource(id = R.string.switch_category),
+                                modifier = Modifier.padding(end = 8.dp),
+                            )
                         }
                     }
                 }

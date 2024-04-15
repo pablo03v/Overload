@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -39,11 +40,13 @@ fun DayScreen(
 ) {
     val selectedDay = getLocalDate(itemState.selectedDayCalendar)
 
+    val items = getItems(categoryState, itemState)
+
     val firstYear =
-        if (itemState.items.isEmpty()) {
+        if (items.isEmpty()) {
             LocalDate.now().year
         } else {
-            itemState.items.minByOrNull { it.startTime }
+            items.minByOrNull { it.startTime }
                 ?.let { convertStringToLocalDateTime(it.startTime).year }
                 ?: LocalDate.now().year
         }

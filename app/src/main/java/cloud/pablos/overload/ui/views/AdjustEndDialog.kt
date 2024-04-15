@@ -39,11 +39,11 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.getItemsPastDays
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -58,13 +58,7 @@ fun AdjustEndDialog(
     val context = LocalContext.current
     val learnMoreLink = "https://codeberg.org/pabloscloud/Overload#spread-acorss-days".toUri()
 
-    val date = LocalDate.now()
-
-    val itemsNotToday =
-        itemState.items.filter { item ->
-            val startTime = convertStringToLocalDateTime(item.startTime)
-            extractDate(startTime) != date
-        }
+    val itemsNotToday = getItemsPastDays(categoryState, itemState)
     val isOngoingNotToday = itemsNotToday.isNotEmpty() && itemsNotToday.any { it.ongoing }
     val firstOngoingItem = itemsNotToday.find { it.ongoing }
 

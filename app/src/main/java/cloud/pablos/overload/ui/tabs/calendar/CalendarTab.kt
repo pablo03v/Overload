@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -67,16 +68,23 @@ fun CalendarTab(
         },
     ) { paddingValues ->
         Box(modifier = Modifier.fillMaxSize()) {
+            val selectedYear by remember { mutableIntStateOf(itemState.selectedYearCalendar) }
+            val selectedDay = getLocalDate(itemState.selectedDayCalendar)
+            val items = getItems(categoryState, itemState)
+
+            LaunchedEffect(selectedYear) {
+                if (itemState.selectedYearCalendar != selectedDay.year) {
+                    itemEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
+                }
+            }
+
             Column(modifier = Modifier.padding(paddingValues)) {
                 AnimatedVisibility(visible = contentType == OverloadContentType.DUAL_PANE) {
-                    val selectedYear by remember { mutableIntStateOf(itemState.selectedYearCalendar) }
-                    val selectedDay = getLocalDate(itemState.selectedDayCalendar)
-
                     val firstYear =
-                        if (itemState.items.isEmpty()) {
+                        if (items.isEmpty()) {
                             LocalDate.now().year
                         } else {
-                            itemState.items.minByOrNull { it.startTime }
+                            items.minByOrNull { it.startTime }
                                 ?.let { convertStringToLocalDateTime(it.startTime).year }
                                 ?: LocalDate.now().year
                         }
@@ -92,12 +100,6 @@ fun CalendarTab(
                             initialPageOffsetFraction = 0f,
                             pageCount = { daysCount },
                         )
-
-                    LaunchedEffect(selectedYear) {
-                        if (itemState.selectedYearCalendar != selectedDay.year) {
-                            itemEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
-                        }
-                    }
 
                     LaunchedEffect(pagerState.currentPage) {
                         scrollToPage = false
@@ -191,6 +193,7 @@ fun CalendarTab(
                             itemEvent = itemEvent,
                             date = getLocalDate(itemState.selectedDayCalendar),
                             year = itemState.selectedYearCalendar,
+                            bottomPadding = 16.dp,
                             onNavigate = onNavigate,
                         )
                     }

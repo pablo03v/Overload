@@ -3,7 +3,14 @@ package cloud.pablos.overload.data
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.category.Category
 import cloud.pablos.overload.data.category.CategoryState
+import cloud.pablos.overload.data.item.Item
+import cloud.pablos.overload.data.item.ItemState
+import cloud.pablos.overload.ui.views.extractDate
+import cloud.pablos.overload.ui.views.getLocalDate
+import java.time.LocalDate
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.pow
@@ -52,6 +59,46 @@ class Helpers {
             val contrastWithWhite = calculateContrastRatio(background, white)
             val contrastWithBlack = calculateContrastRatio(background, black)
             return if (contrastWithWhite >= contrastWithBlack) white else black
+        }
+
+        fun getSelectedDay(itemState: ItemState): LocalDate {
+            return itemState.selectedDayCalendar.takeIf { it.isNotBlank() }?.let { getLocalDate(it) }
+                ?: LocalDate.now()
+        }
+
+        fun getSelectedCategory(categoryState: CategoryState): Category? {
+            return categoryState.categories.find { it.id == categoryState.selectedCategory }
+        }
+
+        fun getItems(
+            categoryState: CategoryState,
+            itemState: ItemState,
+            date: LocalDate? = null,
+        ): List<Item> {
+            return itemState.items.filter { item ->
+                val startTime = convertStringToLocalDateTime(item.startTime)
+                val categoryId = categoryState.selectedCategory
+
+                if (date != null) {
+                    categoryId == item.categoryId &&
+                        extractDate(startTime) == date
+                } else {
+                    categoryId == item.categoryId
+                }
+            }
+        }
+
+        fun getItemsPastDays(
+            categoryState: CategoryState,
+            itemState: ItemState,
+        ): List<Item> {
+            return itemState.items.filter { item ->
+                val startTime = convertStringToLocalDateTime(item.startTime)
+                val categoryId = categoryState.selectedCategory
+
+                categoryId == item.categoryId &&
+                    extractDate(startTime) != LocalDate.now()
+            }
         }
     }
 }

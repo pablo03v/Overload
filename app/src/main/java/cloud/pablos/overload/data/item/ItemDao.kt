@@ -6,11 +6,11 @@ import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
 import cloud.pablos.overload.data.Converters.Companion.convertColorToLong
-import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.Helpers.Companion.getItemsPastDays
+import cloud.pablos.overload.data.Helpers.Companion.getSelectedCategory
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
-import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
-import cloud.pablos.overload.ui.views.extractDate
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -66,7 +66,7 @@ fun startOrStop(
     itemEvent: (ItemEvent) -> Unit,
 ) {
     val date = LocalDate.now()
-    val selectedCategory = categoryState.categories.find { it.id == categoryState.selectedCategory }
+    val selectedCategory = getSelectedCategory(categoryState)
     var selectedCategoryId: Int?
 
     if (selectedCategory != null) {
@@ -83,18 +83,14 @@ fun startOrStop(
         }
     }
 
-    val itemsForToday = getItemsOfDay(date, categoryState, itemState)
-    val isFirstToday = itemsForToday.isEmpty()
-    val isOngoingToday = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
+    val itemsToday = getItems(categoryState, itemState, date)
+    val isFirstToday = itemsToday.isEmpty()
+    val isOngoingToday = itemsToday.isNotEmpty() && itemsToday.last().ongoing
 
-    val itemsNotToday =
-        itemState.items.filter { item ->
-            val startTime = convertStringToLocalDateTime(item.startTime)
-            extractDate(startTime) != date
-        }
-    val isOngoingNotToday = itemsNotToday.isNotEmpty() && itemsNotToday.any { it.ongoing }
+    val itemsPastDays = getItemsPastDays(categoryState, itemState)
+    val itemsOngoingNotToday = itemsPastDays.isNotEmpty() && itemsPastDays.any { it.ongoing }
 
-    if (isOngoingNotToday) {
+    if (itemsOngoingNotToday) {
         itemEvent(ItemEvent.SetForgotToStopDialogShown(true))
     } else if (isFirstToday) {
         itemEvent(ItemEvent.SetCategoryId(selectedCategoryId))
@@ -106,8 +102,8 @@ fun startOrStop(
         itemEvent(ItemEvent.SetIsOngoing(true))
     } else if (isOngoingToday) {
         itemEvent(ItemEvent.SetCategoryId(selectedCategoryId))
-        itemEvent(ItemEvent.SetId(itemsForToday.last().id))
-        itemEvent(ItemEvent.SetStart(itemsForToday.last().startTime))
+        itemEvent(ItemEvent.SetId(itemsToday.last().id))
+        itemEvent(ItemEvent.SetStart(itemsToday.last().startTime))
         itemEvent(ItemEvent.SetEnd(LocalDateTime.now().toString()))
         itemEvent(ItemEvent.SetOngoing(false))
         itemEvent(ItemEvent.SaveItem)
@@ -115,7 +111,7 @@ fun startOrStop(
         itemEvent(ItemEvent.SetIsOngoing(false))
     } else {
         itemEvent(ItemEvent.SetCategoryId(selectedCategoryId))
-        itemEvent(ItemEvent.SetStart(itemsForToday.last().endTime))
+        itemEvent(ItemEvent.SetStart(itemsToday.last().endTime))
         itemEvent(ItemEvent.SetEnd(LocalDateTime.now().toString()))
         itemEvent(ItemEvent.SetOngoing(false))
         itemEvent(ItemEvent.SetPause(true))

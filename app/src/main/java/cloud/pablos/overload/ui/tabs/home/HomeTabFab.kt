@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Stop
@@ -33,8 +34,9 @@ import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
-import cloud.pablos.overload.data.Converters.Companion.convertLongToColor
 import cloud.pablos.overload.data.Helpers
+import cloud.pablos.overload.data.Helpers.Companion.decideBackground
+import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -58,7 +60,7 @@ fun HomeTabFab(
 
     val date = LocalDate.now()
 
-    val itemsForToday = getItemsOfDay(date, categoryState, itemState)
+    val itemsForToday = getItems(categoryState, itemState, date)
 
     val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
     val interactionSource = remember { MutableInteractionSource() }
@@ -95,37 +97,34 @@ fun HomeTabFab(
     ) {
         when (itemState.isFabOpen) {
             true -> {
-                categoryState.categories.filter {
-                    categoryState.selectedCategory != it.id
-                }.forEach { category ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier.padding(end = 8.dp),
                     ) {
-                        Box(
-                            modifier = Modifier.padding(end = 8.dp),
-                        ) {
-                            TextView(
-                                text = "Switch to " + category.name,
-                                modifier =
-                                    Modifier
-                                        .clip(RoundedCornerShape(12.dp))
-                                        .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                                        .padding(horizontal = 8.dp, vertical = 4.dp),
-                            )
-                        }
+                        TextView(
+                            text = stringResource(id = R.string.switch_category),
+                            modifier =
+                                Modifier
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(color = MaterialTheme.colorScheme.surfaceContainer)
+                                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                        )
+                    }
 
-                        val color = convertLongToColor(category.color)
-                        SmallFloatingActionButton(
-                            onClick = {
-                                categoryEvent(CategoryEvent.SetSelectedCategory(category.id))
-
-                                itemEvent(ItemEvent.SetIsFabOpen(false))
-                            },
-                            containerColor = color,
-                            contentColor = Helpers.decideForeground(color),
-                        ) {
-                            TextView(text = category.emoji)
-                        }
+                    SmallFloatingActionButton(
+                        onClick = {
+                            itemEvent(ItemEvent.SetIsFabOpen(false))
+                            categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(true))
+                        },
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Category,
+                            contentDescription = stringResource(id = R.string.switch_category),
+                        )
                     }
                 }
 
@@ -150,8 +149,8 @@ fun HomeTabFab(
                             itemEvent(ItemEvent.SetIsFabOpen(false))
                             manualDialogState.value = true
                         },
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.primaryContainer,
+                        containerColor = backgroundColor,
+                        contentColor = foregroundColor,
                     ) {
                         Icon(
                             imageVector = Icons.Default.Add,
@@ -164,8 +163,8 @@ fun HomeTabFab(
                     onClick = {
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
-                    containerColor = backgroundColor,
-                    contentColor = foregroundColor,
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ) {
                     Icon(
                         imageVector = Icons.Default.Close,

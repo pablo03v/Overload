@@ -155,7 +155,7 @@ fun ConfigurationsTab(
                                 tint = MaterialTheme.colorScheme.onSecondaryContainer,
                             )
                             TextView(
-                                text = "add category",
+                                text = stringResource(id = R.string.add_category),
                                 color = MaterialTheme.colorScheme.onSecondaryContainer,
                             )
                         }

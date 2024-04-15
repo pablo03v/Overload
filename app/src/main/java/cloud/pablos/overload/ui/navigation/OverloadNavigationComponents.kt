@@ -49,6 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.offset
 import androidx.navigation.NavHostController
 import cloud.pablos.overload.R
+import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.Helpers.Companion.getSelectedDay
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -61,8 +63,6 @@ import cloud.pablos.overload.ui.tabs.calendar.CalendarTabTopAppBar
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabTopAppBar
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeleteBottomAppBar
 import cloud.pablos.overload.ui.tabs.home.HomeTabTopAppBar
-import cloud.pablos.overload.ui.tabs.home.getItemsOfDay
-import cloud.pablos.overload.ui.tabs.home.getSelectedDay
 import cloud.pablos.overload.ui.utils.OverloadNavigationContentPosition
 import cloud.pablos.overload.ui.views.DeleteTopAppBar
 import cloud.pablos.overload.ui.views.TextView
@@ -117,7 +117,7 @@ fun OverloadNavigationRail(
                     when (itemState.isDeletingHome) {
                         true -> {
                             val date = getSelectedDay(itemState)
-                            val items = getItemsOfDay(date, categoryState, itemState)
+                            val items = getItems(categoryState, itemState, date)
 
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -345,6 +345,7 @@ class TopBarState private constructor() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun OverloadTopAppBar(
     selectedDestination: String,
@@ -493,7 +494,7 @@ fun ModalNavigationDrawerContent(
                     when (itemState.isDeletingHome) {
                         true -> {
                             val date = getSelectedDay(itemState)
-                            val items = getItemsOfDay(date, categoryState, itemState)
+                            val items = getItems(categoryState, itemState, date)
 
                             Column(
                                 modifier = Modifier.verticalScroll(rememberScrollState()),
