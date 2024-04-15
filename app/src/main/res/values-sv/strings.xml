@@ -50,6 +50,7 @@
     <string name="calendar">Kalender</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfigurationer</string>
+    <string name="categories">Categories</string>
     <string name="goals">Mål</string>
     <string name="work">Arbete</string>
     <string name="work_goal_descr">Sätt upp ett mål för arbetet</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Import</string>
     <string name="import_descr">Import från en backup</string>
-    <string name="import_backup">Import Backup</string>
-    <string name="import_backup_descr">För att importera data till appen använder du Sharesheet från andra appar. På så sätt kan appen på ett säkert sätt komma åt de delade uppgifterna och importera dem till din databas.</string>
     <string name="import_success">Säkerhetskopian har importerats</string>
     <string name="import_failure">Import av säkerhetskopian misslyckades</string>
     <string name="analytics">analys</string>
@@ -101,18 +100,17 @@ Frekvens - Hur ofta inträffar denna krasch?\n
 Tack för ditt tålamod!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Spara</string>
-    <string name="pick_work_goal">Ange mål för arbetet</string>
     <string name="hours">timmar</string>
     <string name="minutes">minuter</string>
     <string name="cancel">Annullera</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
     <string name="pick_pause_goal">Ange mål för paus</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Arbeta vänster</string>
     <string name="pause_left">Paus vänster</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">pil framåt som beskriver riktningen för båda tiderna från början till slut</string>
     <string name="select_year">Välj år</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Översätt</string>
     <string name="translate_descr">Vill du översätta appen? Tack för hjälpen!</string>
     <string name="adjust">Justera</string>
@@ -131,4 +129,7 @@ Tack för ditt tålamod!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>
