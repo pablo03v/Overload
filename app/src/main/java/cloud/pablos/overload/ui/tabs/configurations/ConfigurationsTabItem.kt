@@ -177,9 +177,9 @@ fun ConfigurationsTabItemPreview() {
         color = MaterialTheme.colorScheme.background,
     ) {
         ConfigurationsTabItem(
-            title = "F-Droid",
-            description = "please support them",
-            link = "https://f-droid.org".toUri(),
+            title = "Overload Website",
+            description = "click here to open the website",
+            link = "https://overload.pablos.cloud".toUri(),
             icon = Icons.Rounded.Info,
         )
     }

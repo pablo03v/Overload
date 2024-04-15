@@ -29,12 +29,6 @@ class CategoryViewModel(
             is CategoryEvent.DeleteCategory -> {
                 viewModelScope.launch {
                     dao.deleteCategory(event.category)
-
-                    /*_state.update {
-                        it.copy(
-                            // TODO: If current category, then switch to default
-                        )
-                    }*/
                 }
             }
 
