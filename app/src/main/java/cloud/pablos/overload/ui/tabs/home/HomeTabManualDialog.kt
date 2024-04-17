@@ -316,7 +316,7 @@ fun HomeTabManualDialog(
                         border =
                             FilterChipDefaults.filterChipBorder(
                                 enabled = true,
-                                selected = selectedPause,
+                                selected = selectedPause.not(),
                                 borderColor = backgroundColor,
                             ),
                         onClick = { selectedPause = false },
