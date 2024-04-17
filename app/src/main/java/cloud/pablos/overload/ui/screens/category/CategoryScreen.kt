@@ -240,7 +240,7 @@ fun CategoryScreen(
                                 .padding(bottom = 16.dp)
                                 .clip(shape = RoundedCornerShape(15.dp))
                                 .clickable {
-                                    pauseGoalDialogState.value = true
+                                    goalDialogState.value = true
                                 }
                                 .clearAndSetSemantics {
                                     contentDescription = itemLabel

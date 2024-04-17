@@ -73,7 +73,12 @@ fun DayView(
                         Box(
                             modifier = Modifier.weight(1f),
                         ) {
-                            DayViewProgress(category = selectedCategory, goal = goal1, items = items, isPause = false)
+                            DayViewProgress(
+                                category = selectedCategory,
+                                goal = goal1,
+                                items = items,
+                                isPause = false,
+                            )
                         }
                     }
 
