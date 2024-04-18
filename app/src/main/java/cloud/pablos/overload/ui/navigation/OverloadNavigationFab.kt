@@ -38,7 +38,7 @@ import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.fabPress
-import cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog
+import cloud.pablos.overload.ui.views.AddEntryDialog
 import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -46,6 +46,7 @@ import java.time.LocalDate
 
 @Composable
 fun OverloadNavigationFab(
+    selectedDestination: String,
     categoryEvent: (CategoryEvent) -> Unit,
     categoryState: CategoryState,
     itemState: ItemState,
@@ -55,54 +56,21 @@ fun OverloadNavigationFab(
     val backgroundColor = decideBackground(categoryState)
     val foregroundColor = decideForeground(backgroundColor)
 
-    val date = LocalDate.now()
-
-    val itemsForToday = getItems(categoryState, itemState, date)
-
-    val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
-
-    val interactionSource = remember { MutableInteractionSource() }
-
-    val viewConfiguration = LocalViewConfiguration.current
-
-    var isLongClick by remember { mutableStateOf(false) }
-
-    val manualDialogState = remember { mutableStateOf(false) }
-
-    LaunchedEffect(interactionSource) {
-        interactionSource.interactions.collectLatest { interaction ->
-            when (interaction) {
-                is PressInteraction.Press -> {
-                    isLongClick = false
-                    delay(viewConfiguration.longPressTimeoutMillis)
-                    isLongClick = true
-
-                    itemEvent(ItemEvent.SetIsFabOpen(true))
-                    itemEvent(ItemEvent.SetIsDeletingHome(false))
-                }
-                is PressInteraction.Release -> {
-                }
-                is PressInteraction.Cancel -> {
-                    isLongClick = false
-                }
-            }
-        }
-    }
+    val addEntryDialogState = remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        when (itemState.isFabOpen) {
+        when (itemState.isDeletingHome) {
             true -> {
                 FloatingActionButton(
                     {
-                        itemEvent(ItemEvent.SetIsFabOpen(false))
+                        itemEvent(ItemEvent.DeleteItems(itemState.selectedItemsHome))
                     },
-                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    interactionSource = interactionSource,
+                    Modifier.fillMaxWidth(),
+                    containerColor = MaterialTheme.colorScheme.errorContainer,
+                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
                 ) {
                     Column(
                         Modifier.fillMaxWidth(),
@@ -114,98 +82,210 @@ fun OverloadNavigationFab(
                             Alignment.CenterVertically,
                         ) {
                             Icon(
-                                Icons.Default.Close,
-                                stringResource(R.string.close),
+                                Icons.Filled.DeleteForever,
+                                stringResource(R.string.delete_items_forever),
                                 Modifier.padding(8.dp),
                             )
 
                             TextView(
-                                stringResource(R.string.close),
+                                stringResource(R.string.delete_items_forever).replaceFirstChar { it.uppercase() },
                                 Modifier.padding(end = 8.dp),
                             )
-                        }
-                    }
-                }
-
-                SmallFloatingActionButton(
-                    {
-                        itemEvent(ItemEvent.SetIsFabOpen(false))
-                        manualDialogState.value = true
-                        onDrawerClicked()
-                    },
-                    Modifier.padding(bottom = 10.dp).fillMaxWidth(),
-                    containerColor = backgroundColor,
-                    contentColor = foregroundColor,
-                ) {
-                    Column(
-                        Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.Start,
-                    ) {
-                        Row(
-                            Modifier.padding(8.dp),
-                            Arrangement.Start,
-                            Alignment.CenterVertically,
-                        ) {
-                            Icon(
-                                Icons.Default.Add,
-                                stringResource(R.string.manual_entry),
-                                Modifier.padding(8.dp),
-                            )
-
-                            TextView(
-                                stringResource(R.string.manual_entry),
-                                Modifier.padding(end = 8.dp),
-                            )
-                        }
-                    }
-                }
-
-                if (categoryState.categories.count() > 1) {
-                    SmallFloatingActionButton(
-                        {
-                            itemEvent(ItemEvent.SetIsFabOpen(false))
-                            categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
-                            onDrawerClicked()
-                        },
-                        Modifier.padding(bottom = 10.dp).fillMaxWidth(),
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ) {
-                        Column(
-                            Modifier.fillMaxWidth(),
-                            horizontalAlignment = Alignment.Start,
-                        ) {
-                            Row(
-                                Modifier.padding(8.dp),
-                                Arrangement.Start,
-                                Alignment.CenterVertically,
-                            ) {
-                                Icon(
-                                    Icons.Default.Category,
-                                    stringResource(R.string.switch_category),
-                                    Modifier.padding(8.dp),
-                                )
-
-                                TextView(
-                                    stringResource(R.string.switch_category),
-                                    Modifier.padding(end = 8.dp),
-                                )
-                            }
                         }
                     }
                 }
             }
             false -> {
-                when (itemState.isDeletingHome) {
-                    true -> {
+                when (selectedDestination) {
+                    OverloadRoute.HOME -> {
+                        val date = LocalDate.now()
+                        val itemsForToday = getItems(categoryState, itemState, date)
+                        val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
+                        val interactionSource = remember { MutableInteractionSource() }
+                        val viewConfiguration = LocalViewConfiguration.current
+                        var isLongClick by remember { mutableStateOf(false) }
+
+                        LaunchedEffect(interactionSource) {
+                            interactionSource.interactions.collectLatest { interaction ->
+                                when (interaction) {
+                                    is PressInteraction.Press -> {
+                                        isLongClick = false
+                                        delay(viewConfiguration.longPressTimeoutMillis)
+                                        isLongClick = true
+
+                                        itemEvent(ItemEvent.SetIsFabOpen(true))
+                                        itemEvent(ItemEvent.SetIsDeletingHome(false))
+                                    }
+                                    is PressInteraction.Release -> {
+                                    }
+                                    is PressInteraction.Cancel -> {
+                                        isLongClick = false
+                                    }
+                                }
+                            }
+                        }
+
+                        when (itemState.isFabOpen) {
+                            true -> {
+                                FloatingActionButton(
+                                    {
+                                        itemEvent(ItemEvent.SetIsFabOpen(false))
+                                    },
+                                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    interactionSource = interactionSource,
+                                ) {
+                                    Column(
+                                        Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.Start,
+                                    ) {
+                                        Row(
+                                            Modifier.padding(8.dp),
+                                            Arrangement.Start,
+                                            Alignment.CenterVertically,
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Close,
+                                                stringResource(R.string.close),
+                                                Modifier.padding(8.dp),
+                                            )
+
+                                            TextView(
+                                                stringResource(R.string.close),
+                                                Modifier.padding(end = 8.dp),
+                                            )
+                                        }
+                                    }
+                                }
+
+                                SmallFloatingActionButton(
+                                    {
+                                        itemEvent(ItemEvent.SetIsFabOpen(false))
+                                        addEntryDialogState.value = true
+                                        onDrawerClicked()
+                                    },
+                                    Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+                                    containerColor = backgroundColor,
+                                    contentColor = foregroundColor,
+                                ) {
+                                    Column(
+                                        Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.Start,
+                                    ) {
+                                        Row(
+                                            Modifier.padding(8.dp),
+                                            Arrangement.Start,
+                                            Alignment.CenterVertically,
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Add,
+                                                stringResource(R.string.manual_entry),
+                                                Modifier.padding(8.dp),
+                                            )
+
+                                            TextView(
+                                                stringResource(R.string.manual_entry),
+                                                Modifier.padding(end = 8.dp),
+                                            )
+                                        }
+                                    }
+                                }
+
+                                if (categoryState.categories.count() > 1) {
+                                    SmallFloatingActionButton(
+                                        {
+                                            itemEvent(ItemEvent.SetIsFabOpen(false))
+                                            categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
+                                            onDrawerClicked()
+                                        },
+                                        Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    ) {
+                                        Column(
+                                            Modifier.fillMaxWidth(),
+                                            horizontalAlignment = Alignment.Start,
+                                        ) {
+                                            Row(
+                                                Modifier.padding(8.dp),
+                                                Arrangement.Start,
+                                                Alignment.CenterVertically,
+                                            ) {
+                                                Icon(
+                                                    Icons.Default.Category,
+                                                    stringResource(R.string.switch_category),
+                                                    Modifier.padding(8.dp),
+                                                )
+
+                                                TextView(
+                                                    stringResource(R.string.switch_category),
+                                                    Modifier.padding(end = 8.dp),
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            false -> {
+                                FloatingActionButton(
+                                    {
+                                        if (isLongClick.not()) {
+                                            fabPress(categoryState, categoryEvent, itemState, itemEvent)
+                                        }
+                                    },
+                                    Modifier.fillMaxWidth(),
+                                    containerColor = backgroundColor,
+                                    contentColor = foregroundColor,
+                                    interactionSource = interactionSource,
+                                ) {
+                                    Column(
+                                        Modifier.fillMaxWidth(),
+                                        horizontalAlignment = Alignment.Start,
+                                    ) {
+                                        Row(
+                                            Modifier.padding(8.dp),
+                                            Arrangement.Start,
+                                            Alignment.CenterVertically,
+                                        ) {
+                                            if (isOngoing) {
+                                                Icon(
+                                                    Icons.Default.Stop,
+                                                    stringResource(R.string.stop),
+                                                    Modifier.padding(8.dp),
+                                                )
+
+                                                TextView(
+                                                    stringResource(R.string.stop),
+                                                    Modifier.padding(end = 8.dp),
+                                                )
+                                            } else {
+                                                Icon(
+                                                    Icons.Default.PlayArrow,
+                                                    stringResource(R.string.start),
+                                                    Modifier.padding(8.dp),
+                                                )
+
+                                                TextView(
+                                                    stringResource(R.string.start),
+                                                    Modifier.padding(end = 8.dp),
+                                                )
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    OverloadRoute.CALENDAR -> {
                         FloatingActionButton(
                             {
-                                itemEvent(ItemEvent.DeleteItems(itemState.selectedItemsHome))
+                                addEntryDialogState.value = true
                             },
                             Modifier.fillMaxWidth(),
-                            containerColor = MaterialTheme.colorScheme.errorContainer,
-                            contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                            interactionSource = interactionSource,
+                            containerColor = backgroundColor,
+                            contentColor = foregroundColor,
                         ) {
                             Column(
                                 Modifier.fillMaxWidth(),
@@ -217,63 +297,15 @@ fun OverloadNavigationFab(
                                     Alignment.CenterVertically,
                                 ) {
                                     Icon(
-                                        Icons.Filled.DeleteForever,
-                                        stringResource(R.string.delete_items_forever),
+                                        Icons.Default.Add,
+                                        stringResource(R.string.manual_entry),
                                         Modifier.padding(8.dp),
                                     )
 
                                     TextView(
-                                        stringResource(R.string.delete_items_forever).replaceFirstChar { it.uppercase() },
+                                        stringResource(R.string.manual_entry).replaceFirstChar { it.uppercase() },
                                         Modifier.padding(end = 8.dp),
                                     )
-                                }
-                            }
-                        }
-                    }
-                    false -> {
-                        FloatingActionButton(
-                            {
-                                if (isLongClick.not()) {
-                                    fabPress(categoryState, categoryEvent, itemState, itemEvent)
-                                }
-                            },
-                            Modifier.fillMaxWidth(),
-                            containerColor = backgroundColor,
-                            contentColor = foregroundColor,
-                            interactionSource = interactionSource,
-                        ) {
-                            Column(
-                                Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.Start,
-                            ) {
-                                Row(
-                                    Modifier.padding(8.dp),
-                                    Arrangement.Start,
-                                    Alignment.CenterVertically,
-                                ) {
-                                    if (isOngoing) {
-                                        Icon(
-                                            Icons.Default.Stop,
-                                            stringResource(R.string.stop),
-                                            Modifier.padding(8.dp),
-                                        )
-
-                                        TextView(
-                                            stringResource(R.string.stop),
-                                            Modifier.padding(end = 8.dp),
-                                        )
-                                    } else {
-                                        Icon(
-                                            Icons.Default.PlayArrow,
-                                            stringResource(R.string.start),
-                                            Modifier.padding(8.dp),
-                                        )
-
-                                        TextView(
-                                            stringResource(R.string.start),
-                                            Modifier.padding(end = 8.dp),
-                                        )
-                                    }
                                 }
                             }
                         }
@@ -283,7 +315,7 @@ fun OverloadNavigationFab(
         }
     }
 
-    if (manualDialogState.value) {
-        HomeTabManualDialog({ manualDialogState.value = false }, categoryState, itemState, itemEvent)
+    if (addEntryDialogState.value) {
+        AddEntryDialog({ addEntryDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

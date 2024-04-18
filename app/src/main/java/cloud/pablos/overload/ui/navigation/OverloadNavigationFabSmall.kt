@@ -34,13 +34,14 @@ import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.fabPress
 import cloud.pablos.overload.ui.tabs.home.HomeTabDeleteFAB
-import cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog
+import cloud.pablos.overload.ui.views.AddEntryDialog
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
 
 @Composable
 fun OverloadNavigationFabSmall(
+    selectedDestination: String,
     categoryEvent: (CategoryEvent) -> Unit,
     categoryState: CategoryState,
     itemState: ItemState,
@@ -49,117 +50,130 @@ fun OverloadNavigationFabSmall(
     val backgroundColor = decideBackground(categoryState)
     val foregroundColor = decideForeground(backgroundColor)
 
-    val date = LocalDate.now()
-
-    val itemsForToday = getItems(categoryState, itemState, date)
-
-    val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
-
-    val interactionSource = remember { MutableInteractionSource() }
-
-    val viewConfiguration = LocalViewConfiguration.current
-
-    var isLongClick by remember { mutableStateOf(false) }
-
-    val manualDialogState = remember { mutableStateOf(false) }
-
-    LaunchedEffect(interactionSource) {
-        interactionSource.interactions.collectLatest { interaction ->
-            when (interaction) {
-                is PressInteraction.Press -> {
-                    isLongClick = false
-                    delay(viewConfiguration.longPressTimeoutMillis)
-                    isLongClick = true
-
-                    itemEvent(ItemEvent.SetIsFabOpen(true))
-                    itemEvent(ItemEvent.SetIsDeletingHome(false))
-                }
-                is PressInteraction.Release -> {
-                }
-                is PressInteraction.Cancel -> {
-                    isLongClick = false
-                }
-            }
-        }
-    }
+    val addEntryDialogState = remember { mutableStateOf(false) }
 
     Column(
         verticalArrangement = Arrangement.spacedBy(4.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        when (itemState.isFabOpen) {
+        when (itemState.isDeletingHome) {
             true -> {
-                FloatingActionButton(
-                    {
-                        itemEvent(ItemEvent.SetIsFabOpen(false))
-                    },
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ) {
-                    Icon(
-                        Icons.Default.Close,
-                        stringResource(R.string.close),
-                    )
-                }
-
-                SmallFloatingActionButton(
-                    {
-                        itemEvent(ItemEvent.SetIsFabOpen(false))
-                        manualDialogState.value = true
-                    },
-                    containerColor = backgroundColor,
-                    contentColor = foregroundColor,
-                ) {
-                    Icon(
-                        Icons.Default.Add,
-                        stringResource(R.string.manual_entry),
-                    )
-                }
-
-                if (categoryState.categories.count() > 1) {
-                    SmallFloatingActionButton(
-                        {
-                            itemEvent(ItemEvent.SetIsFabOpen(false))
-                            categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
-                        },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ) {
-                        Icon(
-                            Icons.Default.Category,
-                            stringResource(R.string.switch_category),
-                        )
-                    }
-                }
+                HomeTabDeleteFAB(itemState, itemEvent)
             }
-            false -> {
-                when (itemState.isDeletingHome) {
-                    true -> {
-                        HomeTabDeleteFAB(itemState, itemEvent)
-                    }
 
-                    false -> {
+            false -> {
+                when (selectedDestination) {
+                    OverloadRoute.HOME -> {
+                        val date = LocalDate.now()
+                        val itemsForToday = getItems(categoryState, itemState, date)
+                        val isOngoing = itemsForToday.isNotEmpty() && itemsForToday.last().ongoing
+                        val interactionSource = remember { MutableInteractionSource() }
+                        val viewConfiguration = LocalViewConfiguration.current
+                        var isLongClick by remember { mutableStateOf(false) }
+
+                        LaunchedEffect(interactionSource) {
+                            interactionSource.interactions.collectLatest { interaction ->
+                                when (interaction) {
+                                    is PressInteraction.Press -> {
+                                        isLongClick = false
+                                        delay(viewConfiguration.longPressTimeoutMillis)
+                                        isLongClick = true
+
+                                        itemEvent(ItemEvent.SetIsFabOpen(true))
+                                        itemEvent(ItemEvent.SetIsDeletingHome(false))
+                                    }
+                                    is PressInteraction.Release -> {
+                                    }
+                                    is PressInteraction.Cancel -> {
+                                        isLongClick = false
+                                    }
+                                }
+                            }
+                        }
+
+                        when (itemState.isFabOpen) {
+                            true -> {
+                                FloatingActionButton(
+                                    {
+                                        itemEvent(ItemEvent.SetIsFabOpen(false))
+                                    },
+                                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                ) {
+                                    Icon(
+                                        Icons.Default.Close,
+                                        stringResource(R.string.close),
+                                    )
+                                }
+
+                                SmallFloatingActionButton(
+                                    {
+                                        itemEvent(ItemEvent.SetIsFabOpen(false))
+                                        addEntryDialogState.value = true
+                                    },
+                                    containerColor = backgroundColor,
+                                    contentColor = foregroundColor,
+                                ) {
+                                    Icon(
+                                        Icons.Default.Add,
+                                        stringResource(R.string.manual_entry),
+                                    )
+                                }
+
+                                if (categoryState.categories.count() > 1) {
+                                    SmallFloatingActionButton(
+                                        {
+                                            itemEvent(ItemEvent.SetIsFabOpen(false))
+                                            categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
+                                        },
+                                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    ) {
+                                        Icon(
+                                            Icons.Default.Category,
+                                            stringResource(R.string.switch_category),
+                                        )
+                                    }
+                                }
+                            }
+                            false -> {
+                                FloatingActionButton(
+                                    {
+                                        if (isLongClick.not()) {
+                                            fabPress(categoryState, categoryEvent, itemState, itemEvent)
+                                        }
+                                    },
+                                    containerColor = backgroundColor,
+                                    contentColor = foregroundColor,
+                                    interactionSource = interactionSource,
+                                ) {
+                                    if (isOngoing) {
+                                        Icon(
+                                            Icons.Default.Stop,
+                                            stringResource(R.string.stop),
+                                        )
+                                    } else {
+                                        Icon(
+                                            Icons.Default.PlayArrow,
+                                            stringResource(R.string.start),
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    OverloadRoute.CALENDAR -> {
                         FloatingActionButton(
                             {
-                                if (isLongClick.not()) {
-                                    fabPress(categoryState, categoryEvent, itemState, itemEvent)
-                                }
+                                addEntryDialogState.value = true
                             },
                             containerColor = backgroundColor,
                             contentColor = foregroundColor,
-                            interactionSource = interactionSource,
                         ) {
-                            if (isOngoing) {
-                                Icon(
-                                    Icons.Default.Stop,
-                                    stringResource(R.string.stop),
-                                )
-                            } else {
-                                Icon(
-                                    Icons.Default.PlayArrow,
-                                    stringResource(R.string.start),
-                                )
-                            }
+                            Icon(
+                                Icons.Default.Add,
+                                stringResource(R.string.manual_entry),
+                            )
                         }
                     }
                 }
@@ -167,7 +181,7 @@ fun OverloadNavigationFabSmall(
         }
     }
 
-    if (manualDialogState.value) {
-        HomeTabManualDialog({ manualDialogState.value = false }, categoryState, itemState, itemEvent)
+    if (addEntryDialogState.value) {
+        AddEntryDialog({ addEntryDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

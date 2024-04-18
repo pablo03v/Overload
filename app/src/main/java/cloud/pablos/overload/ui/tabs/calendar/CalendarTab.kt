@@ -3,6 +3,10 @@ package cloud.pablos.overload.ui.tabs.calendar
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,8 +40,10 @@ import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
+import cloud.pablos.overload.ui.tabs.home.CalendarTabFab
 import cloud.pablos.overload.ui.tabs.home.getFormattedDate
 import cloud.pablos.overload.ui.utils.OverloadContentType
+import cloud.pablos.overload.ui.utils.OverloadNavigationType
 import cloud.pablos.overload.ui.views.DayScreenDayView
 import cloud.pablos.overload.ui.views.TextView
 import cloud.pablos.overload.ui.views.YearView
@@ -49,6 +55,7 @@ import java.time.temporal.ChronoUnit
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarTab(
+    navigationType: OverloadNavigationType,
     contentType: OverloadContentType,
     categoryState: CategoryState,
     categoryEvent: (CategoryEvent) -> Unit,
@@ -65,6 +72,15 @@ fun CalendarTab(
                 itemState,
                 itemEvent,
             )
+        },
+        floatingActionButton = {
+            AnimatedVisibility(
+                navigationType == OverloadNavigationType.BOTTOM_NAVIGATION,
+                enter = if (itemState.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
+                exit = if (itemState.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
+            ) {
+                CalendarTabFab(categoryEvent, categoryState, itemState, itemEvent)
+            }
         },
     ) { paddingValues ->
         Box(Modifier.fillMaxSize()) {
@@ -177,7 +193,7 @@ fun CalendarTab(
                             itemState.selectedYearCalendar,
                             categoryState,
                             itemEvent,
-                            16.dp,
+                            80.dp,
                             onNavigate = onNavigate,
                         )
                     }

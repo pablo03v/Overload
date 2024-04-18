@@ -42,6 +42,7 @@ import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.fabPress
+import cloud.pablos.overload.ui.views.AddEntryDialog
 import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -69,7 +70,7 @@ fun HomeTabFab(
 
     var isLongClick by remember { mutableStateOf(false) }
 
-    val manualDialogState = remember { mutableStateOf(false) }
+    val addEntryDialogState = remember { mutableStateOf(false) }
 
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collectLatest { interaction ->
@@ -143,7 +144,7 @@ fun HomeTabFab(
                     SmallFloatingActionButton(
                         {
                             itemEvent(ItemEvent.SetIsFabOpen(false))
-                            manualDialogState.value = true
+                            addEntryDialogState.value = true
                         },
                         containerColor = backgroundColor,
                         contentColor = foregroundColor,
@@ -208,7 +209,7 @@ fun HomeTabFab(
         }
     }
 
-    if (manualDialogState.value) {
-        HomeTabManualDialog({ manualDialogState.value = false }, categoryState, itemState, itemEvent)
+    if (addEntryDialogState.value) {
+        AddEntryDialog({ addEntryDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

@@ -105,12 +105,7 @@ fun OverloadNavigationRail(
                         )
                     }
 
-                    OverloadNavigationFabSmall(
-                        categoryEvent = categoryEvent,
-                        categoryState = categoryState,
-                        itemState = itemState,
-                        itemEvent = itemEvent,
-                    )
+                    OverloadNavigationFabSmall(selectedDestination, categoryEvent, categoryState, itemState, itemEvent)
                 }
                 Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
                     when (itemState.isDeletingHome) {
@@ -482,7 +477,7 @@ fun ModalNavigationDrawerContent(
                         }
                     }
 
-                    OverloadNavigationFab(categoryEvent, categoryState, itemState, itemEvent, onDrawerClicked)
+                    OverloadNavigationFab(selectedDestination, categoryEvent, categoryState, itemState, itemEvent, onDrawerClicked)
                 }
 
                 Column(Modifier.layoutId(LayoutType.CONTENT)) {
