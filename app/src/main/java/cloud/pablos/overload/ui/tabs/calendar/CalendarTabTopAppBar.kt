@@ -14,8 +14,8 @@ import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.ui.views.ChangeCategoryButton
 import cloud.pablos.overload.ui.views.ChangeYearButton
+import cloud.pablos.overload.ui.views.SwitchCategoryButton
 import cloud.pablos.overload.ui.views.TextView
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -28,19 +28,19 @@ fun CalendarTabTopAppBar(
     itemEvent: (ItemEvent) -> Unit,
 ) {
     Surface(
-        tonalElevation = NavigationBarDefaults.Elevation,
         color = MaterialTheme.colorScheme.background,
+        tonalElevation = NavigationBarDefaults.Elevation,
     ) {
         TopAppBar(
-            title = {
+            {
                 TextView(
-                    text = stringResource(id = R.string.calendar),
+                    stringResource(R.string.calendar),
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 )
             },
             actions = {
                 ChangeYearButton(itemState, itemEvent)
-                ChangeCategoryButton(categoryState, categoryEvent)
+                SwitchCategoryButton(categoryState, categoryEvent)
             },
         )
     }

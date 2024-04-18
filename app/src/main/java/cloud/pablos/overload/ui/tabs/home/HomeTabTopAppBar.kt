@@ -13,7 +13,7 @@ import androidx.compose.ui.res.stringResource
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
-import cloud.pablos.overload.ui.views.ChangeCategoryButton
+import cloud.pablos.overload.ui.views.SwitchCategoryButton
 import cloud.pablos.overload.ui.views.TextView
 
 @RequiresApi(Build.VERSION_CODES.S)
@@ -24,24 +24,24 @@ fun HomeTabTopAppBar(
     categoryEvent: (CategoryEvent) -> Unit,
 ) {
     Surface(
-        tonalElevation = NavigationBarDefaults.Elevation,
         color = MaterialTheme.colorScheme.background,
+        tonalElevation = NavigationBarDefaults.Elevation,
     ) {
         TopAppBar(
-            title = {
+            {
                 TextView(
-                    text = stringResource(id = R.string.home),
+                    stringResource(R.string.home),
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 )
             },
+            actions = {
+                SwitchCategoryButton(categoryState, categoryEvent)
+            },
             colors =
                 TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
+                    MaterialTheme.colorScheme.background,
                     titleContentColor = MaterialTheme.colorScheme.onBackground,
                 ),
-            actions = {
-                ChangeCategoryButton(categoryState, categoryEvent)
-            },
         )
     }
 }

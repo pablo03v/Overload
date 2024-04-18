@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">a kiválasztott nap összes elemének kijelölésének megszüntetése</string>
     <string name="delete_items_forever">elemek törlése örökre</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">kiválasztott</string>
+    <string name="ol_selected">kiválasztott</string>
     <string name="get_out_of_isDeleting">kihozza Önt a törlési módból</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -104,7 +104,7 @@ Köszönjük a türelmet!</string>
     <string name="minutes">percek</string>
     <string name="cancel">Törölje</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Szünet cél beállítása</string>
+    <string name="set_goal_pause">Szünet cél beállítása</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Szünet balra</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

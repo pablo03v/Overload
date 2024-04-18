@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">batalkan pilihan semua item pada hari yang dipilih</string>
     <string name="delete_items_forever">hapus item selamanya</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">dipilih</string>
+    <string name="ol_selected">dipilih</string>
     <string name="get_out_of_isDeleting">mengeluarkan Anda dari mode penghapusan</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Mulai</string>
@@ -104,7 +104,7 @@ Terima kasih atas kesabaran Anda!</string>
     <string name="minutes">menit</string>
     <string name="cancel">batal</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Tetapkan Sasaran Jeda</string>
+    <string name="set_goal_pause">Tetapkan Sasaran Jeda</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Jeda kiri</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

@@ -33,15 +33,15 @@ fun CalendarTabYearDialog(
     onClose: () -> Unit,
 ) {
     Dialog(
-        onDismissRequest = onClose,
+        onClose,
         content = {
             Surface(
-                shape = MaterialTheme.shapes.large,
+                Modifier.fillMaxWidth(),
+                MaterialTheme.shapes.large,
+                MaterialTheme.colorScheme.background,
                 tonalElevation = NavigationBarDefaults.Elevation,
-                color = MaterialTheme.colorScheme.background,
-                modifier = Modifier.fillMaxWidth(),
             ) {
-                YearDialogContent(firstYear = firstYear, itemEvent = itemEvent, onClose = onClose)
+                YearDialogContent(firstYear, itemEvent, onClose)
             }
         },
     )
@@ -54,23 +54,23 @@ private fun YearDialogContent(
     onClose: () -> Unit,
 ) {
     Column(
+        Modifier.padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(24.dp),
     ) {
         Icon(
-            imageVector = Icons.Rounded.CalendarViewDay,
-            contentDescription = stringResource(id = R.string.select_year),
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(16.dp),
+            Icons.Rounded.CalendarViewDay,
+            stringResource(R.string.select_year),
+            Modifier.padding(16.dp),
+            MaterialTheme.colorScheme.primary,
         )
 
         TextView(
-            text = stringResource(id = R.string.select_year),
-            fontSize = MaterialTheme.typography.titleLarge.fontSize,
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
+            stringResource(R.string.select_year),
+            Modifier.padding(top = 16.dp, bottom = 8.dp),
+            MaterialTheme.typography.titleLarge.fontSize,
         )
 
-        YearListContent(firstYear = firstYear, itemEvent = itemEvent, onClose = onClose)
+        YearListContent(firstYear, itemEvent, onClose)
     }
 }
 
@@ -83,7 +83,7 @@ private fun YearListContent(
     LazyColumn {
         val currentYear = LocalDate.now().year
         items((currentYear downTo firstYear).toList()) { year ->
-            YearRow(year = year, itemEvent = itemEvent, onClose = onClose)
+            YearRow(year, itemEvent, onClose)
             if (year != firstYear) {
                 HorizontalDivider()
             }
@@ -98,16 +98,15 @@ private fun YearRow(
     onClose: () -> Unit,
 ) {
     Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable {
-                    itemEvent(ItemEvent.SetSelectedYearCalendar(year))
-                    onClose()
-                }
-                .padding(16.dp),
-        horizontalArrangement = Arrangement.Center,
+        Modifier
+            .fillMaxWidth()
+            .clickable {
+                itemEvent(ItemEvent.SetSelectedYearCalendar(year))
+                onClose()
+            }
+            .padding(16.dp),
+        Arrangement.Center,
     ) {
-        TextView(text = year.toString())
+        TextView(year.toString())
     }
 }

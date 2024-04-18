@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.rounded.Archive
 import androidx.compose.material.icons.rounded.BugReport
 import androidx.compose.material.icons.rounded.Code
@@ -30,16 +29,13 @@ import androidx.compose.material.icons.rounded.EmojiNature
 import androidx.compose.material.icons.rounded.PestControl
 import androidx.compose.material.icons.rounded.Translate
 import androidx.compose.material.icons.rounded.Unarchive
-import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -62,6 +58,7 @@ import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.MainActivity
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
+import cloud.pablos.overload.ui.views.AddCategoryButton
 import cloud.pablos.overload.ui.views.TextView
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -101,33 +98,24 @@ fun ConfigurationsTab(
     val createCategoryDialog = remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = {
-            OverloadTopAppBar(
-                selectedDestination = OverloadRoute.CONFIGURATIONS,
-                categoryState = categoryState,
-                categoryEvent = categoryEvent,
-                itemState = itemState,
-                itemEvent = itemEvent,
-            )
-        },
+        topBar = { OverloadTopAppBar(OverloadRoute.CONFIGURATIONS, categoryState, categoryEvent, itemState, itemEvent) },
     ) { paddingValues ->
         LazyColumn(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp),
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(6.dp),
         ) {
             // Categories Title
             item {
-                ConfigurationsTabItem(title = stringResource(id = R.string.categories))
+                ConfigurationsTabItem(stringResource(R.string.categories))
             }
 
             categoryState.categories.forEach { category ->
                 item {
                     ConfigurationsTabItem(
-                        title = category.emoji + " " + category.name,
+                        category.emoji + " " + category.name,
                         action = {
                             categoryEvent(CategoryEvent.SetSelectedCategoryConfigurations(category.id))
                             navController.navigate(OverloadRoute.CATEGORY)
@@ -138,31 +126,7 @@ fun ConfigurationsTab(
             }
 
             item {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth(),
-                ) {
-                    FilledTonalButton(onClick = {
-                        createCategoryDialog.value = true
-                    }) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Add,
-                                contentDescription = stringResource(id = R.string.select_year),
-                                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                            )
-                            TextView(
-                                text = stringResource(id = R.string.add_category),
-                                color = MaterialTheme.colorScheme.onSecondaryContainer,
-                            )
-                        }
-                    }
-                }
+                AddCategoryButton { createCategoryDialog.value = true }
             }
 
             // Categories Divider
@@ -172,33 +136,33 @@ fun ConfigurationsTab(
 
             // Analytics Title
             item {
-                ConfigurationsTabItem(title = stringResource(id = R.string.analytics))
+                ConfigurationsTabItem(stringResource(R.string.analytics))
             }
 
             // Analytics Crash Reports
             item {
                 ConfigurationsTabItem(
-                    title = stringResource(id = R.string.crash_reports),
-                    description = stringResource(id = R.string.crash_reports_descr),
+                    stringResource(R.string.crash_reports),
+                    stringResource(R.string.crash_reports_descr),
+                    Icons.Rounded.BugReport,
                     preferenceKey = acraEnabledKey,
                     switchState = acraEnabledState,
-                    icon = Icons.Rounded.BugReport,
                 )
             }
 
             // Analytics System Logs
             item {
                 AnimatedVisibility(
-                    visible = acraEnabledState.value,
+                    acraEnabledState.value,
                     enter = expandIn(),
                     exit = shrinkOut(),
                 ) {
                     ConfigurationsTabItem(
-                        title = stringResource(id = R.string.system_logs),
-                        description = stringResource(id = R.string.system_logs_descr),
+                        stringResource(R.string.system_logs),
+                        stringResource(R.string.system_logs_descr),
+                        Icons.Rounded.PestControl,
                         preferenceKey = acraSysLogsEnabledKey,
                         switchState = acraSysLogsEnabledState,
-                        icon = Icons.Rounded.PestControl,
                     )
                 }
             }
@@ -210,23 +174,23 @@ fun ConfigurationsTab(
 
             // Storage Title
             item {
-                ConfigurationsTabItem(title = stringResource(id = R.string.storage))
+                ConfigurationsTabItem(stringResource(R.string.storage))
             }
 
             item {
                 ConfigurationsTabItem(
-                    title = stringResource(id = R.string.backup),
-                    description = stringResource(id = R.string.backup_descr),
-                    icon = Icons.Rounded.Archive,
+                    stringResource(R.string.backup),
+                    stringResource(R.string.backup_descr),
+                    Icons.Rounded.Archive,
                     action = { backup(categoryState, itemState, context) },
                 )
             }
 
             item {
                 ConfigurationsTabItem(
-                    title = stringResource(id = R.string.import_ol),
-                    description = stringResource(id = R.string.import_descr),
-                    icon = Icons.Rounded.Unarchive,
+                    stringResource(R.string.import_ol),
+                    stringResource(R.string.import_descr),
+                    Icons.Rounded.Unarchive,
                     action = { launchFilePicker(filePickerLauncher) },
                 )
             }
@@ -238,46 +202,46 @@ fun ConfigurationsTab(
 
             // About Title
             item {
-                ConfigurationsTabItem(title = stringResource(id = R.string.about))
+                ConfigurationsTabItem(stringResource(R.string.about))
             }
 
             // About Source Code
             item {
                 ConfigurationsTabItem(
-                    title = stringResource(id = R.string.sourcecode),
-                    description = stringResource(id = R.string.sourcecode_descr),
-                    link = "https://github.com/pabloscloud/Overload".toUri(),
-                    icon = Icons.Rounded.Code,
+                    stringResource(R.string.sourcecode),
+                    stringResource(R.string.sourcecode_descr),
+                    Icons.Rounded.Code,
+                    "https://github.com/pabloscloud/Overload".toUri(),
                 )
             }
 
             // About ITS
             item {
                 ConfigurationsTabItem(
-                    title = stringResource(id = R.string.issue_reports),
-                    description = stringResource(id = R.string.issue_reports_descr),
-                    link = "https://github.com/pabloscloud/Overload/issues".toUri(),
-                    icon = Icons.Rounded.EmojiNature,
+                    stringResource(R.string.issue_reports),
+                    stringResource(R.string.issue_reports_descr),
+                    Icons.Rounded.EmojiNature,
+                    "https://github.com/pabloscloud/Overload/issues".toUri(),
                 )
             }
 
             // About Translations
             item {
                 ConfigurationsTabItem(
-                    title = stringResource(id = R.string.translate),
-                    description = stringResource(id = R.string.translate_descr),
-                    link = "https://crowdin.com/project/overload".toUri(),
-                    icon = Icons.Rounded.Translate,
+                    stringResource(R.string.translate),
+                    stringResource(R.string.translate_descr),
+                    Icons.Rounded.Translate,
+                    "https://crowdin.com/project/overload".toUri(),
                 )
             }
 
             // About License
             item {
                 ConfigurationsTabItem(
-                    title = stringResource(id = R.string.license),
-                    description = stringResource(id = R.string.license_descr),
-                    link = "https://github.com/pabloscloud/Overload/blob/main/LICENSE".toUri(),
-                    icon = Icons.Rounded.Copyright,
+                    stringResource(R.string.license),
+                    stringResource(R.string.license_descr),
+                    Icons.Rounded.Copyright,
+                    "https://github.com/pabloscloud/Overload/blob/main/LICENSE".toUri(),
                 )
             }
 
@@ -289,22 +253,18 @@ fun ConfigurationsTab(
             // Footer
             item {
                 Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 5.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 5.dp),
+                    Arrangement.Center,
                 ) {
-                    ConfigurationDescription(stringResource(id = R.string.footer))
+                    ConfigurationDescription(stringResource(R.string.footer))
                 }
             }
         }
 
         if (createCategoryDialog.value) {
-            ConfigurationsTabCreateCategoryDialog(
-                onClose = { createCategoryDialog.value = false },
-                categoryEvent = categoryEvent,
-            )
+            ConfigurationsTabCreateCategoryDialog({ createCategoryDialog.value = false }, categoryEvent)
         }
     }
 }
@@ -462,12 +422,12 @@ private fun importJsonData(
                         itemsTable.forEach { itemData ->
                             val item =
                                 Item(
-                                    id = (itemData["id"] as? Double)?.toInt() ?: 0,
-                                    startTime = itemData["startTime"] as String,
-                                    endTime = itemData["endTime"] as String,
-                                    ongoing = itemData["ongoing"] as Boolean,
-                                    pause = itemData["pause"] as Boolean,
-                                    categoryId = (itemData["categoryId"] as? Double)?.toInt() ?: 0,
+                                    (itemData["id"] as? Double)?.toInt() ?: 0,
+                                    itemData["startTime"] as String,
+                                    itemData["endTime"] as String,
+                                    itemData["ongoing"] as Boolean,
+                                    itemData["pause"] as Boolean,
+                                    (itemData["categoryId"] as? Double)?.toInt() ?: 0,
                                 )
 
                             val importResult = itemDao.upsertItem(item)
@@ -480,13 +440,13 @@ private fun importJsonData(
                         categoriesTable.forEach { categoriesData ->
                             val category =
                                 Category(
-                                    id = (categoriesData["id"] as? Double)?.toInt() ?: 0,
-                                    color = (categoriesData["color"] as? Double)?.toLong() ?: 0,
-                                    emoji = categoriesData["emoji"] as String,
-                                    goal1 = (categoriesData["goal1"] as? Double)?.toInt() ?: 0,
-                                    goal2 = (categoriesData["goal2"] as? Double)?.toInt() ?: 0,
-                                    isDefault = categoriesData["isDefault"] as Boolean,
-                                    name = categoriesData["name"] as String,
+                                    (categoriesData["id"] as? Double)?.toInt() ?: 0,
+                                    (categoriesData["color"] as? Double)?.toLong() ?: 0,
+                                    categoriesData["emoji"] as String,
+                                    (categoriesData["goal1"] as? Double)?.toInt() ?: 0,
+                                    (categoriesData["goal2"] as? Double)?.toInt() ?: 0,
+                                    categoriesData["isDefault"] as Boolean,
+                                    categoriesData["name"] as String,
                                 )
 
                             val importResult = categoryDao.upsertCategory(category)
@@ -577,10 +537,10 @@ fun importJsonFile(
 @Composable
 fun ConfigurationLabel(text: String) {
     TextView(
-        text = text,
-        fontSize = MaterialTheme.typography.titleLarge.fontSize,
+        text,
+        Modifier.padding(vertical = 15.dp),
+        MaterialTheme.typography.titleLarge.fontSize,
         color = MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.padding(vertical = 15.dp),
     )
 }
 
@@ -590,7 +550,7 @@ fun ConfigurationTitle(
     color: Color = MaterialTheme.colorScheme.onBackground,
 ) {
     TextView(
-        text = text,
+        text,
         fontSize = MaterialTheme.typography.titleMedium.fontSize,
         color = color,
     )
@@ -599,7 +559,7 @@ fun ConfigurationTitle(
 @Composable
 fun ConfigurationDescription(text: String) {
     Text(
-        text = text,
+        text,
         fontSize = MaterialTheme.typography.bodyMedium.fontSize,
         color = MaterialTheme.colorScheme.onBackground,
     )
@@ -607,7 +567,7 @@ fun ConfigurationDescription(text: String) {
 
 @Composable
 fun HoDivider() {
-    HorizontalDivider(modifier = Modifier.padding(top = 20.dp))
+    HorizontalDivider(Modifier.padding(top = 20.dp))
 }
 
 class OlSharedPreferences(context: Context) {

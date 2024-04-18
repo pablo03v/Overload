@@ -21,14 +21,14 @@ fun TextView(
     maxLines: Int = 1,
 ) {
     Text(
-        text = text,
-        fontSize = fontSize,
+        text,
+        modifier,
+        color,
+        fontSize,
         fontWeight = fontWeight,
-        color = color,
         maxLines = maxLines,
         overflow = TextOverflow.Ellipsis,
         textAlign = align,
-        modifier = modifier,
     )
 }
 

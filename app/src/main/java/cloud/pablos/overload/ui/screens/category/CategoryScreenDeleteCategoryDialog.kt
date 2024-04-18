@@ -32,65 +32,60 @@ fun CategoryScreenDeleteCategoryDialog(
     category: Category,
 ) {
     AlertDialog(
-        onDismissRequest = onDismiss,
-        icon = {
-            Icon(
-                imageVector = Icons.Rounded.Dangerous,
-                contentDescription = "Delete Category",
-                tint = MaterialTheme.colorScheme.error,
-            )
-        },
-        title = {
-            TextView(
-                text = "Delete Category",
-                fontWeight = FontWeight.Bold,
-                align = TextAlign.Center,
-                maxLines = 2,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        },
-        text = {
-            Column {
-                Text(
-                    text =
-                        stringResource(
-                            R.string.delete_category_warning,
-                            category.name,
-                        ),
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth(),
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        },
-        confirmButton = {
+        onDismiss,
+        {
             Button(
-                onClick = {
-                    onConfirm()
-                },
+                { onConfirm() },
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                        MaterialTheme.colorScheme.errorContainer,
+                        MaterialTheme.colorScheme.onErrorContainer,
                     ),
             ) {
                 TextView(stringResource(R.string.yes))
             }
         },
-        dismissButton = {
+        Modifier.padding(16.dp),
+        {
             Button(
-                onClick = {
-                    onDismiss()
-                },
+                { onDismiss() },
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.onSecondaryContainer,
                     ),
             ) {
                 TextView(stringResource(R.string.no))
             }
         },
-        modifier = Modifier.padding(16.dp),
+        {
+            Icon(
+                Icons.Rounded.Dangerous,
+                stringResource(R.string.delete_category),
+                tint = MaterialTheme.colorScheme.error,
+            )
+        },
+        {
+            TextView(
+                stringResource(R.string.delete_category),
+                Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold,
+                align = TextAlign.Center,
+                maxLines = 2,
+            )
+        },
+        {
+            Column {
+                Text(
+                    stringResource(
+                        R.string.delete_category_warning,
+                        category.name,
+                    ),
+                    Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+        },
     )
 }

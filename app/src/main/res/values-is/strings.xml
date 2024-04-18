@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">afvelja alla hluti úr degi</string>
     <string name="delete_items_forever">eyða hlutum að eilífu</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">vista valið</string>
+    <string name="ol_selected">vista valið</string>
     <string name="get_out_of_isDeleting">fær þig út úr eyðingu ham</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Byrja</string>
@@ -104,7 +104,7 @@ Takk fyrir þolinmæðina!</string>
     <string name="minutes">mínútur</string>
     <string name="cancel">hætta við</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Setja Hlé Markmið</string>
+    <string name="set_goal_pause">Setja Hlé Markmið</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Hlé til vinstri</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

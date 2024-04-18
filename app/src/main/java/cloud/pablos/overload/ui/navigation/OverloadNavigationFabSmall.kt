@@ -84,26 +84,26 @@ fun OverloadNavigationFabSmall(
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         when (itemState.isFabOpen) {
             true -> {
                 FloatingActionButton(
-                    onClick = {
+                    {
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(id = R.string.close),
+                        Icons.Default.Close,
+                        stringResource(R.string.close),
                     )
                 }
 
                 SmallFloatingActionButton(
-                    onClick = {
+                    {
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                         manualDialogState.value = true
                     },
@@ -111,23 +111,25 @@ fun OverloadNavigationFabSmall(
                     contentColor = foregroundColor,
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = stringResource(id = R.string.manual_entry),
+                        Icons.Default.Add,
+                        stringResource(R.string.manual_entry),
                     )
                 }
 
-                SmallFloatingActionButton(
-                    onClick = {
-                        itemEvent(ItemEvent.SetIsFabOpen(false))
-                        categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
-                    },
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Category,
-                        contentDescription = stringResource(id = R.string.switch_category),
-                    )
+                if (categoryState.categories.count() > 1) {
+                    SmallFloatingActionButton(
+                        {
+                            itemEvent(ItemEvent.SetIsFabOpen(false))
+                            categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
+                        },
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                    ) {
+                        Icon(
+                            Icons.Default.Category,
+                            stringResource(R.string.switch_category),
+                        )
+                    }
                 }
             }
             false -> {
@@ -138,29 +140,26 @@ fun OverloadNavigationFabSmall(
 
                     false -> {
                         FloatingActionButton(
-                            onClick = {
+                            {
                                 if (isLongClick.not()) {
                                     fabPress(categoryState, categoryEvent, itemState, itemEvent)
                                 }
                             },
-                            interactionSource = interactionSource,
                             containerColor = backgroundColor,
                             contentColor = foregroundColor,
+                            interactionSource = interactionSource,
                         ) {
-                            Icon(
-                                imageVector =
-                                    if (isOngoing) {
-                                        Icons.Default.Stop
-                                    } else {
-                                        Icons.Default.PlayArrow
-                                    },
-                                contentDescription =
-                                    if (isOngoing) {
-                                        stringResource(id = R.string.stop)
-                                    } else {
-                                        stringResource(id = R.string.start)
-                                    },
-                            )
+                            if (isOngoing) {
+                                Icon(
+                                    Icons.Default.Stop,
+                                    stringResource(R.string.stop),
+                                )
+                            } else {
+                                Icon(
+                                    Icons.Default.PlayArrow,
+                                    stringResource(R.string.start),
+                                )
+                            }
                         }
                     }
                 }
@@ -169,6 +168,6 @@ fun OverloadNavigationFabSmall(
     }
 
     if (manualDialogState.value) {
-        HomeTabManualDialog(onClose = { manualDialogState.value = false }, categoryState, itemState, itemEvent)
+        HomeTabManualDialog({ manualDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

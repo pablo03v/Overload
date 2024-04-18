@@ -28,32 +28,32 @@ fun DeleteTopAppBar(
     }
 
     Surface(
-        tonalElevation = NavigationBarDefaults.Elevation,
         color = MaterialTheme.colorScheme.background,
+        tonalElevation = NavigationBarDefaults.Elevation,
     ) {
         TopAppBar(
-            title = {
+            {
                 TextView(
-                    text = itemState.selectedItemsHome.size.toString() + " " + stringResource(id = R.string.itemCount_selected),
+                    itemState.selectedItemsHome.size.toString() + " " + stringResource(R.string.ol_selected),
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 )
             },
-            colors =
-                TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primaryContainer,
-                ),
             actions = {
-                IconButton(onClick = {
+                IconButton({
                     itemEvent(ItemEvent.SetIsDeletingHome(false))
                 }) {
                     Icon(
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = stringResource(id = R.string.get_out_of_isDeleting),
+                        Icons.Filled.Close,
+                        stringResource(R.string.get_out_of_isDeleting),
                         tint = MaterialTheme.colorScheme.primaryContainer,
                     )
                 }
             },
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    MaterialTheme.colorScheme.onPrimaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primaryContainer,
+                ),
         )
     }
 }

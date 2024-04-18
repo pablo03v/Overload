@@ -80,12 +80,11 @@ fun OverloadNavigationRail(
     itemEvent: (ItemEvent) -> Unit,
 ) {
     NavigationRail(
-        modifier = Modifier.fillMaxHeight(),
-        containerColor = MaterialTheme.colorScheme.inverseOnSurface,
+        Modifier.fillMaxHeight(),
+        MaterialTheme.colorScheme.inverseOnSurface,
     ) {
         Layout(
-            modifier = Modifier.widthIn(max = 80.dp),
-            content = {
+            {
                 Column(
                     modifier = Modifier.layoutId(LayoutType.HEADER).padding(bottom = 10.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -95,9 +94,9 @@ fun OverloadNavigationRail(
                         visible = true,
                     ) {
                         NavigationRailItem(
-                            selected = false,
-                            onClick = onDrawerClicked,
-                            icon = {
+                            false,
+                            onDrawerClicked,
+                            {
                                 Icon(
                                     imageVector = Icons.Default.Menu,
                                     contentDescription = stringResource(id = R.string.navigation_drawer),
@@ -193,7 +192,8 @@ fun OverloadNavigationRail(
                     }
                 }
             },
-            measurePolicy = navigationMeasurePolicy(navigationContentPosition),
+            Modifier.widthIn(max = 80.dp),
+            navigationMeasurePolicy(navigationContentPosition),
         )
     }
 }
@@ -256,22 +256,22 @@ fun OverloadBottomNavigationBar(
         BottomBarState.Deleting,
     )) {
         AnimatedVisibility(
-            visible = bottomBarState == currentBottomBarState,
+            bottomBarState == currentBottomBarState,
             enter = slideInVertically(initialOffsetY = { it }),
             exit = slideOutVertically(targetOffsetY = { it }),
         ) {
             when (bottomBarState) {
                 BottomBarState.Normal -> {
-                    NavigationBar(modifier = Modifier.fillMaxWidth()) {
+                    NavigationBar(Modifier.fillMaxWidth()) {
                         TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
                             NavigationBarItem(
-                                selected = selectedDestination == overloadDestination.route,
-                                onClick = {
+                                selectedDestination == overloadDestination.route,
+                                {
                                     navigateToTopLevelDestination(
                                         overloadDestination,
                                     )
                                 },
-                                icon = {
+                                {
                                     Icon(
                                         imageVector =
                                             if (selectedDestination == overloadDestination.route) {
@@ -423,7 +423,7 @@ fun OverloadTopAppBar(
         TopBarState.Deleting,
     )) {
         AnimatedVisibility(
-            visible = topBarState == currentTopBarState,
+            topBarState == currentTopBarState,
             enter = slideInVertically(initialOffsetY = { -it }),
             exit = slideOutVertically(targetOffsetY = { -it }),
         ) {
@@ -457,32 +457,27 @@ fun ModalNavigationDrawerContent(
 ) {
     ModalDrawerSheet {
         Layout(
-            modifier =
-                Modifier
-                    .background(MaterialTheme.colorScheme.inverseOnSurface)
-                    .padding(16.dp),
-            content = {
+            {
                 Column(
-                    modifier = Modifier.layoutId(LayoutType.HEADER).padding(bottom = 10.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                    Modifier.layoutId(LayoutType.HEADER).padding(bottom = 10.dp),
+                    Arrangement.spacedBy(4.dp),
+                    Alignment.CenterHorizontally,
                 ) {
                     Row(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        Arrangement.SpaceBetween,
+                        Alignment.CenterVertically,
                     ) {
                         TextView(
-                            text = stringResource(id = R.string.app_name),
+                            stringResource(id = R.string.app_name),
                             fontSize = MaterialTheme.typography.titleLarge.fontSize,
                         )
-                        IconButton(onClick = onDrawerClicked) {
+                        IconButton(onDrawerClicked) {
                             Icon(
-                                imageVector = Icons.AutoMirrored.Filled.MenuOpen,
-                                contentDescription = stringResource(id = R.string.navigation_drawer),
+                                Icons.AutoMirrored.Filled.MenuOpen,
+                                stringResource(id = R.string.navigation_drawer),
                             )
                         }
                     }
@@ -490,19 +485,26 @@ fun ModalNavigationDrawerContent(
                     OverloadNavigationFab(categoryEvent, categoryState, itemState, itemEvent, onDrawerClicked)
                 }
 
-                Column(modifier = Modifier.layoutId(LayoutType.CONTENT)) {
+                Column(Modifier.layoutId(LayoutType.CONTENT)) {
                     when (itemState.isDeletingHome) {
                         true -> {
                             val date = getSelectedDay(itemState)
                             val items = getItems(categoryState, itemState, date)
 
                             Column(
-                                modifier = Modifier.verticalScroll(rememberScrollState()),
+                                Modifier.verticalScroll(rememberScrollState()),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 NavigationDrawerItem(
-                                    selected = false,
-                                    onClick = {
+                                    {
+                                        TextView(
+                                            stringResource(
+                                                id = R.string.select_all_items_of_selected_day,
+                                            ).replaceFirstChar { it.uppercase() },
+                                        )
+                                    },
+                                    false,
+                                    {
                                         itemEvent(
                                             ItemEvent.SetSelectedItemsHome(
                                                 itemState.selectedItemsHome +
@@ -512,13 +514,6 @@ fun ModalNavigationDrawerContent(
                                                         )
                                                     },
                                             ),
-                                        )
-                                    },
-                                    label = {
-                                        TextView(
-                                            stringResource(
-                                                id = R.string.select_all_items_of_selected_day,
-                                            ).replaceFirstChar { it.uppercase() },
                                         )
                                     },
                                     icon = {
@@ -533,16 +528,16 @@ fun ModalNavigationDrawerContent(
                                         ),
                                 )
                                 NavigationDrawerItem(
-                                    selected = false,
-                                    onClick = {
-                                        itemEvent(ItemEvent.SetSelectedItemsHome(itemState.selectedItemsHome - items.toSet()))
-                                    },
-                                    label = {
+                                    {
                                         TextView(
                                             stringResource(
                                                 id = R.string.deselect_all_items_of_selected_day,
                                             ).replaceFirstChar { it.uppercase() },
                                         )
+                                    },
+                                    false,
+                                    {
+                                        itemEvent(ItemEvent.SetSelectedItemsHome(itemState.selectedItemsHome - items.toSet()))
                                     },
                                     icon = {
                                         Icon(
@@ -558,16 +553,21 @@ fun ModalNavigationDrawerContent(
                             }
                         }
                         false -> {
-                            AnimatedVisibility(visible = itemState.isFabOpen.not()) {
+                            AnimatedVisibility(itemState.isFabOpen.not()) {
                                 Column(
-                                    modifier = Modifier.verticalScroll(rememberScrollState()),
+                                    Modifier.verticalScroll(rememberScrollState()),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
                                     TOP_LEVEL_DESTINATIONS.forEach { overloadDestination ->
                                         NavigationDrawerItem(
-                                            selected = selectedDestination == overloadDestination.route,
-                                            label = {
+                                            {
                                                 TextView(stringResource(id = overloadDestination.iconTextId))
+                                            },
+                                            selectedDestination == overloadDestination.route,
+                                            {
+                                                navigateToTopLevelDestination(
+                                                    overloadDestination,
+                                                )
                                             },
                                             icon = {
                                                 Icon(
@@ -587,11 +587,6 @@ fun ModalNavigationDrawerContent(
                                                 NavigationDrawerItemDefaults.colors(
                                                     unselectedContainerColor = Color.Transparent,
                                                 ),
-                                            onClick = {
-                                                navigateToTopLevelDestination(
-                                                    overloadDestination,
-                                                )
-                                            },
                                         )
                                     }
                                 }
@@ -600,7 +595,10 @@ fun ModalNavigationDrawerContent(
                     }
                 }
             },
-            measurePolicy = navigationMeasurePolicy(navigationContentPosition),
+            Modifier
+                .background(MaterialTheme.colorScheme.inverseOnSurface)
+                .padding(16.dp),
+            navigationMeasurePolicy(navigationContentPosition),
         )
     }
 }

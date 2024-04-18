@@ -18,7 +18,7 @@ import cloud.pablos.overload.data.category.CategoryState
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
-fun ChangeCategoryButton(
+fun SwitchCategoryButton(
     categoryState: CategoryState,
     categoryEvent: (CategoryEvent) -> Unit,
 ) {
@@ -32,13 +32,9 @@ fun ChangeCategoryButton(
         val foregroundColor = decideForeground(backgroundColor)
 
         Button(
-            onClick = { categoryDialogState.value = true },
-            modifier = Modifier.padding(horizontal = 8.dp),
-            colors =
-                ButtonDefaults.buttonColors(
-                    containerColor = backgroundColor,
-                    contentColor = foregroundColor,
-                ),
+            { categoryDialogState.value = true },
+            Modifier.padding(horizontal = 8.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor, foregroundColor),
         ) {
             TextView(selectedCategory.emoji)
         }
@@ -46,8 +42,7 @@ fun ChangeCategoryButton(
             SwitchCategoryDialog(
                 categoryState,
                 categoryEvent,
-                onClose = { categoryDialogState.value = false },
-            )
+            ) { categoryDialogState.value = false }
         }
     }
 }

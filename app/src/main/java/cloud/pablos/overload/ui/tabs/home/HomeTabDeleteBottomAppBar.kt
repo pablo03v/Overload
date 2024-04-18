@@ -29,8 +29,8 @@ fun HomeTabDeleteBottomAppBar(
     val itemsForSelectedDay = getItems(categoryState, itemState, date)
 
     BottomAppBar(
-        actions = {
-            IconButton(onClick = {
+        {
+            IconButton({
                 itemEvent(
                     ItemEvent.SetSelectedItemsHome(
                         itemState.selectedItemsHome +
@@ -44,21 +44,21 @@ fun HomeTabDeleteBottomAppBar(
             }) {
                 Icon(
                     Icons.Filled.SelectAll,
-                    contentDescription = stringResource(id = R.string.select_all_items_of_selected_day),
+                    stringResource(R.string.select_all_items_of_selected_day),
                 )
             }
-            IconButton(onClick = {
+            IconButton({
                 itemEvent(ItemEvent.SetSelectedItemsHome(itemState.selectedItemsHome - itemsForSelectedDay.toSet()))
             }) {
                 Icon(
                     Icons.Filled.Deselect,
-                    contentDescription = stringResource(id = R.string.deselect_all_items_of_selected_day),
+                    stringResource(R.string.deselect_all_items_of_selected_day),
                 )
             }
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
+                {
                     itemEvent(ItemEvent.DeleteItems(itemState.selectedItemsHome))
                 },
                 containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -66,7 +66,7 @@ fun HomeTabDeleteBottomAppBar(
             ) {
                 Icon(
                     Icons.Filled.DeleteForever,
-                    contentDescription = stringResource(id = R.string.delete_items_forever),
+                    stringResource(R.string.delete_items_forever),
                 )
             }
         },
@@ -79,7 +79,7 @@ fun HomeTabDeleteFAB(
     itemEvent: (ItemEvent) -> Unit,
 ) {
     FloatingActionButton(
-        onClick = {
+        {
             itemEvent(ItemEvent.DeleteItems(itemState.selectedItemsHome))
         },
         containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -87,7 +87,7 @@ fun HomeTabDeleteFAB(
     ) {
         Icon(
             Icons.Filled.DeleteForever,
-            contentDescription = stringResource(id = R.string.delete_items_forever),
+            stringResource(R.string.delete_items_forever),
         )
     }
 }

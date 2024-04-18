@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">avmarkera alla artiklar för vald dag</string>
     <string name="delete_items_forever">radera objekt för alltid</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">utvald</string>
+    <string name="ol_selected">utvald</string>
     <string name="get_out_of_isDeleting">får dig ur raderingsläget</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -104,7 +104,7 @@ Tack för ditt tålamod!</string>
     <string name="minutes">minuter</string>
     <string name="cancel">Annullera</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Ange mål för paus</string>
+    <string name="set_goal_pause">Ange mål för paus</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Paus vänster</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

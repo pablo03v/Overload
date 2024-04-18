@@ -31,68 +31,69 @@ import cloud.pablos.overload.R
 import cloud.pablos.overload.ui.views.TextView
 
 @Composable
-fun HomeTabDeletePauseDialog(onClose: () -> Unit) {
+fun HomeTabDeletePauseDialog(onDismiss: () -> Unit) {
     val context = LocalContext.current
     val learnMoreLink = "https://github.com/pabloscloud/Overload?tab=readme-ov-file#why-cant-i-delete-an-ongoing-pause".toUri()
 
     AlertDialog(
-        onDismissRequest = onClose,
+        onDismiss,
+        {
+            Button(
+                { onDismiss() },
+                Modifier.fillMaxWidth(),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.onPrimaryContainer,
+                    ),
+            ) {
+                TextView(stringResource(R.string.close))
+            }
+        },
+        Modifier.padding(16.dp),
         icon = {
             Icon(
-                imageVector = Icons.Rounded.Info,
-                contentDescription = stringResource(id = R.string.delete_pause),
+                Icons.Rounded.Info,
+                stringResource(R.string.delete_pause),
                 tint = MaterialTheme.colorScheme.primary,
             )
         },
         title = {
             TextView(
-                text = stringResource(id = R.string.delete_pause),
+                stringResource(R.string.delete_pause),
+                Modifier.fillMaxWidth(),
                 fontWeight = FontWeight.Bold,
                 align = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
             )
         },
         text = {
             Column {
                 Text(
-                    text = stringResource(id = R.string.delete_pause_descr),
+                    stringResource(R.string.delete_pause_descr),
+                    Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth(),
                     overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
-                val openLinkStr = stringResource(id = R.string.open_link_with)
+                val openLinkStr = stringResource(R.string.open_link_with)
+
                 ClickableText(
-                    text = AnnotatedString(stringResource(id = R.string.learn_more)),
-                    style =
-                        MaterialTheme.typography.bodyMedium.copy(
-                            color = MaterialTheme.colorScheme.primary,
-                            textAlign = TextAlign.Center,
-                        ),
+                    AnnotatedString(stringResource(R.string.learn_more)),
+                    Modifier.fillMaxWidth(),
+                    MaterialTheme.typography.bodyMedium.copy(
+                        MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center,
+                    ),
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, learnMoreLink)
                         val chooserIntent = Intent.createChooser(intent, openLinkStr)
+
                         ContextCompat.startActivity(context, chooserIntent, null)
                     },
-                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
-        confirmButton = {
-            Button(
-                onClick = { onClose() },
-                modifier = Modifier.fillMaxWidth(),
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ),
-            ) {
-                TextView(stringResource(id = R.string.close))
-            }
-        },
-        modifier = Modifier.padding(16.dp),
     )
 }
 

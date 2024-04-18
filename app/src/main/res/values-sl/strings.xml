@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">izbriši vse elemente izbranega dneva</string>
     <string name="delete_items_forever">za vedno izbrišite elemente</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">izbrani</string>
+    <string name="ol_selected">izbrani</string>
     <string name="get_out_of_isDeleting">vas spravi iz načina brisanja</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Začni</string>
@@ -104,7 +104,7 @@ Hvala za potrpežljivost!</string>
     <string name="minutes">minute</string>
     <string name="cancel">preklic</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Nastavite cilj pavze</string>
+    <string name="set_goal_pause">Nastavite cilj pavze</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Prekinitev levo</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

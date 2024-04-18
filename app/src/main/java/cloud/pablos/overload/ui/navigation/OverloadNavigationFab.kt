@@ -90,105 +90,107 @@ fun OverloadNavigationFab(
     }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         when (itemState.isFabOpen) {
             true -> {
                 FloatingActionButton(
-                    onClick = {
+                    {
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
-                    interactionSource = interactionSource,
+                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+                    interactionSource = interactionSource,
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
+                        Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.Start,
                     ) {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.padding(8.dp),
+                            Modifier.padding(8.dp),
+                            Arrangement.Start,
+                            Alignment.CenterVertically,
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Close,
-                                contentDescription = stringResource(id = R.string.close),
-                                modifier = Modifier.padding(8.dp),
+                                Icons.Default.Close,
+                                stringResource(R.string.close),
+                                Modifier.padding(8.dp),
                             )
 
                             TextView(
-                                text = stringResource(id = R.string.close),
-                                modifier = Modifier.padding(end = 8.dp),
+                                stringResource(R.string.close),
+                                Modifier.padding(end = 8.dp),
                             )
                         }
                     }
                 }
 
                 SmallFloatingActionButton(
-                    onClick = {
+                    {
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                         manualDialogState.value = true
                         onDrawerClicked()
                     },
+                    Modifier.padding(bottom = 10.dp).fillMaxWidth(),
                     containerColor = backgroundColor,
                     contentColor = foregroundColor,
-                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
                 ) {
                     Column(
-                        modifier = Modifier.fillMaxWidth(),
+                        Modifier.fillMaxWidth(),
                         horizontalAlignment = Alignment.Start,
                     ) {
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.padding(8.dp),
+                            Modifier.padding(8.dp),
+                            Arrangement.Start,
+                            Alignment.CenterVertically,
                         ) {
                             Icon(
-                                imageVector = Icons.Default.Add,
-                                contentDescription = stringResource(id = R.string.manual_entry),
-                                modifier = Modifier.padding(8.dp),
+                                Icons.Default.Add,
+                                stringResource(R.string.manual_entry),
+                                Modifier.padding(8.dp),
                             )
 
                             TextView(
-                                text = stringResource(id = R.string.manual_entry),
-                                modifier = Modifier.padding(end = 8.dp),
+                                stringResource(R.string.manual_entry),
+                                Modifier.padding(end = 8.dp),
                             )
                         }
                     }
                 }
 
-                SmallFloatingActionButton(
-                    onClick = {
-                        itemEvent(ItemEvent.SetIsFabOpen(false))
-                        categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
-                        onDrawerClicked()
-                    },
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    modifier = Modifier.padding(bottom = 10.dp).fillMaxWidth(),
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalAlignment = Alignment.Start,
+                if (categoryState.categories.count() > 1) {
+                    SmallFloatingActionButton(
+                        {
+                            itemEvent(ItemEvent.SetIsFabOpen(false))
+                            categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
+                            onDrawerClicked()
+                        },
+                        Modifier.padding(bottom = 10.dp).fillMaxWidth(),
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
-                            modifier = Modifier.padding(8.dp),
+                        Column(
+                            Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.Start,
                         ) {
-                            Icon(
-                                imageVector = Icons.Default.Category,
-                                contentDescription = stringResource(id = R.string.switch_category),
-                                modifier = Modifier.padding(8.dp),
-                            )
+                            Row(
+                                Modifier.padding(8.dp),
+                                Arrangement.Start,
+                                Alignment.CenterVertically,
+                            ) {
+                                Icon(
+                                    Icons.Default.Category,
+                                    stringResource(R.string.switch_category),
+                                    Modifier.padding(8.dp),
+                                )
 
-                            TextView(
-                                text = stringResource(id = R.string.switch_category),
-                                modifier = Modifier.padding(end = 8.dp),
-                            )
+                                TextView(
+                                    stringResource(R.string.switch_category),
+                                    Modifier.padding(end = 8.dp),
+                                )
+                            }
                         }
                     }
                 }
@@ -197,32 +199,32 @@ fun OverloadNavigationFab(
                 when (itemState.isDeletingHome) {
                     true -> {
                         FloatingActionButton(
-                            onClick = {
+                            {
                                 itemEvent(ItemEvent.DeleteItems(itemState.selectedItemsHome))
                             },
-                            interactionSource = interactionSource,
+                            Modifier.fillMaxWidth(),
                             containerColor = MaterialTheme.colorScheme.errorContainer,
                             contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                            modifier = Modifier.fillMaxWidth(),
+                            interactionSource = interactionSource,
                         ) {
                             Column(
-                                modifier = Modifier.fillMaxWidth(),
+                                Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.Start,
                             ) {
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Start,
-                                    modifier = Modifier.padding(8.dp),
+                                    Modifier.padding(8.dp),
+                                    Arrangement.Start,
+                                    Alignment.CenterVertically,
                                 ) {
                                     Icon(
                                         Icons.Filled.DeleteForever,
-                                        contentDescription = stringResource(id = R.string.delete_items_forever),
-                                        modifier = Modifier.padding(8.dp),
+                                        stringResource(R.string.delete_items_forever),
+                                        Modifier.padding(8.dp),
                                     )
 
                                     TextView(
-                                        text = stringResource(id = R.string.delete_items_forever).replaceFirstChar { it.uppercase() },
-                                        modifier = Modifier.padding(end = 8.dp),
+                                        stringResource(R.string.delete_items_forever).replaceFirstChar { it.uppercase() },
+                                        Modifier.padding(end = 8.dp),
                                     )
                                 }
                             }
@@ -230,49 +232,48 @@ fun OverloadNavigationFab(
                     }
                     false -> {
                         FloatingActionButton(
-                            onClick = {
+                            {
                                 if (isLongClick.not()) {
                                     fabPress(categoryState, categoryEvent, itemState, itemEvent)
                                 }
                             },
-                            interactionSource = interactionSource,
+                            Modifier.fillMaxWidth(),
                             containerColor = backgroundColor,
                             contentColor = foregroundColor,
-                            modifier = Modifier.fillMaxWidth(),
+                            interactionSource = interactionSource,
                         ) {
                             Column(
-                                modifier = Modifier.fillMaxWidth(),
+                                Modifier.fillMaxWidth(),
                                 horizontalAlignment = Alignment.Start,
                             ) {
                                 Row(
-                                    verticalAlignment = Alignment.CenterVertically,
-                                    horizontalArrangement = Arrangement.Start,
-                                    modifier = Modifier.padding(8.dp),
+                                    Modifier.padding(8.dp),
+                                    Arrangement.Start,
+                                    Alignment.CenterVertically,
                                 ) {
-                                    Icon(
-                                        imageVector = if (isOngoing) Icons.Default.Stop else Icons.Default.PlayArrow,
-                                        contentDescription =
-                                            if (isOngoing) {
-                                                stringResource(id = R.string.stop)
-                                            } else {
-                                                stringResource(
-                                                    id = R.string.start,
-                                                )
-                                            },
-                                        modifier = Modifier.padding(8.dp),
-                                    )
+                                    if (isOngoing) {
+                                        Icon(
+                                            Icons.Default.Stop,
+                                            stringResource(R.string.stop),
+                                            Modifier.padding(8.dp),
+                                        )
 
-                                    TextView(
-                                        text =
-                                            if (isOngoing) {
-                                                stringResource(id = R.string.stop)
-                                            } else {
-                                                stringResource(
-                                                    id = R.string.start,
-                                                )
-                                            },
-                                        modifier = Modifier.padding(end = 8.dp),
-                                    )
+                                        TextView(
+                                            stringResource(R.string.stop),
+                                            Modifier.padding(end = 8.dp),
+                                        )
+                                    } else {
+                                        Icon(
+                                            Icons.Default.PlayArrow,
+                                            stringResource(R.string.start),
+                                            Modifier.padding(8.dp),
+                                        )
+
+                                        TextView(
+                                            stringResource(R.string.start),
+                                            Modifier.padding(end = 8.dp),
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -283,6 +284,6 @@ fun OverloadNavigationFab(
     }
 
     if (manualDialogState.value) {
-        HomeTabManualDialog(onClose = { manualDialogState.value = false }, categoryState, itemState, itemEvent)
+        HomeTabManualDialog({ manualDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

@@ -6,6 +6,8 @@ import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import cloud.pablos.overload.R
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.ui.views.TextView
 
@@ -15,13 +17,13 @@ fun CategoryScreenTopAppBar(categoryState: CategoryState) {
     val selectedCategory = categoryState.categories.find { it.id == categoryState.selectedCategoryConfigurations }
 
     Surface(
-        tonalElevation = NavigationBarDefaults.Elevation,
         color = MaterialTheme.colorScheme.background,
+        tonalElevation = NavigationBarDefaults.Elevation,
     ) {
         TopAppBar(
-            title = {
+            {
                 TextView(
-                    text = "Category" + ": " + (selectedCategory?.name ?: "Unknown"),
+                    stringResource(R.string.category) + ": " + (selectedCategory?.name ?: "Unknown"),
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 )
             },

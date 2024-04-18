@@ -29,8 +29,8 @@ fun DayViewProgress(
     category: Category,
     items: List<Item>,
     goal: Int,
-    date: LocalDate = LocalDate.now(),
     isPause: Boolean,
+    date: LocalDate = LocalDate.now(),
 ) {
     val duration: Long
     var count: Long = 0
@@ -75,14 +75,16 @@ fun DayViewProgress(
     }
     duration = count
 
+    val label = "progress"
+
     // Animation
-    val transition = updateTransition(targetState = duration, label = "progress")
+    val transition = updateTransition(duration, label)
 
     // Progress
     val progress =
         transition.animateFloat(
-            transitionSpec = { tween(800) },
-            label = "progress",
+            { tween(800) },
+            label,
         ) { remTime ->
             val calculatedProgress =
                 if (remTime < 0) {
@@ -97,10 +99,10 @@ fun DayViewProgress(
     // Color
     val color =
         transition.animateColor(
-            transitionSpec = {
+            {
                 tween(800, easing = LinearEasing)
             },
-            label = "Color transition",
+            label,
         ) {
             if (progress.value < 360f) {
                 MaterialTheme.colorScheme.error
@@ -113,7 +115,7 @@ fun DayViewProgress(
     val title =
         when (isPause) {
             true -> {
-                stringResource(id = R.string.pause_left)
+                stringResource(R.string.pause_left)
             }
 
             false -> {
@@ -123,8 +125,8 @@ fun DayViewProgress(
     val subtitle = getDurationString(Duration.ofMillis(goal - duration))
 
     HomeTabProgress(
-        progressData = ProgressData(progress = progress, color = color),
-        title = title,
-        subtitle = subtitle,
+        ProgressData(progress, color),
+        title,
+        subtitle,
     )
 }

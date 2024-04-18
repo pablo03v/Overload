@@ -48,21 +48,21 @@ class OverloadNavigationActions(private val navController: NavHostController) {
 val TOP_LEVEL_DESTINATIONS =
     listOf(
         OverloadTopLevelDestination(
-            route = OverloadRoute.HOME,
-            selectedIcon = Icons.Filled.CalendarToday,
-            unselectedIcon = Icons.Outlined.CalendarToday,
-            iconTextId = R.string.home,
+            OverloadRoute.HOME,
+            Icons.Filled.CalendarToday,
+            Icons.Outlined.CalendarToday,
+            R.string.home,
         ),
         OverloadTopLevelDestination(
-            route = OverloadRoute.CALENDAR,
-            selectedIcon = Icons.Filled.CalendarMonth,
-            unselectedIcon = Icons.Outlined.CalendarMonth,
-            iconTextId = R.string.calendar,
+            OverloadRoute.CALENDAR,
+            Icons.Filled.CalendarMonth,
+            Icons.Outlined.CalendarMonth,
+            R.string.calendar,
         ),
         OverloadTopLevelDestination(
-            route = OverloadRoute.CONFIGURATIONS,
-            selectedIcon = Icons.Filled.Settings,
-            unselectedIcon = Icons.Outlined.Settings,
-            iconTextId = R.string.configurations,
+            OverloadRoute.CONFIGURATIONS,
+            Icons.Filled.Settings,
+            Icons.Outlined.Settings,
+            R.string.configurations,
         ),
     )

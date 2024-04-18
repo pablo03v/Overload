@@ -4,7 +4,7 @@
     <string name="save">Simpan</string>
     <string name="pick_work_goal">Tetapkan Tujuan Kerja</string>
     <string name="select_year">Pilih Tahun</string>
-    <string name="pick_pause_goal">Tetapkan Sasaran Jeda</string>
+    <string name="set_goal_pause">Tetapkan Sasaran Jeda</string>
     <string name="cancel">batal</string>
     <string name="minutes">menit</string>
     <string name="arrow_forward">panah ke depan menggambarkan arah kedua waktu dari awal hingga akhir</string>
@@ -80,7 +80,7 @@
     <string name="no_items_title">Tidak ada item yang dicatat</string>
     <string name="saturday">Sabtu</string>
     <string name="sourcecode">Kode Sumber</string>
-    <string name="itemCount_selected">dipilih</string>
+    <string name="ol_selected">dipilih</string>
     <string name="import_success">Backup berhasil diimpor</string>
     <string name="pause_goal_descr">Tetapkan sasaran untuk jeda</string>
     <string name="thursday">Kamis</string>

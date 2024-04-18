@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">odznaczenie wszystkich elementów wybranego dnia</string>
     <string name="delete_items_forever">usuwanie elementów na zawsze</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">wybrany</string>
+    <string name="ol_selected">wybrany</string>
     <string name="get_out_of_isDeleting">pozwala wyjść z trybu usuwania</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -104,7 +104,7 @@ Dziękujemy za cierpliwość!</string>
     <string name="minutes">minuty</string>
     <string name="cancel">Anuluj</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Ustaw cel pauzy</string>
+    <string name="set_goal_pause">Ustaw cel pauzy</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Pauza w lewo</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

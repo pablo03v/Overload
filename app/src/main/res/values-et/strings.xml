@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">tühistab kõigi valitud päeva objektide valiku</string>
     <string name="delete_items_forever">kustutada objekte igaveseks</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">valitud</string>
+    <string name="ol_selected">valitud</string>
     <string name="get_out_of_isDeleting">viib teid kustutusrežiimist välja</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -104,7 +104,7 @@ Täname kannatlikkuse eest!</string>
     <string name="minutes">minutit</string>
     <string name="cancel">tühistada</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Seatud pausi eesmärk</string>
+    <string name="set_goal_pause">Seatud pausi eesmärk</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Paus vasakule</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

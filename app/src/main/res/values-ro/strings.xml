@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">deselectează toate articolele din ziua selectată</string>
     <string name="delete_items_forever">ștergeți elementele pentru totdeauna</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">selectat</string>
+    <string name="ol_selected">selectat</string>
     <string name="get_out_of_isDeleting">vă scoate din modul de ștergere</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -104,7 +104,7 @@ Vă mulțumim pentru răbdare!</string>
     <string name="minutes">minute</string>
     <string name="cancel">Anulează</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Setați obiectivul pauzei</string>
+    <string name="set_goal_pause">Setați obiectivul pauzei</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Pauză la stânga</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

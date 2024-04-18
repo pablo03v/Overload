@@ -128,88 +128,83 @@ fun DayViewItemOngoing(
         )
 
     Box(
-        modifier =
-            Modifier
-                .clip(RoundedCornerShape(15.dp))
-                .background(backgroundColor),
+        Modifier
+            .clip(RoundedCornerShape(15.dp))
+            .background(backgroundColor),
     ) {
         Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .clearAndSetSemantics {
-                        contentDescription = itemLabel
-                    },
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+            Modifier
+                .fillMaxWidth()
+                .clearAndSetSemantics {
+                    contentDescription = itemLabel
+                },
+            Arrangement.SpaceBetween,
+            Alignment.CenterVertically,
         ) {
             TextView(
-                text = startTimeString,
-                color = foregroundColor,
+                startTimeString,
+                Modifier.padding(12.5.dp),
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(12.5.dp),
+                color = foregroundColor,
             )
 
             if (item.pause) {
                 Icon(
                     Icons.Outlined.DarkMode,
-                    contentDescription = stringResource(id = R.string.pause),
+                    stringResource(R.string.pause),
                     tint = foregroundColor,
                 )
             }
 
             Box(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .padding(10.dp)
-                        .offset(x = 5.dp),
+                Modifier
+                    .weight(1f)
+                    .padding(10.dp)
+                    .offset(x = 5.dp),
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .height(2.dp)
-                                .background(foregroundColor),
+                        Modifier
+                            .weight(1f)
+                            .height(2.dp)
+                            .background(foregroundColor),
                     )
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = stringResource(id = R.string.arrow_forward),
-                        tint = foregroundColor,
-                        modifier =
-                            Modifier
-                                .offset(x = (-5).dp)
-                                .size(25.dp),
+                        stringResource(R.string.arrow_forward),
+                        Modifier
+                            .offset(x = (-5).dp)
+                            .size(25.dp),
+                        foregroundColor,
                     )
                 }
             }
 
             if (hideEnd.not()) {
-                Row(modifier = Modifier.padding(12.5.dp)) {
+                Row(Modifier.padding(12.5.dp)) {
                     TextView(
-                        text = currentHour,
-                        color = foregroundColor,
+                        currentHour,
                         fontWeight = FontWeight.Medium,
+                        color = foregroundColor,
                     )
                     AnimatedVisibility(
-                        visible = blink,
+                        blink,
                         enter = fadeIn(),
-                        exit = fadeOut(animationSpec = tween(1000)),
+                        exit = fadeOut(tween(1000)),
                     ) {
                         TextView(
-                            text = ":",
-                            color = foregroundColor,
+                            ":",
                             fontWeight = FontWeight.Medium,
+                            color = foregroundColor,
                         )
                     }
                     TextView(
-                        text = currentMinute,
-                        color = foregroundColor,
+                        currentMinute,
                         fontWeight = FontWeight.Medium,
+                        color = foregroundColor,
                     )
                 }
             }
@@ -217,22 +212,19 @@ fun DayViewItemOngoing(
 
         if (hideEnd.not()) {
             AnimatedVisibility(
-                visible = blink,
-                enter = fadeIn(),
-                exit = fadeOut(animationSpec = tween(1000)),
-                modifier =
-                    Modifier
-                        .align(Alignment.Center)
-                        .background(backgroundColor),
+                blink,
+                Modifier
+                    .align(Alignment.Center)
+                    .background(backgroundColor),
+                fadeIn(),
+                fadeOut(tween(1000)),
             ) {
                 TextView(
-                    text = durationString,
-                    color = foregroundColor,
+                    durationString,
+                    Modifier.padding(8.dp),
                     fontWeight = FontWeight.Medium,
+                    color = foregroundColor,
                     align = TextAlign.Center,
-                    modifier =
-                        Modifier
-                            .padding(8.dp),
                 )
             }
         }

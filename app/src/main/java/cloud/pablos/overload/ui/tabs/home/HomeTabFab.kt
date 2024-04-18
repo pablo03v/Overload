@@ -92,60 +92,56 @@ fun HomeTabFab(
     }
 
     Column(
-        horizontalAlignment = Alignment.End,
         verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalAlignment = Alignment.End,
     ) {
         when (itemState.isFabOpen) {
             true -> {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Box(
-                        modifier = Modifier.padding(end = 8.dp),
+                if (categoryState.categories.count() > 1) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        TextView(
-                            text = stringResource(id = R.string.switch_category),
-                            modifier =
+                        Box(Modifier.padding(end = 8.dp)) {
+                            TextView(
+                                stringResource(id = R.string.switch_category),
                                 Modifier
                                     .clip(RoundedCornerShape(12.dp))
-                                    .background(color = MaterialTheme.colorScheme.surfaceContainer)
+                                    .background(MaterialTheme.colorScheme.surfaceContainer)
                                     .padding(horizontal = 8.dp, vertical = 4.dp),
-                        )
-                    }
+                            )
+                        }
 
-                    SmallFloatingActionButton(
-                        onClick = {
-                            itemEvent(ItemEvent.SetIsFabOpen(false))
-                            categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
-                        },
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Category,
-                            contentDescription = stringResource(id = R.string.switch_category),
-                        )
+                        SmallFloatingActionButton(
+                            {
+                                itemEvent(ItemEvent.SetIsFabOpen(false))
+                                categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(true))
+                            },
+                            containerColor = MaterialTheme.colorScheme.primaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        ) {
+                            Icon(
+                                Icons.Default.Category,
+                                stringResource(R.string.switch_category),
+                            )
+                        }
                     }
                 }
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Box(
-                        modifier = Modifier.padding(end = 8.dp),
-                    ) {
+                    Box(Modifier.padding(end = 8.dp)) {
                         TextView(
-                            text = stringResource(id = R.string.manual_entry),
-                            modifier =
-                                Modifier
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(color = MaterialTheme.colorScheme.surfaceContainer)
-                                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                            stringResource(R.string.manual_entry),
+                            Modifier
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surfaceContainer)
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
                         )
                     }
 
                     SmallFloatingActionButton(
-                        onClick = {
+                        {
                             itemEvent(ItemEvent.SetIsFabOpen(false))
                             manualDialogState.value = true
                         },
@@ -153,64 +149,58 @@ fun HomeTabFab(
                         contentColor = foregroundColor,
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Add,
-                            contentDescription = stringResource(id = R.string.manual_entry),
+                            Icons.Default.Add,
+                            stringResource(R.string.manual_entry),
                         )
                     }
                 }
 
                 FloatingActionButton(
-                    onClick = {
+                    {
                         itemEvent(ItemEvent.SetIsFabOpen(false))
                     },
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = stringResource(id = R.string.close),
-                        modifier = Modifier.padding(8.dp),
+                        Icons.Default.Close,
+                        stringResource(R.string.close),
+                        Modifier.padding(8.dp),
                     )
                 }
             }
 
             false -> {
                 FloatingActionButton(
-                    onClick = {
+                    {
                         if (isLongClick.not()) {
                             fabPress(categoryState, categoryEvent, itemState, itemEvent)
                         }
                     },
-                    interactionSource = interactionSource,
                     containerColor = backgroundColor,
                     contentColor = foregroundColor,
+                    interactionSource = interactionSource,
                 ) {
                     Row(
+                        Modifier.padding(8.dp),
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(8.dp),
                     ) {
                         Icon(
-                            imageVector = if (isOngoing) Icons.Default.Stop else Icons.Default.PlayArrow,
-                            contentDescription =
-                                if (isOngoing) {
-                                    stringResource(id = R.string.stop)
-                                } else {
-                                    stringResource(
-                                        id = R.string.start,
-                                    )
-                                },
-                            modifier = Modifier.padding(8.dp),
+                            if (isOngoing) Icons.Default.Stop else Icons.Default.PlayArrow,
+                            if (isOngoing) {
+                                stringResource(R.string.stop)
+                            } else {
+                                stringResource(R.string.start)
+                            },
+                            Modifier.padding(8.dp),
                         )
                         TextView(
-                            text =
-                                if (isOngoing) {
-                                    stringResource(id = R.string.stop)
-                                } else {
-                                    stringResource(
-                                        id = R.string.start,
-                                    )
-                                },
-                            modifier = Modifier.padding(end = 8.dp),
+                            if (isOngoing) {
+                                stringResource(R.string.stop)
+                            } else {
+                                stringResource(R.string.start)
+                            },
+                            Modifier.padding(end = 8.dp),
                         )
                     }
                 }
@@ -219,6 +209,6 @@ fun HomeTabFab(
     }
 
     if (manualDialogState.value) {
-        HomeTabManualDialog(onClose = { manualDialogState.value = false }, categoryState, itemState, itemEvent)
+        HomeTabManualDialog({ manualDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

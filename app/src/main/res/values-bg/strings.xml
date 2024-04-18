@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">премахване на избора на всички елементи от избрания ден</string>
     <string name="delete_items_forever">изтриване на елементи завинаги</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">избран</string>
+    <string name="ol_selected">избран</string>
     <string name="get_out_of_isDeleting">ви извежда от режим на изтриване</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Старт</string>
@@ -104,7 +104,7 @@
     <string name="minutes">минути</string>
     <string name="cancel">Отмени</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Задайте цел за пауза</string>
+    <string name="set_goal_pause">Задайте цел за пауза</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Пауза наляво</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

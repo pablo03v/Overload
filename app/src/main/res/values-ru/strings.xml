@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">снять выделение со всего в этом дне</string>
     <string name="delete_items_forever">удалить навсегда</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">выбрано</string>
+    <string name="ol_selected">выбрано</string>
     <string name="get_out_of_isDeleting">выйти из режима удаления</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Начать</string>
@@ -105,7 +105,7 @@
     <string name="minutes">минут</string>
     <string name="cancel">Отмена</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Задать цель отдыха</string>
+    <string name="set_goal_pause">Задать цель отдыха</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Отдыхать осталось</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->

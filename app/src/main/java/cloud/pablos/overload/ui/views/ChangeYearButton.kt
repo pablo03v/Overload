@@ -38,17 +38,16 @@ fun ChangeYearButton(
 
     if (yearsCount > 0) {
         Button(
-            onClick = { yearDialogState.value = true },
-            modifier = Modifier.padding(horizontal = 8.dp),
+            { yearDialogState.value = true },
+            Modifier.padding(horizontal = 8.dp),
         ) {
             TextView(itemState.selectedYearCalendar.toString())
         }
         if (yearDialogState.value) {
             CalendarTabYearDialog(
-                firstYear = firstYear,
-                itemEvent = itemEvent,
-                onClose = { yearDialogState.value = false },
-            )
+                firstYear,
+                itemEvent,
+            ) { yearDialogState.value = false }
         }
     }
 }

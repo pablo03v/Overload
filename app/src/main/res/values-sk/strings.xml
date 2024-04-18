@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">zrušiť výber všetkých položiek vybraného dňa</string>
     <string name="delete_items_forever">navždy odstrániť položky</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">vybrané</string>
+    <string name="ol_selected">vybrané</string>
     <string name="get_out_of_isDeleting">vás dostane z režimu mazania</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -104,7 +104,7 @@ Frekvencia - Ako často dochádza k pádu?\n
     <string name="minutes">minuter</string>
     <string name="cancel">Annullera</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Ange mål för paus</string>
+    <string name="set_goal_pause">Ange mål för paus</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Paus vänster</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
