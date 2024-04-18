@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">deselect all items of selected day</string>
     <string name="delete_items_forever">delete items forever</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">selected</string>
+    <string name="ol_selected">selected</string>
     <string name="get_out_of_isDeleting">gets you out of deletion mode</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -104,7 +104,7 @@ Thanks for patience!</string>
     <string name="minutes">minutes</string>
     <string name="cancel">Cancel</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Set Pause Goal</string>
+    <string name="set_goal_pause">Set Pause Goal</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
     <string name="pause_left">Pause left</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
@@ -132,4 +132,11 @@ Thanks for patience!</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>
+    <string name="go_back">Go Back</string>
+    <string name="delete_category">Delete Category</string>
+    <string name="set_goal">Set Goal</string>
+    <string name="category">Category</string>
+    <string name="name">Name</string>
+    <string name="color">Color</string>
+    <string name="emoji">Emoji</string>
 </resources>

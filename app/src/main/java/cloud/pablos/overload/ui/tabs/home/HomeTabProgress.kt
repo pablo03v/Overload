@@ -44,41 +44,35 @@ fun HomeTabProgress(
     val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
 
     Surface(
+        Modifier.fillMaxWidth(),
+        RoundedCornerShape(30.dp),
+        MaterialTheme.colorScheme.background,
         tonalElevation = NavigationBarDefaults.Elevation,
-        color = MaterialTheme.colorScheme.background,
-        shape = RoundedCornerShape(30.dp),
-        modifier =
-            Modifier
-                .fillMaxWidth(),
     ) {
         Row(
+            Modifier.padding(15.dp),
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(15.dp),
         ) {
-            Canvas(
-                modifier = modifier.size(30.dp),
-            ) {
+            Canvas(Modifier.size(30.dp)) {
                 val strokeWidth = 6.dp.toPx()
 
                 drawArc(
-                    startAngle = 270f, // 270 is 0 degree
-                    sweepAngle = 360f,
-                    useCenter = false,
-                    color = backgroundColor,
-                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                    backgroundColor,
+                    270f,
+                    360f,
+                    false,
+                    style = Stroke(strokeWidth, cap = StrokeCap.Round),
                 )
 
                 drawArc(
-                    startAngle = 270f, // 270 is 0 degree
-                    sweepAngle = progressData.progress,
-                    useCenter = false,
-                    color = progressData.color,
-                    style = Stroke(width = strokeWidth, cap = StrokeCap.Round),
+                    progressData.color,
+                    270f,
+                    progressData.progress,
+                    false,
+                    style = Stroke(strokeWidth, cap = StrokeCap.Round),
                 )
             }
-            Column(
-                modifier = Modifier.padding(horizontal = 10.dp),
-            ) {
+            Column(Modifier.padding(horizontal = 10.dp)) {
                 TextView(title, maxLines = 2)
                 TextView(subtitle)
             }
@@ -101,15 +95,16 @@ class ProgressData(
 fun HomeTabProgressPreview() {
     val goal: Long = 3600000
     val duration: Long = 2700000
+    val label = "progress"
 
     // Animation
-    val transition = updateTransition(targetState = duration, label = "progress")
+    val transition = updateTransition(duration, label)
 
     // Progress
     val progress =
         transition.animateFloat(
-            transitionSpec = { tween(800) },
-            label = "progress",
+            { tween(800) },
+            label,
         ) { remTime ->
             val calculatedProgress =
                 if (remTime < 0) {
@@ -124,10 +119,10 @@ fun HomeTabProgressPreview() {
     // Color
     val color =
         transition.animateColor(
-            transitionSpec = {
+            {
                 tween(800, easing = LinearEasing)
             },
-            label = "Color transition",
+            label,
         ) {
             if (progress.value < 360f) {
                 MaterialTheme.colorScheme.error
@@ -137,12 +132,12 @@ fun HomeTabProgressPreview() {
         }
 
     // Text
-    val title = stringResource(id = R.string.pause_left)
+    val title = stringResource(R.string.pause_left)
     val subtitle = getDurationString(Duration.ofMillis(goal - duration))
 
     HomeTabProgress(
-        progressData = ProgressData(progress = progress, color = color),
-        title = title,
-        subtitle = subtitle,
+        ProgressData(progress, color),
+        title,
+        subtitle,
     )
 }

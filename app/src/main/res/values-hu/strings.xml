@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">a kiválasztott nap összes elemének kijelölésének megszüntetése</string>
     <string name="delete_items_forever">elemek törlése örökre</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">kiválasztott</string>
+    <string name="ol_selected">kiválasztott</string>
     <string name="get_out_of_isDeleting">kihozza Önt a törlési módból</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Naptár</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfigurációk</string>
+    <string name="categories">Categories</string>
     <string name="goals">Célok</string>
     <string name="work">Munka</string>
     <string name="work_goal_descr">Tűzzön ki egy célt a munkához</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Import</string>
     <string name="import_descr">Importálás biztonsági mentésből</string>
-    <string name="import_backup">Import biztonsági mentés</string>
-    <string name="import_backup_descr">Az adatoknak az alkalmazásba történő importálásához kérjük, használja a más alkalmazásokból származó Sharesheet-et. Ez lehetővé teszi, hogy az alkalmazás biztonságosan hozzáférjen a megosztott adatokhoz, és importálja azokat az Ön adatbázisába.</string>
     <string name="import_success">Sikeresen importált biztonsági másolat</string>
     <string name="import_failure">A biztonsági mentés importálása sikertelen</string>
     <string name="analytics">analitika</string>
@@ -101,18 +100,17 @@ Gyakoriság - Milyen gyakran fordul elő az összeomlás?\n
 Köszönjük a türelmet!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Mentés</string>
-    <string name="pick_work_goal">Munkacél beállítása</string>
     <string name="hours">órák</string>
     <string name="minutes">percek</string>
     <string name="cancel">Törölje</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Szünet cél beállítása</string>
+    <string name="set_goal_pause">Szünet cél beállítása</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Munka balra</string>
     <string name="pause_left">Szünet balra</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">nyíl előre, amely a két idő irányát írja le a kezdettől a végéig</string>
     <string name="select_year">Év kiválasztása</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Lefordítani</string>
     <string name="translate_descr">Szeretné lefordítani az alkalmazást? Köszönöm!</string>
     <string name="adjust">Beállítás</string>
@@ -131,4 +129,7 @@ Köszönjük a türelmet!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

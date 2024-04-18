@@ -15,13 +15,13 @@ import cloud.pablos.overload.ui.views.TextView
 @Composable
 fun ConfigurationsTabTopAppBar() {
     Surface(
-        tonalElevation = NavigationBarDefaults.Elevation,
         color = MaterialTheme.colorScheme.background,
+        tonalElevation = NavigationBarDefaults.Elevation,
     ) {
         TopAppBar(
-            title = {
+            {
                 TextView(
-                    text = stringResource(id = R.string.configurations),
+                    stringResource(R.string.configurations),
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 )
             },

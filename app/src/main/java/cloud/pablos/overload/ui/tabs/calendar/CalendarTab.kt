@@ -59,15 +59,15 @@ fun CalendarTab(
     Scaffold(
         topBar = {
             OverloadTopAppBar(
-                selectedDestination = OverloadRoute.CALENDAR,
-                categoryState = categoryState,
-                categoryEvent = categoryEvent,
-                itemState = itemState,
-                itemEvent = itemEvent,
+                OverloadRoute.CALENDAR,
+                categoryState,
+                categoryEvent,
+                itemState,
+                itemEvent,
             )
         },
     ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize()) {
             val selectedYear by remember { mutableIntStateOf(itemState.selectedYearCalendar) }
             val selectedDay = getLocalDate(itemState.selectedDayCalendar)
             val items = getItems(categoryState, itemState)
@@ -78,8 +78,8 @@ fun CalendarTab(
                 }
             }
 
-            Column(modifier = Modifier.padding(paddingValues)) {
-                AnimatedVisibility(visible = contentType == OverloadContentType.DUAL_PANE) {
+            Column(Modifier.padding(paddingValues)) {
+                AnimatedVisibility(contentType == OverloadContentType.DUAL_PANE) {
                     val firstYear =
                         if (items.isEmpty()) {
                             LocalDate.now().year
@@ -96,10 +96,9 @@ fun CalendarTab(
                     var scrollToPage = true
                     val pagerState =
                         rememberPagerState(
-                            initialPage = daysCount,
-                            initialPageOffsetFraction = 0f,
-                            pageCount = { daysCount },
-                        )
+                            daysCount,
+                            0f,
+                        ) { daysCount }
 
                     LaunchedEffect(pagerState.currentPage) {
                         scrollToPage = false
@@ -127,73 +126,58 @@ fun CalendarTab(
                         }
                     }
 
-                    Row(modifier = Modifier.fillMaxSize()) {
-                        Box(
-                            modifier = Modifier.weight(1f),
-                        ) {
+                    Row(Modifier.fillMaxSize()) {
+                        Box(Modifier.weight(1f)) {
                             Column {
                                 Surface(
-                                    tonalElevation = NavigationBarDefaults.Elevation,
                                     color = MaterialTheme.colorScheme.background,
+                                    tonalElevation = NavigationBarDefaults.Elevation,
                                 ) {
                                     WeekDaysHeader()
                                 }
 
                                 YearView(
-                                    categoryState = categoryState,
-                                    itemEvent = itemEvent,
-                                    date = getLocalDate(itemState.selectedDayCalendar),
-                                    year = itemState.selectedYearCalendar,
-                                    bottomPadding = 0.dp,
-                                    highlightSelectedDay = true,
+                                    getLocalDate(itemState.selectedDayCalendar),
+                                    itemState.selectedYearCalendar,
+                                    categoryState,
+                                    itemEvent,
+                                    0.dp,
+                                    true,
                                 )
                             }
                         }
 
-                        Box(
-                            modifier = Modifier.weight(1f),
-                        ) {
-                            HorizontalPager(
-                                state = pagerState,
-                            ) { page ->
+                        Box(Modifier.weight(1f)) {
+                            HorizontalPager(pagerState) { page ->
                                 Column {
                                     Surface(
-                                        tonalElevation = NavigationBarDefaults.Elevation,
                                         color = MaterialTheme.colorScheme.background,
+                                        tonalElevation = NavigationBarDefaults.Elevation,
                                     ) {
-                                        DateHeader(
-                                            daysCount = daysCount,
-                                            page = page,
-                                        )
+                                        DateHeader(daysCount, page)
                                     }
 
-                                    DayScreenDayView(
-                                        daysCount = daysCount,
-                                        page = page,
-                                        categoryState = categoryState,
-                                        itemState = itemState,
-                                        itemEvent = itemEvent,
-                                    )
+                                    DayScreenDayView(daysCount, page, categoryState, itemState, itemEvent)
                                 }
                             }
                         }
                     }
                 }
-                AnimatedVisibility(visible = contentType == OverloadContentType.SINGLE_PANE) {
+                AnimatedVisibility(contentType == OverloadContentType.SINGLE_PANE) {
                     Column {
                         Surface(
-                            tonalElevation = NavigationBarDefaults.Elevation,
                             color = MaterialTheme.colorScheme.background,
+                            tonalElevation = NavigationBarDefaults.Elevation,
                         ) {
                             WeekDaysHeader()
                         }
 
                         YearView(
-                            categoryState = categoryState,
-                            itemEvent = itemEvent,
-                            date = getLocalDate(itemState.selectedDayCalendar),
-                            year = itemState.selectedYearCalendar,
-                            bottomPadding = 16.dp,
+                            getLocalDate(itemState.selectedDayCalendar),
+                            itemState.selectedYearCalendar,
+                            categoryState,
+                            itemEvent,
+                            16.dp,
                             onNavigate = onNavigate,
                         )
                     }
@@ -206,11 +190,10 @@ fun CalendarTab(
 @Composable
 fun WeekDaysHeader() {
     Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+        Arrangement.SpaceBetween,
     ) {
         DayOfWeekHeaderCell("M")
         DayOfWeekHeaderCell("T")
@@ -225,14 +208,13 @@ fun WeekDaysHeader() {
 @Composable
 fun DayOfWeekHeaderCell(text: String) {
     Box(
-        modifier =
-            Modifier
-                .padding()
-                .requiredSize(36.dp),
-        contentAlignment = Alignment.Center,
+        Modifier
+            .padding()
+            .requiredSize(36.dp),
+        Alignment.Center,
     ) {
         TextView(
-            text = text,
+            text,
             fontSize = 14.sp,
         )
     }
@@ -248,17 +230,17 @@ fun DateHeader(
             .minusDays((daysCount - page - 1).toLong())
 
     val text = getFormattedDate(date, true)
+
     Box(
-        modifier =
-            Modifier
-                .padding()
-                .requiredHeight(36.dp)
-                .fillMaxWidth(),
+        Modifier
+            .padding()
+            .requiredHeight(36.dp)
+            .fillMaxWidth(),
     ) {
         TextView(
-            text = text,
-            fontSize = 14.sp,
-            modifier = Modifier.padding(6.dp),
+            text,
+            Modifier.padding(6.dp),
+            14.sp,
         )
     }
 }

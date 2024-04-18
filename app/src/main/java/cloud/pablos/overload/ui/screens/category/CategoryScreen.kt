@@ -1,7 +1,6 @@
 package cloud.pablos.overload.ui.screens.category
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -93,26 +92,17 @@ fun CategoryScreen(
 
     if (selectedCategory != null) {
         Scaffold(
-            topBar = {
-                OverloadTopAppBar(
-                    selectedDestination = OverloadRoute.CATEGORY,
-                    categoryState = categoryState,
-                    categoryEvent = categoryEvent,
-                    itemState = itemState,
-                    itemEvent = itemEvent,
-                )
-            },
+            topBar = { OverloadTopAppBar(OverloadRoute.CATEGORY, categoryState, categoryEvent, itemState, itemEvent) },
         ) { paddingValues ->
             LazyColumn(
-                modifier =
-                    Modifier
-                        .fillMaxSize()
-                        .padding(paddingValues)
-                        .padding(horizontal = 16.dp),
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 item {
-                    ConfigurationsTabItem(title = "Name")
+                    ConfigurationsTabItem("Name")
                 }
 
                 item {
@@ -120,17 +110,18 @@ fun CategoryScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         OutlinedTextField(
-                            value = name,
-                            onValueChange = {
+                            name,
+                            {
                                 name = it
 
                                 if (it.text.isNotEmpty()) {
                                     nameError = false
                                 }
                             },
-                            singleLine = true,
-                            placeholder = { Text(text = "Name") },
+                            Modifier.fillMaxWidth(),
+                            placeholder = { Text("Name") },
                             isError = nameError,
+                            keyboardOptions = KeyboardOptions(KeyboardCapitalization.Sentences),
                             keyboardActions =
                                 KeyboardActions(
                                     onDone = {
@@ -153,8 +144,7 @@ fun CategoryScreen(
                                         )
                                     },
                                 ),
-                            keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true,
                         )
                     }
                 }
@@ -165,7 +155,7 @@ fun CategoryScreen(
                     }
 
                     item {
-                        ConfigurationsTabItem(title = "Color")
+                        ConfigurationsTabItem("Color")
                     }
 
                     item {
@@ -173,17 +163,15 @@ fun CategoryScreen(
                             verticalArrangement = Arrangement.spacedBy(10.dp),
                         ) {
                             Row(
-                                modifier =
-                                    Modifier
-                                        .horizontalScroll(rememberScrollState()),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                Modifier.horizontalScroll(rememberScrollState()),
+                                Arrangement.spacedBy(8.dp),
                             ) {
                                 colorOptions.forEach { colorOption ->
                                     SelectableColor(
-                                        selected = colorOption == color,
-                                        onClick = { color = colorOption },
-                                        color = colorOption,
-                                        surfaceColor = MaterialTheme.colorScheme.surfaceVariant,
+                                        colorOption == color,
+                                        { color = colorOption },
+                                        colorOption,
+                                        MaterialTheme.colorScheme.surfaceVariant,
                                     )
                                 }
                             }
@@ -196,7 +184,7 @@ fun CategoryScreen(
                 }
 
                 item {
-                    ConfigurationsTabItem(title = "Emoji")
+                    ConfigurationsTabItem("Emoji")
                 }
 
                 item {
@@ -204,18 +192,16 @@ fun CategoryScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         Row(
-                            modifier =
-                                Modifier
-                                    .horizontalScroll(rememberScrollState()),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            Modifier.horizontalScroll(rememberScrollState()),
+                            Arrangement.spacedBy(8.dp),
                         ) {
                             emojiOptions.forEach { emojiOption ->
                                 SelectableEmoji(
-                                    selected = emojiOption == emoji,
-                                    onClick = { emoji = emojiOption },
-                                    emoji = emojiOption,
-                                    color = color,
-                                    surfaceColor = MaterialTheme.colorScheme.surfaceVariant,
+                                    emojiOption == emoji,
+                                    { emoji = emojiOption },
+                                    emojiOption,
+                                    color,
+                                    MaterialTheme.colorScheme.surfaceVariant,
                                 )
                             }
                         }
@@ -227,36 +213,31 @@ fun CategoryScreen(
                 }
 
                 item {
-                    ConfigurationsTabItem(title = stringResource(id = R.string.goals))
+                    ConfigurationsTabItem(stringResource(R.string.goals))
                 }
 
                 // Goal 1
                 item {
-                    val itemLabel = stringResource(id = R.string.work) + ": " + stringResource(id = R.string.work_goal_descr)
+                    val itemLabel = stringResource(R.string.work) + ": " + stringResource(R.string.work_goal_descr)
+
                     Row(
+                        Modifier
+                            .padding(bottom = 16.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                            .clickable { goalDialogState.value = true }
+                            .clearAndSetSemantics { contentDescription = itemLabel },
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier =
-                            Modifier
-                                .padding(bottom = 16.dp)
-                                .clip(shape = RoundedCornerShape(15.dp))
-                                .clickable {
-                                    pauseGoalDialogState.value = true
-                                }
-                                .clearAndSetSemantics {
-                                    contentDescription = itemLabel
-                                },
                     ) {
                         Text(
                             selectedCategory.emoji,
-                            modifier =
-                                Modifier
-                                    .width(40.dp)
-                                    .padding(horizontal = 8.dp),
+                            Modifier
+                                .width(40.dp)
+                                .padding(horizontal = 8.dp),
                         )
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth(),
+                            Modifier.fillMaxWidth(),
+                            Arrangement.SpaceBetween,
+                            Alignment.CenterVertically,
                         ) {
                             Column {
                                 ConfigurationTitle(selectedCategory.name)
@@ -268,38 +249,32 @@ fun CategoryScreen(
 
                 // Goal 2
                 item {
-                    val itemLabel = stringResource(id = R.string.pause) + ": " + stringResource(id = R.string.pause_goal_descr)
+                    val itemLabel = stringResource(R.string.pause) + ": " + stringResource(R.string.pause_goal_descr)
 
                     Row(
+                        Modifier
+                            .padding(bottom = 16.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                            .clickable { pauseGoalDialogState.value = true }
+                            .clearAndSetSemantics { contentDescription = itemLabel },
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier =
-                            Modifier
-                                .padding(bottom = 16.dp)
-                                .clip(shape = RoundedCornerShape(15.dp))
-                                .clickable {
-                                    pauseGoalDialogState.value = true
-                                }
-                                .clearAndSetSemantics {
-                                    contentDescription = itemLabel
-                                },
                     ) {
                         Icon(
-                            imageVector = Icons.Filled.DarkMode,
-                            contentDescription = stringResource(id = R.string.pause),
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier =
-                                Modifier
-                                    .width(40.dp)
-                                    .padding(horizontal = 8.dp),
+                            Icons.Filled.DarkMode,
+                            stringResource(id = R.string.pause),
+                            Modifier
+                                .width(40.dp)
+                                .padding(horizontal = 8.dp),
+                            MaterialTheme.colorScheme.primary,
                         )
                         Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth(),
+                            Modifier.fillMaxWidth(),
+                            Arrangement.SpaceBetween,
+                            Alignment.CenterVertically,
                         ) {
                             Column {
-                                ConfigurationTitle(stringResource(id = R.string.pause))
-                                ConfigurationDescription(stringResource(id = R.string.pause_goal_descr))
+                                ConfigurationTitle(stringResource(R.string.pause))
+                                ConfigurationDescription(stringResource(R.string.pause_goal_descr))
                             }
                         }
                     }
@@ -309,19 +284,19 @@ fun CategoryScreen(
 
         if (goalDialogState.value) {
             CategoryScreenGoalDialog(
-                onClose = { goalDialogState.value = false },
-                isPause = false,
-                category = selectedCategory,
-                categoryEvent = categoryEvent,
+                selectedCategory,
+                categoryEvent,
+                { goalDialogState.value = false },
+                false,
             )
         }
 
         if (pauseGoalDialogState.value) {
             CategoryScreenGoalDialog(
-                onClose = { pauseGoalDialogState.value = false },
-                isPause = true,
-                category = selectedCategory,
-                categoryEvent = categoryEvent,
+                selectedCategory,
+                categoryEvent,
+                { pauseGoalDialogState.value = false },
+                true,
             )
         }
     }
@@ -345,6 +320,4 @@ fun save(
     categoryEvent(CategoryEvent.SetEmoji(emoji))
     categoryEvent(CategoryEvent.SetIsDefault(isDefault))
     categoryEvent(CategoryEvent.SaveCategory)
-
-    Log.d("category save", "yeeeeah weird")
 }

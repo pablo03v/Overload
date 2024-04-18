@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">tühistab kõigi valitud päeva objektide valiku</string>
     <string name="delete_items_forever">kustutada objekte igaveseks</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">valitud</string>
+    <string name="ol_selected">valitud</string>
     <string name="get_out_of_isDeleting">viib teid kustutusrežiimist välja</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Kalender</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfiguratsioonid</string>
+    <string name="categories">Categories</string>
     <string name="goals">Eesmärgid</string>
     <string name="work">Töö</string>
     <string name="work_goal_descr">Seadke tööle eesmärk</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Impordi</string>
     <string name="import_descr">Importida varukoopiast</string>
-    <string name="import_backup">Impordi varukoopia</string>
-    <string name="import_backup_descr">Andmete importimiseks rakendusse kasutage teiste rakenduste aktsiate lehte. See võimaldab rakendusel turvalist juurdepääsu jagatud andmetele ja nende importimist teie andmebaasi.</string>
     <string name="import_success">Varukoopia edukalt imporditud</string>
     <string name="import_failure">Varukoopia importimine ebaõnnestus</string>
     <string name="analytics">analüütika</string>
@@ -101,18 +100,17 @@ Sagedus - Kui sageli see krahh esineb?\n
 Täname kannatlikkuse eest!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Säästa</string>
-    <string name="pick_work_goal">Määra töö eesmärk</string>
     <string name="hours">tundi</string>
     <string name="minutes">minutit</string>
     <string name="cancel">tühistada</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Seatud pausi eesmärk</string>
+    <string name="set_goal_pause">Seatud pausi eesmärk</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Töö vasakule</string>
     <string name="pause_left">Paus vasakule</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">nool ettepoole, mis kirjeldab mõlema aja suunda algusest lõpuni</string>
     <string name="select_year">Valige aasta</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Tõlgi</string>
     <string name="translate_descr">Soovid rakendust tõlkida? Aitäh!</string>
     <string name="adjust">Reguleeri</string>
@@ -131,4 +129,7 @@ Täname kannatlikkuse eest!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

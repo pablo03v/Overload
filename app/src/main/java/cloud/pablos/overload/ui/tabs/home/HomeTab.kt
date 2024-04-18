@@ -60,18 +60,17 @@ fun HomeTab(
 
     val pagerState =
         rememberPagerState(
-            initialPage = 2,
-            initialPageOffsetFraction = 0f,
-            pageCount = { homeTabItems.size },
-        )
+            2,
+            0f,
+        ) { homeTabItems.size }
 
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(pagerState.currentPage) {
         val selectedDayString =
             when (pagerState.currentPage) {
-                0 -> getFormattedDate(daysBefore = 2)
-                1 -> getFormattedDate(daysBefore = 1)
+                0 -> getFormattedDate(2)
+                1 -> getFormattedDate(1)
                 2 -> getFormattedDate()
                 else -> getFormattedDate()
             }
@@ -79,37 +78,27 @@ fun HomeTab(
     }
 
     Scaffold(
-        topBar = {
-            OverloadTopAppBar(
-                selectedDestination = OverloadRoute.HOME,
-                categoryState = categoryState,
-                categoryEvent = categoryEvent,
-                itemState = itemState,
-                itemEvent = itemEvent,
-            )
-        },
+        topBar = { OverloadTopAppBar(OverloadRoute.HOME, categoryState, categoryEvent, itemState, itemEvent) },
         floatingActionButton = {
             AnimatedVisibility(
-                visible =
-                    navigationType == OverloadNavigationType.BOTTOM_NAVIGATION &&
-                        itemState.selectedDayCalendar == LocalDate.now().toString() &&
-                        itemState.isDeletingHome.not(),
+                navigationType == OverloadNavigationType.BOTTOM_NAVIGATION &&
+                    itemState.selectedDayCalendar == LocalDate.now().toString() &&
+                    itemState.isDeletingHome.not(),
                 enter = if (itemState.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
                 exit = if (itemState.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
             ) {
-                HomeTabFab(categoryEvent = categoryEvent, categoryState = categoryState, itemState = itemState, itemEvent = itemEvent)
+                HomeTabFab(categoryEvent, categoryState, itemState, itemEvent)
             }
         },
     ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(modifier = Modifier.padding(paddingValues)) {
+        Box(Modifier.fillMaxSize()) {
+            Column(Modifier.padding(paddingValues)) {
                 Surface(
-                    tonalElevation = NavigationBarDefaults.Elevation,
                     color = MaterialTheme.colorScheme.background,
+                    tonalElevation = NavigationBarDefaults.Elevation,
                 ) {
                     PrimaryTabRow(
-                        selectedTabIndex = pagerState.currentPage,
-                        divider = {},
+                        pagerState.currentPage,
                         indicator = {
                             TabRowDefaults.PrimaryIndicator(
                                 modifier = Modifier.tabIndicatorOffset(pagerState.currentPage, matchContentSize = true),
@@ -117,16 +106,17 @@ fun HomeTab(
                                 color = backgroundColor,
                             )
                         },
+                        divider = {},
                     ) {
                         homeTabItems.forEachIndexed { index, item ->
                             Tab(
-                                selected = pagerState.currentPage == index,
-                                onClick = {
+                                pagerState.currentPage == index,
+                                {
                                     coroutineScope.launch { pagerState.animateScrollToPage(index) }
                                 },
                                 text = {
                                     TextView(
-                                        text = stringResource(id = item.titleResId),
+                                        stringResource(id = item.titleResId),
                                         fontSize = MaterialTheme.typography.labelLarge.fontSize,
                                         fontWeight = if (pagerState.currentPage == index) FontWeight.Bold else FontWeight.Normal,
                                         color = MaterialTheme.colorScheme.onBackground,
@@ -136,10 +126,9 @@ fun HomeTab(
                         }
                     }
                 }
-                HorizontalPager(
-                    state = pagerState,
-                ) { page ->
+                HorizontalPager(pagerState) { page ->
                     val item = homeTabItems[page]
+
                     item.screen(categoryState, itemState, itemEvent)
                 }
             }
@@ -148,9 +137,7 @@ fun HomeTab(
 
     if (categoryState.isCreateCategoryDialogOpenHome) {
         ConfigurationsTabCreateCategoryDialog(
-            onClose = {
-                categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(false))
-            },
+            { categoryEvent(CategoryEvent.SetIsCreateCategoryDialogOpenHome(false)) },
             categoryEvent,
         )
     }
@@ -159,10 +146,9 @@ fun HomeTab(
         SwitchCategoryDialog(
             categoryState,
             categoryEvent,
-            onClose = {
-                categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(false))
-            },
-        )
+        ) {
+            categoryEvent(CategoryEvent.SetIsSwitchCategoryDialogOpenHome(false))
+        }
     }
 }
 

@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -48,84 +47,80 @@ fun CategoryScreenGoalDialog(
     val hoursFocusRequest = remember { FocusRequester() }
     val minFocusRequest = remember { FocusRequester() }
 
-    val context = LocalContext.current
-    // val sharedPreferences = remember { OlSharedPreferences(context) }
-
     LaunchedEffect(Unit) {
         hoursFocusRequest.requestFocus()
     }
 
     AlertDialog(
-        onDismissRequest = onClose,
-        title = {
-            TextView(
-                text =
-                    if (isPause) {
-                        stringResource(id = R.string.pick_pause_goal)
-                    } else {
-                        "Set Goal"
-                    },
-                fontWeight = FontWeight.Bold,
-                align = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        },
-        text = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                TimeInput(
-                    label = stringResource(R.string.hours),
-                    value = hours,
-                    onValueChange = { hours = it },
-                    isError = hoursValidator.not(),
-                    focusRequester = hoursFocusRequest,
-                )
-
-                TimeInput(
-                    label = stringResource(R.string.minutes),
-                    value = minutes,
-                    onValueChange = { minutes = it },
-                    isError = minValidator.not(),
-                    focusRequester = minFocusRequest,
-                )
-            }
-        },
-        confirmButton = {
+        onClose,
+        {
             Button(
-                onClick = {
+                {
                     onClose.save(
-                        hours = hours.toIntOrNull(),
-                        minutes = minutes.toIntOrNull(),
-                        valid = hoursValidator && minValidator,
-                        isPause = isPause,
-                        category = category,
-                        categoryEvent = categoryEvent,
+                        category,
+                        categoryEvent,
+                        hours.toIntOrNull(),
+                        minutes.toIntOrNull(),
+                        hoursValidator && minValidator,
+                        isPause,
                     )
                 },
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.onPrimaryContainer,
                     ),
             ) {
-                TextView(stringResource(id = R.string.save))
+                TextView(stringResource(R.string.save))
             }
         },
-        dismissButton = {
+        Modifier.padding(16.dp),
+        {
             Button(
-                onClick = onClose,
+                onClose,
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.onSecondaryContainer,
                     ),
             ) {
-                Text(text = stringResource(R.string.cancel))
+                Text(stringResource(R.string.cancel))
             }
         },
-        modifier = Modifier.padding(16.dp),
+        title = {
+            TextView(
+                if (isPause) {
+                    stringResource(R.string.set_goal_pause)
+                } else {
+                    stringResource(R.string.set_goal)
+                },
+                Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold,
+                align = TextAlign.Center,
+            )
+        },
+        text = {
+            Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                TimeInput(
+                    stringResource(R.string.hours),
+                    hours,
+                    { hours = it },
+                    hoursValidator.not(),
+                    hoursFocusRequest,
+                )
+
+                TimeInput(
+                    stringResource(R.string.minutes),
+                    minutes,
+                    { minutes = it },
+                    minValidator.not(),
+                    minFocusRequest,
+                )
+            }
+        },
     )
 }
 
@@ -138,15 +133,15 @@ fun TimeInput(
     focusRequester: FocusRequester,
 ) {
     TextField(
-        value = value,
-        onValueChange = onValueChange,
-        singleLine = true,
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-        keyboardActions = KeyboardActions(onDone = { focusRequester.requestFocus() }),
-        placeholder = { Text(text = "0") },
+        value,
+        onValueChange,
+        Modifier.focusRequester(focusRequester),
+        placeholder = { Text("0") },
+        trailingIcon = { Text(label, Modifier.padding(end = 10.dp)) },
         isError = isError,
-        modifier = Modifier.focusRequester(focusRequester),
-        trailingIcon = { Text(text = label, modifier = Modifier.padding(end = 10.dp)) },
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+        keyboardActions = KeyboardActions { focusRequester.requestFocus() },
+        singleLine = true,
     )
 }
 

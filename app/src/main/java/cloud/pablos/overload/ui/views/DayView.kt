@@ -58,35 +58,33 @@ fun DayView(
         val goal1 = selectedCategory.goal1
         val goal2 = selectedCategory.goal2
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-        ) {
+        LazyColumn(Modifier.fillMaxSize()) {
             item {
                 Row(
-                    modifier =
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(top = 10.dp, start = 10.dp, end = 10.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp),
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp, 10.dp, 10.dp),
+                    Arrangement.spacedBy(10.dp),
                 ) {
                     if (goal1 > 0) {
-                        Box(
-                            modifier = Modifier.weight(1f),
-                        ) {
-                            DayViewProgress(category = selectedCategory, goal = goal1, items = items, isPause = false)
+                        Box(Modifier.weight(1f)) {
+                            DayViewProgress(
+                                selectedCategory,
+                                items,
+                                goal1,
+                                false,
+                            )
                         }
                     }
 
                     if (goal2 > 0) {
-                        Box(
-                            modifier = Modifier.weight(1f),
-                        ) {
+                        Box(Modifier.weight(1f)) {
                             DayViewProgress(
-                                category = selectedCategory,
-                                goal = goal2,
-                                items = items,
-                                date = date,
-                                isPause = true,
+                                selectedCategory,
+                                items,
+                                goal2,
+                                true,
+                                date,
                             )
                         }
                     }
@@ -101,36 +99,34 @@ fun DayView(
             ) {
                 item {
                     Box(
-                        modifier =
-                            Modifier
-                                .padding(10.dp, 10.dp, 10.dp)
-                                .combinedClickable(
-                                    onLongClick = {
+                        Modifier
+                            .padding(10.dp, 10.dp, 10.dp)
+                            .combinedClickable(
+                                onLongClick = {
+                                    deletePauseDialogState.value = true
+                                },
+                                onClick = {
+                                    if (itemState.isDeletingHome) {
                                         deletePauseDialogState.value = true
-                                    },
-                                    onClick = {
-                                        if (itemState.isDeletingHome) {
-                                            deletePauseDialogState.value = true
-                                        } else {
-                                            itemEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
-                                            editItemDialogState.value = true
-                                        }
-                                    },
-                                ),
+                                    } else {
+                                        itemEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
+                                        editItemDialogState.value = true
+                                    }
+                                },
+                            ),
                     ) {
                         DayViewItemOngoing(
-                            item =
-                                Item(
-                                    id = -1,
-                                    startTime = items.last().endTime,
-                                    endTime = LocalDate.now().toString(),
-                                    ongoing = true,
-                                    pause = true,
-                                    categoryId = categoryState.selectedCategory,
-                                ),
-                            isSelected = false,
-                            categoryState = categoryState,
-                            itemState = itemState,
+                            Item(
+                                -1,
+                                items.last().endTime,
+                                LocalDate.now().toString(),
+                                true,
+                                true,
+                                categoryState.selectedCategory,
+                            ),
+                            categoryState,
+                            itemState,
+                            false,
                         )
                     }
                 }
@@ -143,44 +139,43 @@ fun DayView(
                 val item = itemsDesc[index]
                 val isSelected = itemState.selectedItemsHome.contains(item)
                 Box(
-                    modifier =
-                        Modifier
-                            .padding(
-                                10.dp,
-                                if (isFirstItem) 10.dp else 0.dp,
-                                10.dp,
-                                if (isLastItem) 80.dp else 10.dp,
-                            )
-                            .combinedClickable(
-                                onLongClick = {
-                                    itemEvent(ItemEvent.SetIsDeletingHome(true))
-                                    itemEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
-                                    itemEvent(ItemEvent.SetIsFabOpen(false))
-                                },
-                                onClick = {
-                                    if (itemState.isDeletingHome) {
-                                        when (isSelected) {
-                                            true ->
-                                                itemEvent(
-                                                    ItemEvent.SetSelectedItemsHome(itemState.selectedItemsHome.filterNot { it == item }),
-                                                )
+                    Modifier
+                        .padding(
+                            10.dp,
+                            if (isFirstItem) 10.dp else 0.dp,
+                            10.dp,
+                            if (isLastItem) 80.dp else 10.dp,
+                        )
+                        .combinedClickable(
+                            onLongClick = {
+                                itemEvent(ItemEvent.SetIsDeletingHome(true))
+                                itemEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
+                                itemEvent(ItemEvent.SetIsFabOpen(false))
+                            },
+                            onClick = {
+                                if (itemState.isDeletingHome) {
+                                    when (isSelected) {
+                                        true ->
+                                            itemEvent(
+                                                ItemEvent.SetSelectedItemsHome(itemState.selectedItemsHome.filterNot { it == item }),
+                                            )
 
-                                            else ->
-                                                itemEvent(
-                                                    ItemEvent.SetSelectedItemsHome(
-                                                        itemState.selectedItemsHome +
-                                                            listOf(
-                                                                item,
-                                                            ),
-                                                    ),
-                                                )
-                                        }
-                                    } else {
-                                        itemEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
-                                        editItemDialogState.value = true
+                                        else ->
+                                            itemEvent(
+                                                ItemEvent.SetSelectedItemsHome(
+                                                    itemState.selectedItemsHome +
+                                                        listOf(
+                                                            item,
+                                                        ),
+                                                ),
+                                            )
                                     }
-                                },
-                            ),
+                                } else {
+                                    itemEvent(ItemEvent.SetSelectedItemsHome(listOf(item)))
+                                    editItemDialogState.value = true
+                                }
+                            },
+                        ),
                 ) {
                     when (item.ongoing.not() && item.endTime.isNotBlank()) {
                         true -> DayViewItemNotOngoing(item, categoryState, itemState, isSelected)
@@ -191,43 +186,42 @@ fun DayView(
         }
     } else {
         Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
+            Modifier.fillMaxSize(),
+            Arrangement.Center,
+            Alignment.CenterHorizontally,
         ) {
             TextView(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                text = stringResource(id = R.string.no_items_title),
-                fontSize = MaterialTheme.typography.titleLarge.fontSize,
-                fontWeight = FontWeight.Bold,
-                align = TextAlign.Center,
-                color = MaterialTheme.colorScheme.primary,
+                stringResource(R.string.no_items_title),
+                Modifier.padding(horizontal = 8.dp),
+                MaterialTheme.typography.titleLarge.fontSize,
+                FontWeight.Bold,
+                MaterialTheme.colorScheme.primary,
+                TextAlign.Center,
             )
             TextView(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                text = stringResource(id = R.string.no_items_subtitle),
-                fontSize = MaterialTheme.typography.bodyMedium.fontSize,
-                fontWeight = FontWeight.Medium,
-                align = TextAlign.Center,
-                color = MaterialTheme.colorScheme.primary,
+                stringResource(R.string.no_items_subtitle),
+                Modifier.padding(horizontal = 8.dp),
+                MaterialTheme.typography.bodyMedium.fontSize,
+                FontWeight.Medium,
+                MaterialTheme.colorScheme.primary,
+                TextAlign.Center,
             )
         }
     }
 
     if (deletePauseDialogState.value) {
-        HomeTabDeletePauseDialog(onClose = { deletePauseDialogState.value = false })
+        HomeTabDeletePauseDialog { deletePauseDialogState.value = false }
     }
 
     if (editItemDialogState.value) {
         HomeTabEditItemDialog(
-            onClose = {
-                itemEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
-                editItemDialogState.value = false
-            },
             categoryState,
             itemState,
             itemEvent,
-        )
+        ) {
+            itemEvent(ItemEvent.SetSelectedItemsHome(emptyList()))
+            editItemDialogState.value = false
+        }
     }
 }
 

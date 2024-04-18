@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">afvelja alla hluti úr degi</string>
     <string name="delete_items_forever">eyða hlutum að eilífu</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">vista valið</string>
+    <string name="ol_selected">vista valið</string>
     <string name="get_out_of_isDeleting">fær þig út úr eyðingu ham</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Byrja</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Dagatal</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Stillingar</string>
+    <string name="categories">Categories</string>
     <string name="goals">Markmið</string>
     <string name="work">Vinna</string>
     <string name="work_goal_descr">Setja sér markmið í starfi</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Flytja inn</string>
     <string name="import_descr">Flytja inn úr öryggisafriti</string>
-    <string name="import_backup">Flytja Inn Öryggisafrit</string>
-    <string name="import_backup_descr">Til að flytja gögn inn í forritið skaltu nota Deilingarblaðið úr öðrum forritum. Þetta gerir forritinu kleift að fá öruggan aðgang að sameiginlegum gögnum og flytja þau inn í gagnagrunninn þinn.</string>
     <string name="import_success">Afritun tókst að flytja inn</string>
     <string name="import_failure">Tókst ekki að flytja inn afritið</string>
     <string name="analytics">greinandi</string>
@@ -101,18 +100,17 @@ Tíðni-Hversu oft gerist þetta hrun?\n
 Takk fyrir þolinmæðina!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Vista</string>
-    <string name="pick_work_goal">Settu Þér Markmið Í Vinnunni</string>
     <string name="hours">afgreiðslutími</string>
     <string name="minutes">mínútur</string>
     <string name="cancel">hætta við</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Setja Hlé Markmið</string>
+    <string name="set_goal_pause">Setja Hlé Markmið</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Vinna eftir</string>
     <string name="pause_left">Hlé til vinstri</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">ör áfram sem lýsir stefnu beggja tíma frá upphafi til enda</string>
     <string name="select_year">Veldu Ár</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Þýðing</string>
     <string name="translate_descr">Viltu þýða appið? Takk fyrir!</string>
     <string name="adjust">Stilla</string>
@@ -131,4 +129,7 @@ Takk fyrir þolinmæðina!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

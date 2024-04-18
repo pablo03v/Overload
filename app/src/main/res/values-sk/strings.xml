@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">zrušiť výber všetkých položiek vybraného dňa</string>
     <string name="delete_items_forever">navždy odstrániť položky</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">vybrané</string>
+    <string name="ol_selected">vybrané</string>
     <string name="get_out_of_isDeleting">vás dostane z režimu mazania</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Kalendár</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfigurácie</string>
+    <string name="categories">Categories</string>
     <string name="goals">Ciele</string>
     <string name="work">Práca</string>
     <string name="work_goal_descr">Stanovte si pracovný cieľ</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Import</string>
     <string name="import_descr">Import zo zálohy</string>
-    <string name="import_backup">Import Backup</string>
-    <string name="import_backup_descr">Ak chcete do aplikácie importovať údaje, použite hárok akcií z iných aplikácií. To umožní aplikácii bezpečný prístup k zdieľaným údajom a ich import do vašej databázy.</string>
     <string name="import_success">Zálohovanie úspešne importované</string>
     <string name="import_failure">Import zálohy zlyhal</string>
     <string name="analytics">analytika</string>
@@ -101,18 +100,17 @@ Frekvencia - Ako často dochádza k pádu?\n
 Ďakujeme za trpezlivosť!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Spara</string>
-    <string name="pick_work_goal">Ange mål för arbetet</string>
     <string name="hours">timmar</string>
     <string name="minutes">minuter</string>
     <string name="cancel">Annullera</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Ange mål för paus</string>
+    <string name="set_goal_pause">Ange mål för paus</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Arbeta vänster</string>
     <string name="pause_left">Paus vänster</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">pil framåt som beskriver riktningen för båda tiderna från början till slut</string>
     <string name="select_year">Välj år</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Översätt</string>
     <string name="translate_descr">Chcete aplikáciu preložiť? Tack för hjälpen!</string>
     <string name="adjust">Justera</string>
@@ -131,4 +129,7 @@ Frekvencia - Ako často dochádza k pádu?\n
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

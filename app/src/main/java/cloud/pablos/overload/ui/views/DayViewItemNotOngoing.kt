@@ -102,84 +102,78 @@ fun DayViewItemNotOngoing(
         )
 
     Box(
-        modifier =
-            Modifier
-                .clip(RoundedCornerShape(15.dp))
-                .background(backgroundColor),
+        Modifier
+            .clip(RoundedCornerShape(15.dp))
+            .background(backgroundColor),
     ) {
         Row(
-            modifier =
-                Modifier
-                    .fillMaxWidth()
-                    .clearAndSetSemantics {
-                        contentDescription = itemLabel
-                    },
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically,
+            Modifier
+                .fillMaxWidth()
+                .clearAndSetSemantics {
+                    contentDescription = itemLabel
+                },
+            Arrangement.SpaceBetween,
+            Alignment.CenterVertically,
         ) {
             TextView(
-                text = startTimeString,
-                color = foregroundColor,
+                startTimeString,
+                Modifier.padding(12.5.dp),
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(12.5.dp),
+                color = foregroundColor,
             )
 
             if (item.pause) {
                 Icon(
                     Icons.Outlined.DarkMode,
-                    contentDescription = stringResource(id = R.string.pause),
+                    stringResource(R.string.pause),
                     tint = foregroundColor,
                 )
             }
 
             Box(
-                modifier =
-                    Modifier
-                        .weight(1f)
-                        .padding(10.dp)
-                        .offset(x = 5.dp),
+                Modifier
+                    .weight(1f)
+                    .padding(10.dp)
+                    .offset(x = 5.dp),
             ) {
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Box(
-                        modifier =
-                            Modifier
-                                .weight(1f)
-                                .height(2.dp)
-                                .background(foregroundColor),
+                        Modifier
+                            .weight(1f)
+                            .height(2.dp)
+                            .background(foregroundColor),
                     )
                     Icon(
                         Icons.AutoMirrored.Filled.ArrowForward,
-                        contentDescription = stringResource(id = R.string.arrow_forward),
-                        tint = foregroundColor,
-                        modifier =
-                            Modifier
-                                .offset(x = (-5).dp)
-                                .size(25.dp),
+                        stringResource(R.string.arrow_forward),
+                        Modifier
+                            .offset(x = (-5).dp)
+                            .size(25.dp),
+                        foregroundColor,
                     )
                 }
             }
 
             TextView(
-                text = endTimeString,
-                color = foregroundColor,
+                endTimeString,
+                Modifier.padding(12.5.dp),
                 fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(12.5.dp),
+                color = foregroundColor,
             )
         }
 
         TextView(
-            text = durationString,
-            color = foregroundColor,
+            durationString,
+            Modifier
+                .align(Alignment.Center)
+                .background(backgroundColor)
+                .padding(8.dp),
             fontWeight = FontWeight.Medium,
+            color = foregroundColor,
             align = TextAlign.Center,
-            modifier =
-                Modifier
-                    .align(Alignment.Center)
-                    .background(backgroundColor)
-                    .padding(8.dp),
         )
     }
 }

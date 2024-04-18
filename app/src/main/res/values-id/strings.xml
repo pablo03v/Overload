@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">batalkan pilihan semua item pada hari yang dipilih</string>
     <string name="delete_items_forever">hapus item selamanya</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">dipilih</string>
+    <string name="ol_selected">dipilih</string>
     <string name="get_out_of_isDeleting">mengeluarkan Anda dari mode penghapusan</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Mulai</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Kalender</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfigurasi</string>
+    <string name="categories">Categories</string>
     <string name="goals">Tujuan</string>
     <string name="work">Pekerjaan</string>
     <string name="work_goal_descr">Menetapkan tujuan untuk pekerjaan</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Impor</string>
     <string name="import_descr">Mengimpor dari backup</string>
-    <string name="import_backup">Impor Backup</string>
-    <string name="import_backup_descr">Untuk mengimpor data ke dalam aplikasi, silakan gunakan Sharesheet dari aplikasi lain. Hal ini memungkinkan aplikasi mengakses data bersama dengan aman dan mengimpornya ke dalam basis data Anda.</string>
     <string name="import_success">Backup berhasil diimpor</string>
     <string name="import_failure">Mengimpor backup gagal</string>
     <string name="analytics">analitik</string>
@@ -101,18 +100,17 @@ Frekuensi - Seberapa sering kerusakan ini terjadi?\n
 Terima kasih atas kesabaran Anda!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Simpan</string>
-    <string name="pick_work_goal">Tetapkan Tujuan Kerja</string>
     <string name="hours">jam</string>
     <string name="minutes">menit</string>
     <string name="cancel">batal</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Tetapkan Sasaran Jeda</string>
+    <string name="set_goal_pause">Tetapkan Sasaran Jeda</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Pekerjaan tersisa</string>
     <string name="pause_left">Jeda kiri</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">panah ke depan menggambarkan arah kedua waktu dari awal hingga akhir</string>
     <string name="select_year">Pilih Tahun</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Menerjemahkan</string>
     <string name="translate_descr">Ingin menerjemahkan aplikasi? Terima kasih!</string>
     <string name="adjust">Sesuaikan</string>
@@ -131,4 +129,7 @@ Terima kasih atas kesabaran Anda!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

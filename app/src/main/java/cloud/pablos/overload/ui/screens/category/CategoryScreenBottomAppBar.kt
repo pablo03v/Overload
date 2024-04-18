@@ -36,23 +36,23 @@ fun CategoryScreenBottomAppBar(
     val deleteCategoryDialog = remember { mutableStateOf(false) }
 
     BottomAppBar(
-        actions = {
-            IconButton(onClick = { navController.navigate(OverloadRoute.CONFIGURATIONS) }) {
+        {
+            IconButton({ navController.navigate(OverloadRoute.CONFIGURATIONS) }) {
                 Icon(
                     Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
-                    contentDescription = "Go Back",
+                    stringResource(R.string.go_back),
                 )
             }
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { deleteCategoryDialog.value = true },
+                { deleteCategoryDialog.value = true },
                 containerColor = MaterialTheme.colorScheme.errorContainer,
                 contentColor = MaterialTheme.colorScheme.onErrorContainer,
             ) {
                 Icon(
                     Icons.Filled.DeleteForever,
-                    contentDescription = stringResource(id = R.string.delete_items_forever),
+                    stringResource(R.string.delete_items_forever),
                 )
             }
         },
@@ -60,8 +60,8 @@ fun CategoryScreenBottomAppBar(
 
     if (deleteCategoryDialog.value && selectedCategory != null) {
         CategoryScreenDeleteCategoryDialog(
-            onDismiss = { deleteCategoryDialog.value = false },
-            onConfirm = {
+            { deleteCategoryDialog.value = false },
+            {
                 categoryEvent(CategoryEvent.DeleteCategory(selectedCategory))
 
                 val items = getItems(categoryState, itemState)
@@ -70,7 +70,7 @@ fun CategoryScreenBottomAppBar(
                 deleteCategoryDialog.value = false
                 navController.navigate(OverloadRoute.CONFIGURATIONS)
             },
-            category = selectedCategory,
+            selectedCategory,
         )
     }
 }

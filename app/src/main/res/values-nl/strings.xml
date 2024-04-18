@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">geen items van gekozen dag selecteren</string>
     <string name="delete_items_forever">items permanent verwijderen</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">geselecteerd</string>
+    <string name="ol_selected">geselecteerd</string>
     <string name="get_out_of_isDeleting">verwijdermodus afsluiten</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Starten</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Kalender</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Instellingen</string>
+    <string name="categories">Categories</string>
     <string name="goals">Doelen</string>
     <string name="work">Werk</string>
     <string name="work_goal_descr">Stel een werkdoel in</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Importeren</string>
     <string name="import_descr">Importeer uit een reservekopie</string>
-    <string name="import_backup">Reservekopie importeren</string>
-    <string name="import_backup_descr">Je kunt gegevens importeren door het deelmenu vanuit een andere app te openen. Zo kunnen de gegevens op een veilige manier worden overgezet naar de databank.</string>
     <string name="import_success">De reservekopie is geïmporteerd</string>
     <string name="import_failure">Het importeren is mislukt</string>
     <string name="analytics">statistieken</string>
@@ -101,18 +100,17 @@ Frequentie - Hoe vaak komt deze crash voor?\n
 Bedankt voor je geduld!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Opslaan</string>
-    <string name="pick_work_goal">Werkdoel instellen</string>
     <string name="hours">uur</string>
     <string name="minutes">minuten</string>
     <string name="cancel">Annuleren</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Pauzedoel instellen</string>
+    <string name="set_goal_pause">Pauzedoel instellen</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Resterende werktijd</string>
     <string name="pause_left">Resterende pauzetijd</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">pijl vooruit die beide tijden van begin tot einde aangeeft</string>
     <string name="select_year">Kies een jaartal</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Vertalen</string>
     <string name="translate_descr">Wil je helpen om de app te vertalen? Bij voorbaat dank!</string>
     <string name="adjust">Aanpassen</string>
@@ -131,4 +129,7 @@ Bedankt voor je geduld!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">izbriši vse elemente izbranega dneva</string>
     <string name="delete_items_forever">za vedno izbrišite elemente</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">izbrani</string>
+    <string name="ol_selected">izbrani</string>
     <string name="get_out_of_isDeleting">vas spravi iz načina brisanja</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Začni</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Koledar</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfiguracije</string>
+    <string name="categories">Categories</string>
     <string name="goals">Cilji</string>
     <string name="work">Delo</string>
     <string name="work_goal_descr">Postavite cilj za delo</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Uvoz</string>
     <string name="import_descr">Uvoz iz varnostne kopije</string>
-    <string name="import_backup">Uvoz varnostne kopije</string>
-    <string name="import_backup_descr">Če želite podatke uvoziti v aplikacijo, uporabite zbirko Sharesheet iz drugih aplikacij. Tako lahko aplikacija varno dostopa do podatkov v skupni rabi in jih uvozi v vašo zbirko podatkov.</string>
     <string name="import_success">Varnostna kopija uspešno uvožena</string>
     <string name="import_failure">Uvoz varnostne kopije ni uspel</string>
     <string name="analytics">analitika</string>
@@ -101,18 +100,17 @@ Pogostost - Kako pogosto se pojavlja ta okvara?\n
 Hvala za potrpežljivost!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Shrani</string>
-    <string name="pick_work_goal">Določite delovni cilj</string>
     <string name="hours">ure</string>
     <string name="minutes">minute</string>
     <string name="cancel">preklic</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Nastavite cilj pavze</string>
+    <string name="set_goal_pause">Nastavite cilj pavze</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Delo ostane</string>
     <string name="pause_left">Prekinitev levo</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">puščica naprej, ki opisuje smer obeh časov od začetka do konca</string>
     <string name="select_year">Izberite leto</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Prevesti</string>
     <string name="translate_descr">Želite aplikacijo prevesti? Hvala!</string>
     <string name="adjust">Prilagodite</string>
@@ -131,4 +129,7 @@ Hvala za potrpežljivost!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

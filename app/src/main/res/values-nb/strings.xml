@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">deselect all items of selected day</string>
     <string name="delete_items_forever">delete items forever</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">selected</string>
+    <string name="ol_selected">selected</string>
     <string name="get_out_of_isDeleting">gets you out of deletion mode</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Calendar</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Configurations</string>
+    <string name="categories">Categories</string>
     <string name="goals">Goals</string>
     <string name="work">Work</string>
     <string name="work_goal_descr">Set a goal for work</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Import</string>
     <string name="import_descr">Import from a backup</string>
-    <string name="import_backup">Import Backup</string>
-    <string name="import_backup_descr">To import data into the app, please use the Sharesheet from other apps. This allows the app to securely access the shared data and import it into your database.</string>
     <string name="import_success">Backup successfully imported</string>
     <string name="import_failure">Importing the backup failed</string>
     <string name="analytics">analytics</string>
@@ -101,18 +100,17 @@ Frequency - How often does this crash occur?\n
 Thanks for patience!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Save</string>
-    <string name="pick_work_goal">Set Work Goal</string>
     <string name="hours">hours</string>
     <string name="minutes">minutes</string>
     <string name="cancel">Cancel</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Set Pause Goal</string>
+    <string name="set_goal_pause">Set Pause Goal</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Work left</string>
     <string name="pause_left">Pause left</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">arrow forward from start to end</string>
     <string name="select_year">Select Year</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Translate</string>
     <string name="translate_descr">Want to translate the app? Thanks!</string>
     <string name="adjust">Adjust</string>
@@ -131,4 +129,7 @@ Thanks for patience!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

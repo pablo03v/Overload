@@ -139,14 +139,14 @@ fun OverloadApp(
         }
 
     OverloadNavigationWrapper(
-        navigationType = navigationType,
-        contentType = contentType,
-        navigationContentPosition = navigationContentPosition,
-        categoryState = categoryState,
-        categoryEvent = categoryEvent,
-        itemState = itemState,
-        itemEvent = itemEvent,
-        filePickerLauncher = filePickerLauncher,
+        navigationType,
+        contentType,
+        navigationContentPosition,
+        categoryState,
+        categoryEvent,
+        itemState,
+        itemEvent,
+        filePickerLauncher,
     )
 }
 
@@ -162,7 +162,7 @@ private fun OverloadNavigationWrapper(
     itemEvent: (ItemEvent) -> Unit,
     filePickerLauncher: ActivityResultLauncher<Intent>,
 ) {
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     val navController = rememberNavController()
@@ -198,7 +198,7 @@ private fun OverloadNavigationWrapper(
 
         OverloadNavigationType.NAVIGATION_RAIL -> {
             ModalNavigationDrawer(
-                drawerContent = {
+                {
                     ModalNavigationDrawerContent(
                         selectedDestination = selectedDestination,
                         navigationContentPosition = navigationContentPosition,
@@ -274,14 +274,14 @@ fun OverloadAppContent(
     Row(modifier = modifier.fillMaxSize()) {
         AnimatedVisibility(visible = navigationType == OverloadNavigationType.NAVIGATION_RAIL) {
             OverloadNavigationRail(
-                selectedDestination = selectedDestination,
-                navigationContentPosition = navigationContentPosition,
-                navigateToTopLevelDestination = navigateToTopLevelDestination,
-                onDrawerClicked = onDrawerClicked,
-                categoryEvent = categoryEvent,
-                categoryState = categoryState,
-                itemState = itemState,
-                itemEvent = itemEvent,
+                selectedDestination,
+                navigationContentPosition,
+                navigateToTopLevelDestination,
+                onDrawerClicked,
+                categoryEvent,
+                categoryState,
+                itemState,
+                itemEvent,
             )
         }
         Column(
@@ -294,11 +294,6 @@ fun OverloadAppContent(
                 navigationType = navigationType,
                 contentType = contentType,
                 navController = navController,
-                categoryState = categoryState,
-                categoryEvent = categoryEvent,
-                itemState = itemState,
-                itemEvent = itemEvent,
-                filePickerLauncher = filePickerLauncher,
                 modifier =
                     Modifier
                         .weight(1f)
@@ -313,23 +308,28 @@ fun OverloadAppContent(
                                 Modifier
                             },
                         ),
+                categoryState = categoryState,
+                categoryEvent = categoryEvent,
+                itemState = itemState,
+                itemEvent = itemEvent,
+                filePickerLauncher = filePickerLauncher,
             )
-            AnimatedVisibility(visible = navigationType == OverloadNavigationType.BOTTOM_NAVIGATION) {
+            AnimatedVisibility(navigationType == OverloadNavigationType.BOTTOM_NAVIGATION) {
                 OverloadBottomNavigationBar(
-                    selectedDestination = selectedDestination,
-                    navigateToTopLevelDestination = navigateToTopLevelDestination,
-                    categoryState = categoryState,
-                    categoryEvent = categoryEvent,
-                    itemState = itemState,
-                    itemEvent = itemEvent,
-                    navController = navController,
+                    selectedDestination,
+                    navigateToTopLevelDestination,
+                    categoryState,
+                    categoryEvent,
+                    itemState,
+                    itemEvent,
+                    navController,
                 )
             }
         }
     }
     if (forgotDialogState) {
         ForgotToStopDialog(
-            onClose = { itemEvent(ItemEvent.SetForgotToStopDialogShown(false)) },
+            onDismiss = { itemEvent(ItemEvent.SetForgotToStopDialogShown(false)) },
             categoryState,
             itemEvent,
         )
@@ -337,7 +337,7 @@ fun OverloadAppContent(
 
     if (adjustEndDialogState) {
         AdjustEndDialog(
-            onClose = { itemEvent(ItemEvent.SetAdjustEndDialogShown(false)) },
+            onDismiss = { itemEvent(ItemEvent.SetAdjustEndDialogShown(false)) },
             categoryState,
             itemState,
             itemEvent,
@@ -346,7 +346,7 @@ fun OverloadAppContent(
 
     if (spreadAcrossDaysDialogState) {
         SpreadAcrossDaysDialog(
-            onClose = { itemEvent(ItemEvent.SetSpreadAcrossDaysDialogShown(false)) },
+            onDismiss = { itemEvent(ItemEvent.SetSpreadAcrossDaysDialogShown(false)) },
             categoryState,
             itemState,
             itemEvent,
@@ -368,54 +368,24 @@ private fun OverloadNavHost(
     filePickerLauncher: ActivityResultLauncher<Intent>,
 ) {
     NavHost(
-        modifier = modifier,
-        navController = navController,
-        startDestination = OverloadRoute.HOME,
+        navController,
+        OverloadRoute.HOME,
+        modifier,
     ) {
         composable(OverloadRoute.HOME) {
-            HomeTab(
-                navigationType = navigationType,
-                categoryEvent = categoryEvent,
-                categoryState = categoryState,
-                itemState = itemState,
-                itemEvent = itemEvent,
-            )
+            HomeTab(navigationType, categoryEvent, categoryState, itemState, itemEvent)
         }
         composable(OverloadRoute.CALENDAR) {
-            CalendarTab(
-                contentType = contentType,
-                categoryState = categoryState,
-                categoryEvent = categoryEvent,
-                itemState = itemState,
-                itemEvent = itemEvent,
-                onNavigate = { navController.navigate(OverloadRoute.DAY) },
-            )
+            CalendarTab(contentType, categoryState, categoryEvent, itemState, itemEvent, { navController.navigate(OverloadRoute.DAY) })
         }
         composable(OverloadRoute.CATEGORY) {
-            CategoryScreen(
-                categoryState = categoryState,
-                categoryEvent = categoryEvent,
-                itemState = itemState,
-                itemEvent = itemEvent,
-            )
+            CategoryScreen(categoryState, categoryEvent, itemState, itemEvent)
         }
         composable(OverloadRoute.DAY) {
-            DayScreen(
-                categoryState = categoryState,
-                categoryEvent = categoryEvent,
-                itemState = itemState,
-                itemEvent = itemEvent,
-            )
+            DayScreen(categoryState, categoryEvent, itemState, itemEvent)
         }
         composable(OverloadRoute.CONFIGURATIONS) {
-            ConfigurationsTab(
-                categoryState = categoryState,
-                categoryEvent = categoryEvent,
-                itemState = itemState,
-                itemEvent = itemEvent,
-                filePickerLauncher = filePickerLauncher,
-                navController = navController,
-            )
+            ConfigurationsTab(categoryState, categoryEvent, itemState, itemEvent, filePickerLauncher, navController)
         }
     }
 }

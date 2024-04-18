@@ -51,7 +51,7 @@ import java.util.Calendar
 
 @Composable
 fun HomeTabManualDialog(
-    onClose: () -> Unit,
+    onDismiss: () -> Unit,
     categoryState: CategoryState,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
@@ -181,167 +181,10 @@ fun HomeTabManualDialog(
         )
 
     AlertDialog(
-        onDismissRequest = onClose,
-        icon = {
-            Icon(
-                imageVector = Icons.Rounded.AddCircle,
-                contentDescription = stringResource(id = R.string.manual_entry),
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        },
-        title = {
-            TextView(
-                text = stringResource(id = R.string.manual_entry),
-                fontWeight = FontWeight.Bold,
-                align = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        },
-        text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                TextView(
-                    stringResource(id = R.string.start_label),
-                    fontWeight = FontWeight.Bold,
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    TextView(
-                        text = selectedStartDateText,
-                        color = foregroundColor,
-                        modifier =
-                            Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable {
-                                    startDatePicker.show()
-                                }
-                                .background(color = backgroundColor)
-                                .padding(horizontal = 10.dp, vertical = 6.dp),
-                    )
-                    TextView(
-                        text = selectedStartTimeText,
-                        color = foregroundColor,
-                        modifier =
-                            Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable {
-                                    startTimePicker.show()
-                                }
-                                .background(color = backgroundColor)
-                                .padding(horizontal = 10.dp, vertical = 6.dp),
-                    )
-                }
-                TextView(
-                    stringResource(id = R.string.end_label),
-                    fontWeight = FontWeight.Bold,
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    TextView(
-                        text = selectedEndDateText,
-                        color = foregroundColor,
-                        modifier =
-                            Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable {
-                                    endDatePicker.show()
-                                }
-                                .background(color = backgroundColor)
-                                .padding(horizontal = 10.dp, vertical = 6.dp),
-                    )
-                    TextView(
-                        text = selectedEndTimeText,
-                        color = foregroundColor,
-                        modifier =
-                            Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable {
-                                    endTimePicker.show()
-                                }
-                                .background(color = backgroundColor)
-                                .padding(horizontal = 10.dp, vertical = 6.dp),
-                    )
-                }
-                TextView(
-                    stringResource(id = R.string.pause),
-                    fontWeight = FontWeight.Bold,
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    FilterChip(
-                        colors =
-                            FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = backgroundColor,
-                                labelColor = foregroundColor,
-                                iconColor = foregroundColor,
-                            ),
-                        border =
-                            FilterChipDefaults.filterChipBorder(
-                                enabled = true,
-                                selected = selectedPause,
-                                borderColor = backgroundColor,
-                            ),
-                        onClick = { selectedPause = true },
-                        label = {
-                            TextView(
-                                stringResource(id = R.string.yes),
-                            )
-                        },
-                        selected = selectedPause,
-                        leadingIcon = {
-                            if (selectedPause) {
-                                Icon(
-                                    imageVector = Icons.Default.Done,
-                                    contentDescription = stringResource(id = R.string.yes),
-                                    modifier = Modifier.size(FilterChipDefaults.IconSize),
-                                )
-                            }
-                        },
-                    )
-
-                    FilterChip(
-                        colors =
-                            FilterChipDefaults.filterChipColors(
-                                selectedContainerColor = backgroundColor,
-                                labelColor = foregroundColor,
-                                iconColor = foregroundColor,
-                            ),
-                        border =
-                            FilterChipDefaults.filterChipBorder(
-                                enabled = true,
-                                selected = selectedPause,
-                                borderColor = backgroundColor,
-                            ),
-                        onClick = { selectedPause = false },
-                        label = {
-                            TextView(
-                                stringResource(id = R.string.no),
-                            )
-                        },
-                        selected = selectedPause.not(),
-                        leadingIcon = {
-                            if (selectedPause.not()) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = stringResource(id = R.string.no),
-                                    modifier = Modifier.size(FilterChipDefaults.IconSize),
-                                )
-                            }
-                        },
-                    )
-                }
-            }
-        },
-        confirmButton = {
+        onDismiss,
+        {
             Button(
-                onClick = {
+                {
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
                     itemEvent(ItemEvent.SetStart(selectedStart.format(formatter)))
@@ -351,30 +194,169 @@ fun HomeTabManualDialog(
                     itemEvent(ItemEvent.SetCategoryId(categoryState.selectedCategory))
                     itemEvent(ItemEvent.SaveItem)
 
-                    onClose()
+                    onDismiss()
                 },
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = backgroundColor,
-                        contentColor = foregroundColor,
-                    ),
+                colors = ButtonDefaults.buttonColors(backgroundColor, foregroundColor),
             ) {
-                TextView(stringResource(id = R.string.save))
+                TextView(stringResource(R.string.save))
             }
         },
-        dismissButton = {
+        Modifier.padding(16.dp),
+        {
             Button(
-                onClick = onClose,
+                onDismiss,
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.onSecondaryContainer,
                     ),
             ) {
-                TextView(stringResource(id = R.string.cancel))
+                TextView(stringResource(R.string.cancel))
             }
         },
-        modifier = Modifier.padding(16.dp),
+        {
+            Icon(
+                Icons.Rounded.AddCircle,
+                stringResource(R.string.manual_entry),
+                tint = MaterialTheme.colorScheme.primary,
+            )
+        },
+        {
+            TextView(
+                stringResource(R.string.manual_entry),
+                Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold,
+                align = TextAlign.Center,
+            )
+        },
+        {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                TextView(
+                    stringResource(R.string.start_label),
+                    fontWeight = FontWeight.Bold,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TextView(
+                        selectedStartDateText,
+                        Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                startDatePicker.show()
+                            }
+                            .background(backgroundColor)
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        color = foregroundColor,
+                    )
+                    TextView(
+                        selectedStartTimeText,
+                        Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                startTimePicker.show()
+                            }
+                            .background(backgroundColor)
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        color = foregroundColor,
+                    )
+                }
+                TextView(
+                    stringResource(R.string.end_label),
+                    fontWeight = FontWeight.Bold,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TextView(
+                        selectedEndDateText,
+                        Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                endDatePicker.show()
+                            }
+                            .background(backgroundColor)
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        color = foregroundColor,
+                    )
+                    TextView(
+                        selectedEndTimeText,
+                        Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                endTimePicker.show()
+                            }
+                            .background(backgroundColor)
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        color = foregroundColor,
+                    )
+                }
+                TextView(
+                    stringResource(R.string.pause),
+                    fontWeight = FontWeight.Bold,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    FilterChip(
+                        selectedPause,
+                        { selectedPause = true },
+                        {
+                            TextView(
+                                stringResource(R.string.yes),
+                            )
+                        },
+                        leadingIcon = {
+                            if (selectedPause) {
+                                Icon(
+                                    Icons.Default.Done,
+                                    stringResource(R.string.yes),
+                                    Modifier.size(FilterChipDefaults.IconSize),
+                                )
+                            }
+                        },
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                labelColor = foregroundColor,
+                                iconColor = foregroundColor,
+                                selectedContainerColor = backgroundColor,
+                            ),
+                        border = FilterChipDefaults.filterChipBorder(true, selectedPause, backgroundColor),
+                    )
+
+                    FilterChip(
+                        selectedPause.not(),
+                        { selectedPause = false },
+                        {
+                            TextView(
+                                stringResource(R.string.no),
+                            )
+                        },
+                        leadingIcon = {
+                            if (selectedPause.not()) {
+                                Icon(
+                                    Icons.Default.Close,
+                                    stringResource(R.string.no),
+                                    Modifier.size(FilterChipDefaults.IconSize),
+                                )
+                            }
+                        },
+                        colors =
+                            FilterChipDefaults.filterChipColors(
+                                labelColor = foregroundColor,
+                                iconColor = foregroundColor,
+                                selectedContainerColor = backgroundColor,
+                            ),
+                        border = FilterChipDefaults.filterChipBorder(true, selectedPause.not(), backgroundColor),
+                    )
+                }
+            }
+        },
     )
 }
 

@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">odznaczenie wszystkich elementów wybranego dnia</string>
     <string name="delete_items_forever">usuwanie elementów na zawsze</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">wybrany</string>
+    <string name="ol_selected">wybrany</string>
     <string name="get_out_of_isDeleting">pozwala wyjść z trybu usuwania</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Kalendarz</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfiguracje</string>
+    <string name="categories">Categories</string>
     <string name="goals">Cele</string>
     <string name="work">Praca</string>
     <string name="work_goal_descr">Wyznacz cel dla pracy</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Import</string>
     <string name="import_descr">Import z kopii zapasowej</string>
-    <string name="import_backup">Importuj kopię zapasową</string>
-    <string name="import_backup_descr">Aby zaimportować dane do aplikacji, należy użyć arkusza Sharesheet z innych aplikacji. Umożliwi to aplikacji bezpieczny dostęp do udostępnionych danych i zaimportowanie ich do bazy danych.</string>
     <string name="import_success">Pomyślnie zaimportowano kopię zapasową</string>
     <string name="import_failure">Importowanie kopii zapasowej nie powiodło się</string>
     <string name="analytics">analityka</string>
@@ -101,18 +100,17 @@ Częstotliwość - Jak często występuje ta awaria?\n
 Dziękujemy za cierpliwość!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Zapisz</string>
-    <string name="pick_work_goal">Wyznacz cel pracy</string>
     <string name="hours">godziny</string>
     <string name="minutes">minuty</string>
     <string name="cancel">Anuluj</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Ustaw cel pauzy</string>
+    <string name="set_goal_pause">Ustaw cel pauzy</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Praca w lewo</string>
     <string name="pause_left">Pauza w lewo</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">strzałka do przodu opisująca kierunek obu czasów od początku do końca</string>
     <string name="select_year">Wybierz rok</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Przetłumacz</string>
     <string name="translate_descr">Chcesz przetłumaczyć aplikację? Dzięki!</string>
     <string name="adjust">Dostosuj</string>
@@ -131,4 +129,7 @@ Dziękujemy za cierpliwość!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

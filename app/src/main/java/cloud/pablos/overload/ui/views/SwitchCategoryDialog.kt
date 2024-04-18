@@ -1,5 +1,7 @@
 package cloud.pablos.overload.ui.views
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,18 +32,18 @@ import cloud.pablos.overload.data.category.CategoryState
 fun SwitchCategoryDialog(
     categoryState: CategoryState,
     categoryEvent: (CategoryEvent) -> Unit,
-    onClose: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     Dialog(
-        onDismissRequest = onClose,
+        onDismiss,
         content = {
             Surface(
-                shape = MaterialTheme.shapes.large,
+                Modifier.fillMaxWidth(),
+                MaterialTheme.shapes.large,
+                MaterialTheme.colorScheme.background,
                 tonalElevation = NavigationBarDefaults.Elevation,
-                color = MaterialTheme.colorScheme.background,
-                modifier = Modifier.fillMaxWidth(),
             ) {
-                CategoryDialogContent(categoryState, categoryEvent, onClose)
+                CategoryDialogContent(categoryState, categoryEvent, onDismiss)
             }
         },
     )
@@ -54,26 +56,27 @@ private fun CategoryDialogContent(
     onClose: () -> Unit,
 ) {
     Column(
+        Modifier.padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.padding(24.dp),
     ) {
         Icon(
-            imageVector = Icons.Rounded.Category,
-            contentDescription = stringResource(id = R.string.select_category),
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(16.dp),
+            Icons.Rounded.Category,
+            stringResource(R.string.select_category),
+            Modifier.padding(16.dp),
+            MaterialTheme.colorScheme.primary,
         )
 
         TextView(
-            text = stringResource(id = R.string.select_category),
-            fontSize = MaterialTheme.typography.titleLarge.fontSize,
-            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
+            stringResource(R.string.select_category),
+            Modifier.padding(top = 16.dp, bottom = 8.dp),
+            MaterialTheme.typography.titleLarge.fontSize,
         )
 
         CategoryListContent(categoryState, categoryEvent, onClose)
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 private fun CategoryListContent(
     categoryState: CategoryState,
@@ -97,16 +100,15 @@ private fun CategoryRow(
     onClose: () -> Unit,
 ) {
     Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .clickable {
-                    categoryEvent(CategoryEvent.SetSelectedCategory(category.id))
-                    onClose()
-                }
-                .padding(16.dp),
-        horizontalArrangement = Arrangement.Center,
+        Modifier
+            .fillMaxWidth()
+            .clickable {
+                categoryEvent(CategoryEvent.SetSelectedCategory(category.id))
+                onClose()
+            }
+            .padding(16.dp),
+        Arrangement.Center,
     ) {
-        TextView(text = category.emoji + " " + category.name)
+        TextView(category.emoji + " " + category.name)
     }
 }

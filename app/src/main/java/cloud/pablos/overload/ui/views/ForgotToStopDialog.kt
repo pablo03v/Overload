@@ -34,7 +34,7 @@ import cloud.pablos.overload.data.item.ItemEvent
 
 @Composable
 fun ForgotToStopDialog(
-    onClose: () -> Unit,
+    onDismiss: () -> Unit,
     categoryState: CategoryState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
@@ -45,85 +45,83 @@ fun ForgotToStopDialog(
     val learnMoreLink = "https://github.com/pabloscloud/Overload?tab=readme-ov-file#why-does-the-app-annoy-me-with-a-popup-to-adjust-the-end".toUri()
 
     AlertDialog(
-        onDismissRequest = onClose,
+        onDismiss,
+        {
+            Button(
+                {
+                    itemEvent(ItemEvent.SetSpreadAcrossDaysDialogShown(true))
+                    onDismiss()
+                },
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.onSecondaryContainer,
+                    ),
+            ) {
+                TextView(stringResource(R.string.spread_across_days))
+            }
+        },
+        modifier = Modifier.padding(16.dp),
+        {
+            Button(
+                {
+                    itemEvent(ItemEvent.SetAdjustEndDialogShown(true))
+                    onDismiss()
+                },
+                Modifier.fillMaxWidth(),
+                colors =
+                    ButtonDefaults.buttonColors(
+                        backgroundColor,
+                        foregroundColor,
+                    ),
+            ) {
+                TextView(stringResource(R.string.adjust))
+            }
+        },
         icon = {
             Icon(
-                imageVector = Icons.Rounded.Info,
-                contentDescription = stringResource(R.string.spans_days),
+                Icons.Rounded.Info,
+                stringResource(R.string.spans_days),
                 tint = MaterialTheme.colorScheme.error,
             )
         },
         title = {
             TextView(
-                text = stringResource(R.string.spans_days),
+                stringResource(R.string.spans_days),
+                Modifier.fillMaxWidth(),
                 fontWeight = FontWeight.Bold,
                 align = TextAlign.Center,
                 maxLines = 2,
-                modifier = Modifier.fillMaxWidth(),
             )
         },
         text = {
             Column {
                 Text(
-                    text = stringResource(R.string.spans_days_descr),
+                    stringResource(R.string.spans_days_descr),
+                    Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth(),
                     overflow = TextOverflow.Ellipsis,
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
 
-                val openLinkStr = stringResource(id = R.string.open_link_with)
+                val openLinkStr = stringResource(R.string.open_link_with)
                 ClickableText(
-                    text = AnnotatedString(stringResource(id = R.string.learn_more)),
-                    style =
-                        MaterialTheme.typography.bodyMedium.copy(
-                            color = MaterialTheme.colorScheme.primary,
-                            textAlign = TextAlign.Center,
-                        ),
+                    AnnotatedString(stringResource(R.string.learn_more)),
+                    Modifier.fillMaxWidth(),
+                    MaterialTheme.typography.bodyMedium.copy(
+                        MaterialTheme.colorScheme.primary,
+                        textAlign = TextAlign.Center,
+                    ),
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, learnMoreLink)
                         val chooserIntent = Intent.createChooser(intent, openLinkStr)
                         ContextCompat.startActivity(context, chooserIntent, null)
                     },
-                    modifier = Modifier.fillMaxWidth(),
                 )
             }
         },
-        confirmButton = {
-            Button(
-                onClick = {
-                    itemEvent(ItemEvent.SetSpreadAcrossDaysDialogShown(true))
-                    onClose()
-                },
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    ),
-                modifier =
-                    Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-            ) {
-                TextView(stringResource(R.string.spread_across_days))
-            }
-        },
-        dismissButton = {
-            Button(
-                onClick = {
-                    itemEvent(ItemEvent.SetAdjustEndDialogShown(true))
-                    onClose()
-                },
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = backgroundColor,
-                        contentColor = foregroundColor,
-                    ),
-                modifier = Modifier.fillMaxWidth(),
-            ) {
-                TextView(stringResource(id = R.string.adjust))
-            }
-        },
-        modifier = Modifier.padding(16.dp),
     )
 }

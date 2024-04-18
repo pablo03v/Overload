@@ -18,13 +18,13 @@ fun DayScreenTopAppBar(itemState: ItemState) {
     val title = getFormattedDate(selectedDay, true)
 
     Surface(
-        tonalElevation = NavigationBarDefaults.Elevation,
         color = MaterialTheme.colorScheme.background,
+        tonalElevation = NavigationBarDefaults.Elevation,
     ) {
         TopAppBar(
-            title = {
+            {
                 TextView(
-                    text = title,
+                    title,
                     fontSize = MaterialTheme.typography.titleLarge.fontSize,
                 )
             },

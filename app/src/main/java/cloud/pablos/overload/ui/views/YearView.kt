@@ -45,8 +45,8 @@ fun YearView(
     categoryState: CategoryState,
     itemEvent: (ItemEvent) -> Unit,
     bottomPadding: Dp = 0.dp,
-    onNavigate: () -> Unit = {},
     highlightSelectedDay: Boolean = false,
+    onNavigate: () -> Unit = {},
 ) {
     val currentYear = LocalDate.now().year
     val months =
@@ -57,10 +57,9 @@ fun YearView(
         }
 
     LazyColumn(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp),
+        Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
     ) {
         months.forEachIndexed { monthIndex, month ->
             item {
@@ -95,12 +94,11 @@ fun YearView(
 @Composable
 fun MonthNameHeader(month: Month) {
     TextView(
-        text = month.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()),
-        fontSize = 24.sp,
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
+        month.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()),
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
+        24.sp,
     )
 }
 
@@ -131,11 +129,10 @@ fun WeekRow(
         }
 
     Row(
-        modifier =
-            Modifier
-                .fillMaxWidth()
-                .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        Arrangement.SpaceBetween,
     ) {
         if (weekOfMonth == 0) {
             repeat(emptyCells) {
@@ -150,23 +147,16 @@ fun WeekRow(
             if (iterationDate.month == month) {
                 val colors =
                     getColorOfDay(
-                        categoryState = categoryState,
-                        date = iterationDate,
-                        firstDayOfMonth = firstDayOfMonth,
-                        selected = date == iterationDate,
-                        highlightSelectedDay = highlightSelectedDay,
+                        categoryState,
+                        iterationDate,
+                        firstDayOfMonth,
+                        date == iterationDate,
+                        highlightSelectedDay,
                     )
                 val number = iterationDate.dayOfMonth.toString()
                 val clickable = iterationDate <= today
 
-                DayCell(
-                    date = iterationDate,
-                    itemEvent = itemEvent,
-                    colors = colors,
-                    number = number,
-                    clickable = clickable,
-                    onNavigate = onNavigate,
-                )
+                DayCell(iterationDate, itemEvent, colors, number, clickable, onNavigate)
             } else {
                 EmptyDayCell()
             }
@@ -188,30 +178,28 @@ fun DayCell(
     onNavigate: () -> Unit,
 ) {
     Box(
-        modifier =
-            Modifier
-                .padding()
-                .requiredSize(36.dp)
-                .background(colors.background, shape = CircleShape)
-                .combinedClickable(
-                    enabled = clickable,
-                    onClick = {
-                        itemEvent(ItemEvent.SetSelectedDayCalendar(getFormattedDate(date)))
-                        itemEvent(ItemEvent.SetIsSelectedHome(true))
-                        onNavigate()
-                    },
-                    indication =
-                        rememberRipple(
-                            radius = 18.dp,
-                        ),
-                    interactionSource = remember { MutableInteractionSource() },
-                )
-                .clip(CircleShape)
-                .border(3.dp, colors.borderColor, CircleShape),
-        contentAlignment = Alignment.Center,
+        Modifier
+            .padding()
+            .requiredSize(36.dp)
+            .background(colors.background, CircleShape)
+            .combinedClickable(
+                remember { MutableInteractionSource() },
+                rememberRipple(
+                    radius = 18.dp,
+                ),
+                clickable,
+                onClick = {
+                    itemEvent(ItemEvent.SetSelectedDayCalendar(getFormattedDate(date)))
+                    itemEvent(ItemEvent.SetIsSelectedHome(true))
+                    onNavigate()
+                },
+            )
+            .clip(CircleShape)
+            .border(3.dp, colors.borderColor, CircleShape),
+        Alignment.Center,
     ) {
         TextView(
-            text = number,
+            number,
             fontSize = 14.sp,
             color = colors.foreground,
         )
@@ -221,13 +209,12 @@ fun DayCell(
 @Composable
 fun EmptyDayCell() {
     Box(
-        modifier =
-            Modifier
-                .padding()
-                .requiredSize(36.dp)
-                .background(Color.Transparent, shape = CircleShape)
-                .clip(CircleShape)
-                .border(3.dp, Color.Transparent, CircleShape),
+        Modifier
+            .padding()
+            .requiredSize(36.dp)
+            .background(Color.Transparent, CircleShape)
+            .clip(CircleShape)
+            .border(3.dp, Color.Transparent, CircleShape),
     )
 }
 

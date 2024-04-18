@@ -103,13 +103,13 @@ class MainActivity : ComponentActivity() {
                 val itemEvent = itemViewModel::itemEvent
 
                 OverloadApp(
-                    windowSize = windowSize,
-                    displayFeatures = displayFeatures,
-                    categoryState = categoryState,
-                    categoryEvent = categoryEvent,
-                    itemState = itemState,
-                    itemEvent = itemEvent,
-                    filePickerLauncher = filePickerLauncher,
+                    windowSize,
+                    displayFeatures,
+                    categoryState,
+                    categoryEvent,
+                    itemState,
+                    itemEvent,
+                    filePickerLauncher,
                 )
             }
         }

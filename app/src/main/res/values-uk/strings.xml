@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">зняти позначку з усіх елементів обраного дня</string>
     <string name="delete_items_forever">видалити елементи назавжди</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">вибрано</string>
+    <string name="ol_selected">вибрано</string>
     <string name="get_out_of_isDeleting">виводить з режиму видалення</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Старт</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Календар</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Конфігурації</string>
+    <string name="categories">Categories</string>
     <string name="goals">Цілі</string>
     <string name="work">Робота</string>
     <string name="work_goal_descr">Встановіть мету для роботи</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Не вдалося створити резервну копію</string>
     <string name="import_ol">Імпорт</string>
     <string name="import_descr">Імпорт з резервної копії</string>
-    <string name="import_backup">Імпорт резервної копії</string>
-    <string name="import_backup_descr">Щоб імпортувати дані до програми, скористайтеся таблицею спільного доступу з інших програм. Це дозволить програмі отримати безпечний доступ до спільних даних та імпортувати їх до вашої бази даних.</string>
     <string name="import_success">Резервну копію успішно імпортовано</string>
     <string name="import_failure">Не вдалося імпортувати резервну копію</string>
     <string name="analytics">аналіз</string>
@@ -101,18 +100,17 @@
 Дякуємо за терпіння!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Зберегти</string>
-    <string name="pick_work_goal">Встановіть робочу мету</string>
     <string name="hours">годин</string>
     <string name="minutes">хвилин</string>
     <string name="cancel">Скасувати</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Встановіть мету паузи</string>
+    <string name="set_goal_pause">Встановіть мету паузи</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Залишилася робота</string>
     <string name="pause_left">Залишилася пауза</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">стрілка вперед, від початку до кінця</string>
     <string name="select_year">Виберіть рік</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Перекласти</string>
     <string name="translate_descr">Хочете перекласти додаток? Дякую!</string>
     <string name="adjust">Hалаштувати</string>
@@ -131,4 +129,7 @@
     <string name="talback_pause">Пауза з %s до %s</string>
     <string name="talback_entry_ongoing">Триває введення з %s</string>
     <string name="talback_pause_ongoing">Триває пауза з %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

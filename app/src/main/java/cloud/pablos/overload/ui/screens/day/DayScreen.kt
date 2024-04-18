@@ -57,10 +57,9 @@ fun DayScreen(
 
     val pagerState =
         rememberPagerState(
-            initialPage = daysCount,
-            initialPageOffsetFraction = 0f,
-            pageCount = { daysCount },
-        )
+            daysCount,
+            0f,
+        ) { daysCount }
 
     LaunchedEffect(pagerState.currentPage) {
         itemEvent(
@@ -83,29 +82,15 @@ fun DayScreen(
     }
 
     Scaffold(
-        topBar = {
-            OverloadTopAppBar(
-                selectedDestination = OverloadRoute.DAY,
-                categoryState = categoryState,
-                categoryEvent = categoryEvent,
-                itemState = itemState,
-                itemEvent = itemEvent,
-            )
-        },
+        topBar = { OverloadTopAppBar(OverloadRoute.DAY, categoryState, categoryEvent, itemState, itemEvent) },
     ) { paddingValues ->
-        Box(modifier = Modifier.fillMaxSize()) {
+        Box(Modifier.fillMaxSize()) {
             HorizontalPager(
-                state = pagerState,
+                pagerState,
+                Modifier.padding(paddingValues),
                 beyondBoundsPageCount = 2,
-                modifier = Modifier.padding(paddingValues),
             ) { page ->
-                DayScreenDayView(
-                    daysCount = daysCount,
-                    page = page,
-                    categoryState = categoryState,
-                    itemState = itemState,
-                    itemEvent = itemEvent,
-                )
+                DayScreenDayView(daysCount, page, categoryState, itemState, itemEvent)
             }
         }
     }

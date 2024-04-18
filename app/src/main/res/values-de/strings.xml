@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">wähle alle Einträge des ausgewählten Tages ab</string>
     <string name="delete_items_forever">Einträge für immer löschen</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">ausgewählt</string>
+    <string name="ol_selected">ausgewählt</string>
     <string name="get_out_of_isDeleting">deaktiviert den Löschmodus</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -62,8 +62,6 @@
     <string name="backup_failed">Erstellen des Backups fehlgeschlagen</string>
     <string name="import_ol">Wiederherstellen</string>
     <string name="import_descr">Stelle Daten aus einer Sicherung her</string>
-    <string name="import_backup">Sicherung wiederherstellen</string>
-    <string name="import_backup_descr">Um Daten in die App zu importieren, benutze bitte das Sharesheet von anderen Apps. Damit kann die App sicher auf die freigegebenen Daten zugreifen und diese in Ihre Datenbank importieren.</string>
     <string name="import_success">Sicherung erfolgreich wiederhergestellt</string>
     <string name="import_failure">Sicherung konnte nicht wiederhergestellt werden</string>
     <string name="analytics">Analysen</string>
@@ -102,18 +100,17 @@ Häufigkeit – Wie oft kommt dieser Absturz vor?\n
 Danke für deine Geduld!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Speichern</string>
-    <string name="pick_work_goal">Arbeitsziel setzen</string>
     <string name="hours">Stunden</string>
     <string name="minutes">Minuten</string>
     <string name="cancel">Abbrechen</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Pausenziel setzen</string>
+    <string name="set_goal_pause">Pausenziel setzen</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Übrige Arbeitszeit</string>
     <string name="pause_left">Übrige Pause</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">Pfeil nach vorne von Anfang bis Ende</string>
     <string name="select_year">Jahr auswählen</string>
+    <string name="select_category">Kategorie auswählen</string>
     <string name="translate">Übersetzen</string>
     <string name="translate_descr">Möchtest du übersetzen helfen? Danke!</string>
     <string name="adjust">Anpassen</string>
@@ -132,4 +129,8 @@ Danke für deine Geduld!</string>
     <string name="talback_pause">Pause von %s bis %s</string>
     <string name="talback_entry_ongoing">Laufender Eintrag seit %s</string>
     <string name="talback_pause_ongoing">Laufende Pause seit %s</string>
+    <string name="add_category">Kategorie hinzufügen</string>
+    <string name="switch_category">Kategorie wechseln</string>
+    <string name="delete_category_warning">Bist du sicher, dass du %s löschen möchtest?</string>
+    <string name="name">Name</string>
 </resources>

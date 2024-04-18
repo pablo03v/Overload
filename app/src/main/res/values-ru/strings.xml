@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">снять выделение со всего в этом дне</string>
     <string name="delete_items_forever">удалить навсегда</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">выбрано</string>
+    <string name="ol_selected">выбрано</string>
     <string name="get_out_of_isDeleting">выйти из режима удаления</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Начать</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Календарь</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Параметры</string>
+    <string name="categories">Categories</string>
     <string name="goals">Цели</string>
     <string name="work">Работа</string>
     <string name="work_goal_descr">Задать цель для работы</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Не удалось создать резервную копию</string>
     <string name="import_ol">Импортировать</string>
     <string name="import_descr">Импортировать данные из резервной копии</string>
-    <string name="import_backup">Импорт резервной копии</string>
-    <string name="import_backup_descr">Чтобы импортировать данные, используйте обмен из других приложений. Это позволит приложению безопасно получить данные и импортировать их.</string>
     <string name="import_success">Резервная копия успешно импортирована</string>
     <string name="import_failure">Импорт резервной копии не удался</string>
     <string name="analytics">аналитика</string>
@@ -102,18 +101,17 @@
 Спасибо за неравнодушие и терпение!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Сохранить</string>
-    <string name="pick_work_goal">Задать цель работы</string>
     <string name="hours">часов</string>
     <string name="minutes">минут</string>
     <string name="cancel">Отмена</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Задать цель отдыха</string>
+    <string name="set_goal_pause">Задать цель отдыха</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Работать осталось</string>
     <string name="pause_left">Отдыхать осталось</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">стрелка вперёд от начала и до конца</string>
     <string name="select_year">Выберите год</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Перевод</string>
     <string name="translate_descr">Хотите помочь с переводом приложения? Спасибо!</string>
     <string name="adjust">Скорректировать</string>
@@ -132,4 +130,7 @@
     <string name="talback_pause">Пауза с %s по %s</string>
     <string name="talback_entry_ongoing">Протекающая запись с %s</string>
     <string name="talback_pause_ongoing">Протекающая пауза с %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

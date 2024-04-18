@@ -50,10 +50,10 @@ import java.util.Calendar
 
 @Composable
 fun HomeTabEditItemDialog(
-    onClose: () -> Unit,
     categoryState: CategoryState,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
 
@@ -194,143 +194,10 @@ fun HomeTabEditItemDialog(
         )
 
     AlertDialog(
-        onDismissRequest = onClose,
-        icon = {
-            Icon(
-                imageVector = Icons.Rounded.AddCircle,
-                contentDescription = stringResource(id = R.string.edit_entry),
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        },
-        title = {
-            TextView(
-                text = stringResource(id = R.string.edit_entry),
-                fontWeight = FontWeight.Bold,
-                align = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        },
-        text = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                TextView(
-                    stringResource(id = R.string.start_label),
-                    fontWeight = FontWeight.Bold,
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    TextView(
-                        text = selectedStartDateText,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier =
-                            Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable {
-                                    startDatePicker.show()
-                                }
-                                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
-                                .padding(horizontal = 10.dp, vertical = 6.dp),
-                    )
-                    TextView(
-                        text = selectedStartTimeText,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier =
-                            Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable {
-                                    startTimePicker.show()
-                                }
-                                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
-                                .padding(horizontal = 10.dp, vertical = 6.dp),
-                    )
-                }
-                TextView(
-                    stringResource(id = R.string.end_label),
-                    fontWeight = FontWeight.Bold,
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    TextView(
-                        text = selectedEndDateText,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier =
-                            Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable {
-                                    endDatePicker.show()
-                                }
-                                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
-                                .padding(horizontal = 10.dp, vertical = 6.dp),
-                    )
-                    TextView(
-                        text = selectedEndTimeText,
-                        color = MaterialTheme.colorScheme.onTertiaryContainer,
-                        modifier =
-                            Modifier
-                                .clip(RoundedCornerShape(12.dp))
-                                .clickable {
-                                    endTimePicker.show()
-                                }
-                                .background(color = MaterialTheme.colorScheme.tertiaryContainer)
-                                .padding(horizontal = 10.dp, vertical = 6.dp),
-                    )
-                }
-                TextView(
-                    stringResource(id = R.string.pause),
-                    fontWeight = FontWeight.Bold,
-                )
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    FilterChip(
-                        onClick = { selectedPause = true },
-                        label = {
-                            TextView(
-                                stringResource(id = R.string.yes),
-                            )
-                        },
-                        selected = selectedPause,
-                        leadingIcon = {
-                            if (selectedPause) {
-                                Icon(
-                                    imageVector = Icons.Default.Done,
-                                    contentDescription = stringResource(id = R.string.yes),
-                                    modifier = Modifier.size(FilterChipDefaults.IconSize),
-                                )
-                            }
-                        },
-                    )
-
-                    FilterChip(
-                        onClick = { selectedPause = false },
-                        label = {
-                            TextView(
-                                stringResource(id = R.string.no),
-                            )
-                        },
-                        selected = selectedPause.not(),
-                        leadingIcon = {
-                            if (selectedPause.not()) {
-                                Icon(
-                                    imageVector = Icons.Default.Close,
-                                    contentDescription = stringResource(id = R.string.no),
-                                    modifier = Modifier.size(FilterChipDefaults.IconSize),
-                                )
-                            }
-                        },
-                    )
-                }
-            }
-        },
-        confirmButton = {
+        onDismiss,
+        {
             Button(
-                onClick = {
+                {
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS")
 
                     if (selectedItem != null) {
@@ -344,29 +211,158 @@ fun HomeTabEditItemDialog(
 
                     itemEvent(ItemEvent.SaveItem)
 
-                    onClose()
+                    onDismiss()
                 },
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.onPrimaryContainer,
                     ),
             ) {
-                TextView(stringResource(id = R.string.save))
+                TextView(stringResource(R.string.save))
             }
         },
-        dismissButton = {
+        Modifier.padding(16.dp),
+        {
             Button(
-                onClick = onClose,
+                onDismiss,
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.onSecondaryContainer,
                     ),
             ) {
-                TextView(stringResource(id = R.string.cancel))
+                TextView(stringResource(R.string.cancel))
             }
         },
-        modifier = Modifier.padding(16.dp),
+        {
+            Icon(
+                Icons.Rounded.AddCircle,
+                stringResource(R.string.edit_entry),
+                tint = MaterialTheme.colorScheme.primary,
+            )
+        },
+        {
+            TextView(
+                stringResource(R.string.edit_entry),
+                Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold,
+                align = TextAlign.Center,
+            )
+        },
+        {
+            Column(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                TextView(
+                    stringResource(R.string.start_label),
+                    fontWeight = FontWeight.Bold,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TextView(
+                        selectedStartDateText,
+                        Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                startDatePicker.show()
+                            }
+                            .background(MaterialTheme.colorScheme.tertiaryContainer)
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    )
+                    TextView(
+                        selectedStartTimeText,
+                        Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                startTimePicker.show()
+                            }
+                            .background(MaterialTheme.colorScheme.tertiaryContainer)
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    )
+                }
+                TextView(
+                    stringResource(R.string.end_label),
+                    fontWeight = FontWeight.Bold,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TextView(
+                        selectedEndDateText,
+                        Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                endDatePicker.show()
+                            }
+                            .background(MaterialTheme.colorScheme.tertiaryContainer)
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    )
+                    TextView(
+                        selectedEndTimeText,
+                        Modifier
+                            .clip(RoundedCornerShape(12.dp))
+                            .clickable {
+                                endTimePicker.show()
+                            }
+                            .background(MaterialTheme.colorScheme.tertiaryContainer)
+                            .padding(horizontal = 10.dp, vertical = 6.dp),
+                        color = MaterialTheme.colorScheme.onTertiaryContainer,
+                    )
+                }
+                TextView(
+                    stringResource(R.string.pause),
+                    fontWeight = FontWeight.Bold,
+                )
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    FilterChip(
+                        selectedPause,
+                        { selectedPause = true },
+                        {
+                            TextView(
+                                stringResource(R.string.yes),
+                            )
+                        },
+                        leadingIcon = {
+                            if (selectedPause) {
+                                Icon(
+                                    Icons.Default.Done,
+                                    stringResource(R.string.yes),
+                                    Modifier.size(FilterChipDefaults.IconSize),
+                                )
+                            }
+                        },
+                    )
+
+                    FilterChip(
+                        selectedPause.not(),
+                        { selectedPause = false },
+                        {
+                            TextView(
+                                stringResource(R.string.no),
+                            )
+                        },
+                        leadingIcon = {
+                            if (selectedPause.not()) {
+                                Icon(
+                                    Icons.Default.Close,
+                                    stringResource(R.string.no),
+                                    Modifier.size(FilterChipDefaults.IconSize),
+                                )
+                            }
+                        },
+                    )
+                }
+            }
+        },
     )
 }

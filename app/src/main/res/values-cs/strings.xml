@@ -30,7 +30,7 @@
     <string name="deselect_all_items_of_selected_day">zruší výběr všech položek vybraného dne</string>
     <string name="delete_items_forever">navždy odstranit položky</string>
     <!-- cloud.pablos.overload.ui.tabs.home.HomeTabDeleteTopAppBar -->
-    <string name="itemCount_selected">vybrané</string>
+    <string name="ol_selected">vybrané</string>
     <string name="get_out_of_isDeleting">vás dostane z režimu mazání</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
     <string name="start">Start</string>
@@ -50,6 +50,7 @@
     <string name="calendar">Kalendář</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfigurace</string>
+    <string name="categories">Categories</string>
     <string name="goals">Cíle</string>
     <string name="work">Práce</string>
     <string name="work_goal_descr">Stanovte si pracovní cíl</string>
@@ -61,8 +62,6 @@
     <string name="backup_failed">Generating the backup failed</string>
     <string name="import_ol">Import</string>
     <string name="import_descr">Import ze zálohy</string>
-    <string name="import_backup">Import zálohy</string>
-    <string name="import_backup_descr">Pro import dat do aplikace použijte Sharesheet z jiných aplikací. To aplikaci umožní bezpečný přístup ke sdíleným datům a jejich import do vaší databáze.</string>
     <string name="import_success">Záloha byla úspěšně importována</string>
     <string name="import_failure">Import zálohy se nezdařil</string>
     <string name="analytics">analytika</string>
@@ -101,18 +100,17 @@ Nedávné změny - Aktualizovali jste nedávno aplikaci nebo změnili nastavení
 Děkujeme za trpělivost!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabWorkGoalDialog -->
     <string name="save">Uložit</string>
-    <string name="pick_work_goal">Stanovení pracovního cíle</string>
     <string name="hours">hodiny</string>
     <string name="minutes">minuty</string>
     <string name="cancel">Zrušit</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
-    <string name="pick_pause_goal">Nastavení cíle pauzy</string>
+    <string name="set_goal_pause">Nastavení cíle pauzy</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="work_left">Práce vlevo</string>
     <string name="pause_left">Pauza vlevo</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">šipka vpřed popisující směr obou časů od začátku do konce</string>
     <string name="select_year">Zvolte rok</string>
+    <string name="select_category">Select Category</string>
     <string name="translate">Přeložit</string>
     <string name="translate_descr">Chcete aplikaci přeložit? Díky!</string>
     <string name="adjust">Úprava</string>
@@ -131,4 +129,7 @@ Děkujeme za trpělivost!</string>
     <string name="talback_pause">Pause from %s to %s</string>
     <string name="talback_entry_ongoing">Ongoing entry since %s</string>
     <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="add_category">add category</string>
+    <string name="switch_category">Switch Category</string>
+    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
 </resources>

@@ -39,8 +39,8 @@ import cloud.pablos.overload.R
 fun ConfigurationsTabItem(
     title: String,
     description: String? = null,
-    link: Uri? = null,
     icon: ImageVector? = null,
+    link: Uri? = null,
     preferenceKey: String? = null,
     switchState: MutableState<Boolean>? = null,
     action: (() -> Unit)? = null,
@@ -48,85 +48,82 @@ fun ConfigurationsTabItem(
 ) {
     val context = LocalContext.current
 
-    val openLinkStr = stringResource(id = R.string.open_link_with)
+    val openLinkStr = stringResource(R.string.open_link_with)
     Row(
+        if (link != null) {
+            Modifier
+                .clip(shape = RoundedCornerShape(15.dp))
+                .clickable {
+                    val intent = Intent(Intent.ACTION_VIEW, link)
+                    val chooserIntent = Intent.createChooser(intent, openLinkStr)
+                    context.startActivity(chooserIntent)
+                }
+                .padding(vertical = 10.dp)
+                .clearAndSetSemantics {
+                    contentDescription = "$title: $description"
+                }
+        } else if (background && action != null) {
+            val shape = RoundedCornerShape(15.dp)
+            Modifier
+                .clip(shape)
+                .background(MaterialTheme.colorScheme.surfaceVariant, shape)
+                .clickable {
+                    action()
+                }
+                .padding(10.dp)
+        } else if (action != null) {
+            val shape = RoundedCornerShape(15.dp)
+            Modifier
+                .clip(shape)
+                .clickable {
+                    action()
+                }
+                .padding(vertical = 10.dp)
+        } else {
+            Modifier
+                .clearAndSetSemantics {
+                    contentDescription = "$title: $description"
+                }
+        },
         verticalAlignment = Alignment.CenterVertically,
-        modifier =
-            if (link != null) {
-                Modifier
-                    .clip(shape = RoundedCornerShape(15.dp))
-                    .clickable {
-                        val intent = Intent(Intent.ACTION_VIEW, link)
-                        val chooserIntent = Intent.createChooser(intent, openLinkStr)
-                        context.startActivity(chooserIntent)
-                    }
-                    .padding(vertical = 10.dp)
-                    .clearAndSetSemantics {
-                        contentDescription = "$title: $description"
-                    }
-            } else if (background && action != null) {
-                val shape = RoundedCornerShape(15.dp)
-                Modifier
-                    .clip(shape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant, shape)
-                    .clickable {
-                        action()
-                    }
-                    .padding(10.dp)
-            } else if (action != null) {
-                val shape = RoundedCornerShape(15.dp)
-                Modifier
-                    .clip(shape)
-                    .clickable {
-                        action()
-                    }
-                    .padding(vertical = 10.dp)
-            } else {
-                Modifier
-                    .clearAndSetSemantics {
-                        contentDescription = "$title: $description"
-                    }
-            },
     ) {
         if (description != null || background) {
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(15.dp),
-                modifier = Modifier.fillMaxWidth(),
+                Modifier.fillMaxWidth(),
+                Arrangement.spacedBy(15.dp),
+                Alignment.CenterVertically,
             ) {
                 if (icon != null) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = title,
-                        tint =
-                            if (!background) {
-                                MaterialTheme.colorScheme.primary
-                            } else {
-                                MaterialTheme.colorScheme.onSurfaceVariant
-                            },
-                        modifier =
-                            if (!background) {
-                                Modifier.padding(horizontal = 15.dp)
-                            } else {
-                                Modifier
-                            },
-                    )
+                    if (background) {
+                        Icon(
+                            icon,
+                            title,
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    } else {
+                        Icon(
+                            icon,
+                            title,
+                            Modifier.padding(horizontal = 15.dp),
+                            MaterialTheme.colorScheme.primary,
+                        )
+                    }
                 }
                 if (description != null) {
-                    Column(modifier = Modifier.weight(1f)) {
+                    Column(Modifier.weight(1f)) {
                         ConfigurationTitle(title)
                         ConfigurationDescription(description)
                     }
                 } else {
                     Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth(),
+                        Modifier.fillMaxWidth(),
+                        Arrangement.SpaceBetween,
+                        Alignment.CenterVertically,
                     ) {
                         ConfigurationTitle(title, MaterialTheme.colorScheme.onSurfaceVariant)
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForwardIos,
-                            contentDescription = title,
+                            Icons.AutoMirrored.Filled.ArrowForwardIos,
+                            title,
                             tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
@@ -135,13 +132,12 @@ fun ConfigurationsTabItem(
                     val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)
 
                     AcraSwitch(
-                        sharedPreferences = sharedPreferences,
-                        preferenceKey = preferenceKey,
-                        state = switchState,
-                        onCheckedChange = { newChecked ->
-                            sharedPreferences.edit().putBoolean(preferenceKey, newChecked).apply()
-                        },
-                    )
+                        sharedPreferences,
+                        preferenceKey,
+                        switchState,
+                    ) { newChecked ->
+                        sharedPreferences.edit().putBoolean(preferenceKey, newChecked).apply()
+                    }
                 }
             }
         } else {
@@ -160,8 +156,8 @@ fun AcraSwitch(
     onCheckedChange: (Boolean) -> Unit,
 ) {
     Switch(
-        checked = state.value,
-        onCheckedChange = { newChecked ->
+        state.value,
+        { newChecked ->
             state.value = newChecked
             onCheckedChange(newChecked)
             sharedPreferences.edit().putBoolean(preferenceKey, newChecked).apply()
@@ -173,14 +169,14 @@ fun AcraSwitch(
 @Composable
 fun ConfigurationsTabItemPreview() {
     Surface(
-        tonalElevation = NavigationBarDefaults.Elevation,
         color = MaterialTheme.colorScheme.background,
+        tonalElevation = NavigationBarDefaults.Elevation,
     ) {
         ConfigurationsTabItem(
-            title = "Overload Website",
-            description = "click here to open the website",
-            link = "https://overload.pablos.cloud".toUri(),
-            icon = Icons.Rounded.Info,
+            "Overload Website",
+            "click here to open the website",
+            Icons.Rounded.Info,
+            "https://overload.pablos.cloud".toUri(),
         )
     }
 }

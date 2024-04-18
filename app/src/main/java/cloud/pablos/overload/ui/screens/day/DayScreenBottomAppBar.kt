@@ -6,17 +6,19 @@ import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import cloud.pablos.overload.R
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 
 @Composable
 fun DayScreenBottomAppBar(navController: NavHostController) {
     BottomAppBar(
-        actions = {
-            IconButton(onClick = { navController.navigate(OverloadRoute.CALENDAR) }) {
+        {
+            IconButton({ navController.navigate(OverloadRoute.CALENDAR) }) {
                 Icon(
                     Icons.AutoMirrored.Outlined.KeyboardArrowLeft,
-                    contentDescription = "Go Back",
+                    stringResource(R.string.go_back),
                 )
             }
         },

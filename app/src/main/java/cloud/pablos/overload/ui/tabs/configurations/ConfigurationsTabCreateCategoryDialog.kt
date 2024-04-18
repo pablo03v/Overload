@@ -95,7 +95,7 @@ val emojiOptions: List<String> =
         "🎓",
         "📝",
         "✏️",
-        "🏋️‍♂️",
+        "🏋",
         "🚴",
         "🏃",
         "⛹️‍♀️",
@@ -124,7 +124,7 @@ val emojiOptions: List<String> =
         "🌱",
         "🛀",
         "🌅",
-        "🛋️",
+        "🛋",
         "📺",
     )
 
@@ -146,100 +146,10 @@ fun ConfigurationsTabCreateCategoryDialog(
     }
 
     AlertDialog(
-        onDismissRequest = onClose,
-        title = {
-            TextView(
-                text = "Create Category",
-                fontWeight = FontWeight.Bold,
-                align = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth(),
-            )
-        },
-        text = {
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    TextView(
-                        "Name",
-                        fontWeight = FontWeight.Bold,
-                        color = if (nameError) MaterialTheme.colorScheme.error else Color.Unspecified,
-                    )
-                    OutlinedTextField(
-                        value = name,
-                        onValueChange =
-                            {
-                                name = it
-                                if (it.text.isNotEmpty()) {
-                                    nameError = false
-                                }
-                            },
-                        singleLine = true,
-                        placeholder = { Text(text = "Name") },
-                        isError = nameError,
-                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
-                        modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
-                    )
-                }
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    TextView(
-                        "Color",
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Row(
-                        modifier =
-                            Modifier
-                                .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        colorOptions.forEach { colorOption ->
-                            SelectableColor(
-                                selected = colorOption == color,
-                                onClick = { color = colorOption },
-                                color = colorOption,
-                            )
-                        }
-                    }
-                }
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    TextView(
-                        "Emoji",
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Row(
-                        modifier =
-                            Modifier
-                                .horizontalScroll(rememberScrollState()),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        emojiOptions.forEach { emojiOption ->
-                            SelectableEmoji(
-                                selected = emojiOption == emoji,
-                                onClick = { emoji = emojiOption },
-                                emoji = emojiOption,
-                                color = color,
-                            )
-                        }
-                    }
-                }
-            }
-        },
-        confirmButton = {
+        onClose,
+        {
             Button(
-                onClick = {
+                {
                     if (name.text.isEmpty()) {
                         nameError = true
                         return@Button
@@ -256,70 +166,152 @@ fun ConfigurationsTabCreateCategoryDialog(
                 },
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.onPrimaryContainer,
                     ),
             ) {
-                TextView(stringResource(id = R.string.save))
+                TextView(stringResource(R.string.save))
             }
         },
-        dismissButton = {
+        Modifier.padding(16.dp),
+        {
             Button(
-                onClick = onClose,
+                onClose,
                 colors =
                     ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                        MaterialTheme.colorScheme.secondaryContainer,
+                        MaterialTheme.colorScheme.onSecondaryContainer,
                     ),
             ) {
-                TextView(text = stringResource(R.string.cancel))
+                TextView(stringResource(R.string.cancel))
             }
         },
-        modifier = Modifier.padding(16.dp),
+        title = {
+            TextView(
+                stringResource(R.string.add_category).replaceFirstChar { it.uppercase() },
+                Modifier.fillMaxWidth(),
+                fontWeight = FontWeight.Bold,
+                align = TextAlign.Center,
+            )
+        },
+        text = {
+            Column(
+                Modifier.fillMaxWidth(),
+                Arrangement.spacedBy(8.dp),
+                Alignment.CenterHorizontally,
+            ) {
+                Column(
+                    Modifier.fillMaxWidth(),
+                    Arrangement.spacedBy(8.dp),
+                ) {
+                    TextView(
+                        stringResource(id = R.string.name),
+                        fontWeight = FontWeight.Bold,
+                        color = if (nameError) MaterialTheme.colorScheme.error else Color.Unspecified,
+                    )
+                    OutlinedTextField(
+                        name,
+                        {
+                            name = it
+                            if (it.text.isNotEmpty()) {
+                                nameError = false
+                            }
+                        },
+                        Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequester),
+                        placeholder = { Text(stringResource(R.string.name)) },
+                        isError = nameError,
+                        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+                        singleLine = true,
+                    )
+                }
+
+                Column(
+                    Modifier.fillMaxWidth(),
+                    Arrangement.spacedBy(8.dp),
+                ) {
+                    TextView(
+                        stringResource(R.string.color),
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Row(
+                        Modifier.horizontalScroll(rememberScrollState()),
+                        Arrangement.spacedBy(8.dp),
+                    ) {
+                        colorOptions.forEach { colorOption ->
+                            SelectableColor(
+                                colorOption == color,
+                                { color = colorOption },
+                                colorOption,
+                            )
+                        }
+                    }
+                }
+
+                Column(
+                    Modifier.fillMaxWidth(),
+                    Arrangement.spacedBy(8.dp),
+                ) {
+                    TextView(
+                        stringResource(R.string.emoji),
+                        fontWeight = FontWeight.Bold,
+                    )
+                    Row(
+                        Modifier.horizontalScroll(rememberScrollState()),
+                        Arrangement.spacedBy(8.dp),
+                    ) {
+                        emojiOptions.forEach { emojiOption ->
+                            SelectableEmoji(
+                                emojiOption == emoji,
+                                { emoji = emojiOption },
+                                emojiOption,
+                                color,
+                            )
+                        }
+                    }
+                }
+            }
+        },
     )
 }
 
 @Composable
 fun SelectableColor(
-    modifier: Modifier = Modifier,
     selected: Boolean,
     onClick: () -> Unit,
     color: Color,
     surfaceColor: Color = MaterialTheme.colorScheme.surfaceContainerLowest,
 ) {
     Surface(
-        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         color = surfaceColor,
     ) {
         Surface(
-            modifier =
-                Modifier
-                    .clickable { onClick() }
-                    .padding(12.dp)
-                    .size(34.dp),
-            shape = CircleShape,
-            color = color,
+            Modifier
+                .clickable { onClick() }
+                .padding(12.dp)
+                .size(34.dp),
+            CircleShape,
+            color,
         ) {
             Box {
                 AnimatedVisibility(
-                    visible = selected,
-                    modifier =
-                        Modifier
-                            .align(Alignment.Center)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary),
-                    enter = fadeIn() + expandIn(expandFrom = Alignment.Center),
-                    exit = shrinkOut(shrinkTowards = Alignment.Center) + fadeOut(),
+                    selected,
+                    Modifier
+                        .align(Alignment.Center)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primary),
+                    fadeIn() + expandIn(expandFrom = Alignment.Center),
+                    shrinkOut(shrinkTowards = Alignment.Center) + fadeOut(),
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Check,
-                        contentDescription = "Checked",
-                        modifier =
-                            Modifier
-                                .padding(5.dp)
-                                .size(15.dp),
-                        tint = MaterialTheme.colorScheme.surface,
+                        Icons.Outlined.Check,
+                        stringResource(R.string.ol_selected),
+                        Modifier
+                            .padding(5.dp)
+                            .size(15.dp),
+                        MaterialTheme.colorScheme.surface,
                     )
                 }
             }
@@ -329,7 +321,6 @@ fun SelectableColor(
 
 @Composable
 fun SelectableEmoji(
-    modifier: Modifier = Modifier,
     selected: Boolean,
     onClick: () -> Unit,
     emoji: String,
@@ -341,7 +332,7 @@ fun SelectableEmoji(
     LaunchedEffect(selected) {
         surfaceColorBySelection.animateTo(
             if (selected) surfaceColorSelected else surfaceColor,
-            animationSpec = tween(250),
+            tween(250),
         )
     }
 
@@ -349,32 +340,29 @@ fun SelectableEmoji(
     LaunchedEffect(color) {
         bgColor.animateTo(
             color,
-            animationSpec = tween(250),
+            tween(250),
         )
     }
 
     Surface(
-        modifier = modifier,
         shape = RoundedCornerShape(16.dp),
         color = surfaceColorBySelection.value,
     ) {
         Surface(
-            modifier =
-                Modifier
-                    .clickable { onClick() }
-                    .padding(12.dp)
-                    .size(34.dp),
-            shape = CircleShape,
-            color = Color.LightGray,
+            Modifier
+                .clickable { onClick() }
+                .padding(12.dp)
+                .size(34.dp),
+            CircleShape,
+            Color.LightGray,
         ) {
             Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier =
-                    Modifier
-                        .clip(CircleShape)
-                        .background(bgColor.value)
-                        .fillMaxSize(),
+                Modifier
+                    .clip(CircleShape)
+                    .background(bgColor.value)
+                    .fillMaxSize(),
+                Arrangement.Center,
+                Alignment.CenterVertically,
             ) {
                 Text(emoji)
             }

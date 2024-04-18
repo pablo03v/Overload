@@ -52,7 +52,7 @@ import java.time.format.DateTimeFormatter
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AdjustEndDialog(
-    onClose: () -> Unit,
+    onDismiss: () -> Unit,
     categoryState: CategoryState,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
@@ -91,86 +91,11 @@ fun AdjustEndDialog(
             )
 
         AlertDialog(
-            onDismissRequest = onClose,
-            icon = {
-                Icon(
-                    imageVector = Icons.Rounded.Info,
-                    contentDescription = stringResource(R.string.adjust_end_time),
-                    tint = MaterialTheme.colorScheme.error,
-                )
-            },
-            title = {
-                TextView(
-                    text = stringResource(R.string.adjust_end_time),
-                    fontWeight = FontWeight.Bold,
-                    align = TextAlign.Center,
-                    maxLines = 2,
-                    modifier = Modifier.fillMaxWidth(),
-                )
-            },
-            text = {
-                Column {
-                    Text(
-                        text = stringResource(R.string.adjust_descr),
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
-                        overflow = TextOverflow.Ellipsis,
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    val openLinkStr = stringResource(id = R.string.open_link_with)
-                    ClickableText(
-                        text = AnnotatedString(stringResource(id = R.string.learn_more)),
-                        style =
-                            MaterialTheme.typography.bodyMedium.copy(
-                                color = MaterialTheme.colorScheme.primary,
-                                textAlign = TextAlign.Center,
-                            ),
-                        onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, learnMoreLink)
-                            val chooserIntent = Intent.createChooser(intent, openLinkStr)
-                            ContextCompat.startActivity(context, chooserIntent, null)
-                        },
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    DayViewItemOngoing(
-                        item = firstOngoingItem,
-                        showDate = true,
-                        hideEnd = true,
-                        categoryState = categoryState,
-                        itemState = itemState,
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        TextView(endTime.format(DateTimeFormatter.ofPattern("MM/dd/yy HH:mm")))
-                        Button(
-                            onClick = {
-                                timePicker.show()
-                            },
-                            colors =
-                                ButtonColors(
-                                    containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-                                    contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
-                                    disabledContainerColor = MaterialTheme.colorScheme.surface,
-                                    disabledContentColor = MaterialTheme.colorScheme.onSurface,
-                                ),
-                        ) { TextView(stringResource(R.string.adjust)) }
-                    }
-                }
-            },
-            confirmButton = {
+            onDismiss,
+            {
                 Button(
                     onClick = {
-                        onClose.save(itemEvent, firstOngoingItem, endTime)
+                        onDismiss.save(itemEvent, firstOngoingItem, endTime)
                     },
                     colors =
                         ButtonDefaults.buttonColors(
@@ -181,24 +106,94 @@ fun AdjustEndDialog(
                     TextView(stringResource(R.string.save))
                 }
             },
-            dismissButton = {
+            Modifier.padding(16.dp),
+            {
                 Button(
-                    onClick = {
-                        onClose()
-                    },
+                    { onDismiss() },
                     colors =
                         ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                            MaterialTheme.colorScheme.secondaryContainer,
+                            MaterialTheme.colorScheme.onSecondaryContainer,
                         ),
                 ) {
-                    TextView(stringResource(id = R.string.close))
+                    TextView(stringResource(R.string.close))
                 }
             },
-            modifier = Modifier.padding(16.dp),
+            {
+                Icon(
+                    Icons.Rounded.Info,
+                    stringResource(R.string.adjust_end_time),
+                    tint = MaterialTheme.colorScheme.error,
+                )
+            },
+            {
+                TextView(
+                    stringResource(R.string.adjust_end_time),
+                    Modifier.fillMaxWidth(),
+                    fontWeight = FontWeight.Bold,
+                    align = TextAlign.Center,
+                    maxLines = 2,
+                )
+            },
+            {
+                Column {
+                    Text(
+                        stringResource(R.string.adjust_descr),
+                        Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                    Spacer(Modifier.height(16.dp))
+
+                    val openLinkStr = stringResource(R.string.open_link_with)
+                    ClickableText(
+                        AnnotatedString(stringResource(R.string.learn_more)),
+                        Modifier.fillMaxWidth(),
+                        MaterialTheme.typography.bodyMedium.copy(
+                            MaterialTheme.colorScheme.primary,
+                            textAlign = TextAlign.Center,
+                        ),
+                        onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, learnMoreLink)
+                            val chooserIntent = Intent.createChooser(intent, openLinkStr)
+                            ContextCompat.startActivity(context, chooserIntent, null)
+                        },
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    DayViewItemOngoing(
+                        firstOngoingItem,
+                        categoryState,
+                        itemState,
+                        showDate = true,
+                        hideEnd = true,
+                    )
+
+                    Spacer(Modifier.height(16.dp))
+
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        Arrangement.SpaceBetween,
+                        Alignment.CenterVertically,
+                    ) {
+                        TextView(endTime.format(DateTimeFormatter.ofPattern("MM/dd/yy HH:mm")))
+                        Button(
+                            { timePicker.show() },
+                            colors =
+                                ButtonColors(
+                                    MaterialTheme.colorScheme.tertiaryContainer,
+                                    MaterialTheme.colorScheme.onTertiaryContainer,
+                                    MaterialTheme.colorScheme.surface,
+                                    MaterialTheme.colorScheme.onSurface,
+                                ),
+                        ) { TextView(stringResource(R.string.adjust)) }
+                    }
+                }
+            },
         )
     } else {
-        onClose()
+        onDismiss()
     }
 }
 
