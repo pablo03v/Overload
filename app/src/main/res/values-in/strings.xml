@@ -2,13 +2,11 @@
 <resources>
     <string name="hours">jam</string>
     <string name="save">Simpan</string>
-    <string name="pick_work_goal">Tetapkan Tujuan Kerja</string>
     <string name="select_year">Pilih Tahun</string>
     <string name="set_goal_pause">Tetapkan Sasaran Jeda</string>
     <string name="cancel">batal</string>
     <string name="minutes">menit</string>
     <string name="arrow_forward">panah ke depan menggambarkan arah kedua waktu dari awal hingga akhir</string>
-    <string name="work_left">Pekerjaan tersisa</string>
     <string name="pause_left">Jeda kiri</string>
     <string name="select_all_items_of_selected_day">pilih semua item pada hari yang dipilih</string>
     <string name="storage">penyimpanan</string>
@@ -25,7 +23,6 @@
     <string name="acra_toastText">Kecelakaan terdeteksi. Mohon bantuannya dengan mengirimkan email!</string>
     <string name="import_descr">Mengimpor dari backup</string>
     <string name="translate">Menerjemahkan</string>
-    <string name="import_backup">Impor Backup</string>
     <string name="learn_more">Pelajari lebih lanjut…</string>
     <string name="sourcecode_descr">Ingin melihat bagian dalamnya? Ayo!</string>
     <string name="pause">Jeda</string>
@@ -66,7 +63,6 @@
     <string name="work_goal_descr">Menetapkan tujuan untuk pekerjaan</string>
     <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
     <string name="open_link_with">Buka tautan dengan</string>
-    <string name="import_backup_descr">Untuk mengimpor data ke dalam aplikasi, silakan gunakan Sharesheet dari aplikasi lain. Hal ini memungkinkan aplikasi mengakses data bersama dengan aman dan mengimpornya ke dalam basis data Anda.</string>
     <string name="configurations">Konfigurasi</string>
     <string name="sunday">Minggu</string>
     <string name="no_items_subtitle">Tidak ada item yang disimpan untuk hari itu.</string>
