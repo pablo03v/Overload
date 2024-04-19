@@ -133,4 +133,11 @@
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>
+    <string name="go_back">Go Back</string>
+    <string name="delete_category">Delete Category</string>
+    <string name="set_goal">Set Goal</string>
+    <string name="category">Category</string>
+    <string name="name">Name</string>
+    <string name="color">Color</string>
+    <string name="emoji">Emoji</string>
 </resources>
