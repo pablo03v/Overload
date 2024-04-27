@@ -298,7 +298,7 @@ fun OverloadAppContent(
                     Modifier
                         .weight(1f)
                         .then(
-                            if (navigationType == OverloadNavigationType.BOTTOM_NAVIGATION && itemState.isDeletingHome.not()) {
+                            if (navigationType == OverloadNavigationType.BOTTOM_NAVIGATION) {
                                 Modifier.consumeWindowInsets(
                                     WindowInsets.systemBars.only(
                                         WindowInsetsSides.Bottom,
