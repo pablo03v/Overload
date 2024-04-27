@@ -2,6 +2,7 @@ package cloud.pablos.overload.ui.tabs.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -55,6 +56,7 @@ fun HomeTabFab(
     categoryState: CategoryState,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
+    extended: Boolean = true,
 ) {
     val backgroundColor = decideBackground(categoryState)
     val foregroundColor = decideForeground(backgroundColor)
@@ -195,14 +197,16 @@ fun HomeTabFab(
                             },
                             Modifier.padding(8.dp),
                         )
-                        TextView(
-                            if (isOngoing) {
-                                stringResource(R.string.stop)
-                            } else {
-                                stringResource(R.string.start)
-                            },
-                            Modifier.padding(end = 8.dp),
-                        )
+                        AnimatedVisibility(visible = extended) {
+                            TextView(
+                                if (isOngoing) {
+                                    stringResource(R.string.stop)
+                                } else {
+                                    stringResource(R.string.start)
+                                },
+                                Modifier.padding(end = 8.dp),
+                            )
+                        }
                     }
                 }
             }

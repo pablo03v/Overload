@@ -570,10 +570,6 @@ fun HoDivider() {
     HorizontalDivider(Modifier.padding(top = 20.dp))
 }
 
-class OlSharedPreferences(context: Context) {
-    private val sharedPreferences = context.getSharedPreferences("ol_prefs", Context.MODE_PRIVATE)
-}
-
 fun restartApp(context: Context) {
     val intent = Intent(context.applicationContext, MainActivity::class.java)
     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)

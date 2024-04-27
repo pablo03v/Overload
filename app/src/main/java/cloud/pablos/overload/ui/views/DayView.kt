@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +47,7 @@ fun DayView(
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
     date: LocalDate,
+    listState: LazyListState = rememberLazyListState(),
 ) {
     val selectedCategory = getSelectedCategory(categoryState)
 
@@ -58,7 +61,10 @@ fun DayView(
         val goal1 = selectedCategory.goal1
         val goal2 = selectedCategory.goal2
 
-        LazyColumn(Modifier.fillMaxSize()) {
+        LazyColumn(
+            Modifier.fillMaxSize(),
+            listState,
+        ) {
             item {
                 Row(
                     Modifier

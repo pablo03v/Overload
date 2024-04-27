@@ -2,6 +2,7 @@ package cloud.pablos.overload.ui.tabs.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,20 +21,21 @@ import androidx.compose.ui.unit.dp
 import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Helpers.Companion.decideBackground
 import cloud.pablos.overload.data.Helpers.Companion.decideForeground
-import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.AddEntryDialog
 import cloud.pablos.overload.ui.views.TextView
+import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun CalendarTabFab(
-    categoryEvent: (CategoryEvent) -> Unit,
     categoryState: CategoryState,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
+    date: LocalDate = LocalDate.now(),
+    extended: Boolean = true,
 ) {
     val backgroundColor = decideBackground(categoryState)
     val foregroundColor = decideForeground(backgroundColor)
@@ -60,10 +62,12 @@ fun CalendarTabFab(
                     stringResource(R.string.manual_entry),
                     Modifier.padding(8.dp),
                 )
-                TextView(
-                    stringResource(R.string.manual_entry),
-                    Modifier.padding(end = 8.dp),
-                )
+                AnimatedVisibility(visible = extended) {
+                    TextView(
+                        stringResource(R.string.manual_entry),
+                        Modifier.padding(end = 8.dp),
+                    )
+                }
             }
         }
     }
