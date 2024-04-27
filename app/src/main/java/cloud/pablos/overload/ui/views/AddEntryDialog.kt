@@ -1,4 +1,4 @@
-package cloud.pablos.overload.ui.tabs.home
+package cloud.pablos.overload.ui.views
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,14 +44,14 @@ import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.ui.views.TextView
+import cloud.pablos.overload.ui.tabs.home.getFormattedDate
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
 
 @Composable
-fun HomeTabManualDialog(
+fun AddEntryDialog(
     onDismiss: () -> Unit,
     categoryState: CategoryState,
     itemState: ItemState,
@@ -309,6 +310,7 @@ fun HomeTabManualDialog(
                         {
                             TextView(
                                 stringResource(R.string.yes),
+                                color = if (selectedPause) foregroundColor else Color.Unspecified,
                             )
                         },
                         leadingIcon = {
@@ -317,13 +319,12 @@ fun HomeTabManualDialog(
                                     Icons.Default.Done,
                                     stringResource(R.string.yes),
                                     Modifier.size(FilterChipDefaults.IconSize),
+                                    foregroundColor,
                                 )
                             }
                         },
                         colors =
                             FilterChipDefaults.filterChipColors(
-                                labelColor = foregroundColor,
-                                iconColor = foregroundColor,
                                 selectedContainerColor = backgroundColor,
                             ),
                         border = FilterChipDefaults.filterChipBorder(true, selectedPause, backgroundColor),
@@ -335,6 +336,7 @@ fun HomeTabManualDialog(
                         {
                             TextView(
                                 stringResource(R.string.no),
+                                color = if (selectedPause.not()) foregroundColor else Color.Unspecified,
                             )
                         },
                         leadingIcon = {
@@ -343,13 +345,12 @@ fun HomeTabManualDialog(
                                     Icons.Default.Close,
                                     stringResource(R.string.no),
                                     Modifier.size(FilterChipDefaults.IconSize),
+                                    foregroundColor,
                                 )
                             }
                         },
                         colors =
                             FilterChipDefaults.filterChipColors(
-                                labelColor = foregroundColor,
-                                iconColor = foregroundColor,
                                 selectedContainerColor = backgroundColor,
                             ),
                         border = FilterChipDefaults.filterChipBorder(true, selectedPause.not(), backgroundColor),

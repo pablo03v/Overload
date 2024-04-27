@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.MaterialTheme
@@ -47,6 +49,7 @@ fun YearView(
     bottomPadding: Dp = 0.dp,
     highlightSelectedDay: Boolean = false,
     onNavigate: () -> Unit = {},
+    listState: LazyListState = rememberLazyListState(),
 ) {
     val currentYear = LocalDate.now().year
     val months =
@@ -60,6 +63,7 @@ fun YearView(
         Modifier
             .fillMaxSize()
             .padding(horizontal = 16.dp),
+        listState,
     ) {
         months.forEachIndexed { monthIndex, month ->
             item {

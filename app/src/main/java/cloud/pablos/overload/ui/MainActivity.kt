@@ -1,7 +1,6 @@
 package cloud.pablos.overload.ui
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
@@ -62,7 +61,7 @@ class MainActivity : ComponentActivity() {
 
     private val filePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
+            if (result.resultCode == RESULT_OK) {
                 val uri = result.data?.data
                 uri?.let {
                     lifecycleScope.launch {

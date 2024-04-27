@@ -3,6 +3,8 @@ package cloud.pablos.overload.data.category
 sealed interface CategoryEvent {
     data object SaveCategory : CategoryEvent
 
+    data object CreateCategory : CategoryEvent
+
     data class SetId(val id: Int) : CategoryEvent
 
     data class SetColor(val color: Long) : CategoryEvent

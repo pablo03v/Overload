@@ -62,10 +62,9 @@ fun CategoryScreenBottomAppBar(
         CategoryScreenDeleteCategoryDialog(
             { deleteCategoryDialog.value = false },
             {
-                categoryEvent(CategoryEvent.DeleteCategory(selectedCategory))
-
-                val items = getItems(categoryState, itemState)
+                val items = getItems(selectedCategory.id, itemState)
                 itemEvent(ItemEvent.DeleteItems(items))
+                categoryEvent(CategoryEvent.DeleteCategory(selectedCategory))
 
                 deleteCategoryDialog.value = false
                 navController.navigate(OverloadRoute.CONFIGURATIONS)

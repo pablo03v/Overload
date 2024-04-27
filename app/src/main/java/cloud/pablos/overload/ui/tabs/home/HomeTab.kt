@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,6 +36,7 @@ import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
+import cloud.pablos.overload.ui.isScrollingUp
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
 import cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabCreateCategoryDialog
@@ -56,6 +58,8 @@ fun HomeTab(
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
+    val listState = rememberLazyListState()
+
     val backgroundColor = decideBackground(categoryState)
 
     val pagerState =
@@ -87,7 +91,7 @@ fun HomeTab(
                 enter = if (itemState.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
                 exit = if (itemState.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
             ) {
-                HomeTabFab(categoryEvent, categoryState, itemState, itemEvent)
+                HomeTabFab(categoryEvent, categoryState, itemState, itemEvent, listState.isScrollingUp())
             }
         },
     ) { paddingValues ->
@@ -129,7 +133,7 @@ fun HomeTab(
                 HorizontalPager(pagerState) { page ->
                     val item = homeTabItems[page]
 
-                    item.screen(categoryState, itemState, itemEvent)
+                    item.screen(categoryState, itemState, itemEvent, listState)
                 }
             }
         }

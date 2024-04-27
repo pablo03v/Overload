@@ -2,6 +2,7 @@ package cloud.pablos.overload.ui.tabs.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.PressInteraction
@@ -42,6 +43,7 @@ import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.data.item.fabPress
+import cloud.pablos.overload.ui.views.AddEntryDialog
 import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
@@ -54,6 +56,7 @@ fun HomeTabFab(
     categoryState: CategoryState,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
+    extended: Boolean = true,
 ) {
     val backgroundColor = decideBackground(categoryState)
     val foregroundColor = decideForeground(backgroundColor)
@@ -69,7 +72,7 @@ fun HomeTabFab(
 
     var isLongClick by remember { mutableStateOf(false) }
 
-    val manualDialogState = remember { mutableStateOf(false) }
+    val addEntryDialogState = remember { mutableStateOf(false) }
 
     LaunchedEffect(interactionSource) {
         interactionSource.interactions.collectLatest { interaction ->
@@ -143,7 +146,7 @@ fun HomeTabFab(
                     SmallFloatingActionButton(
                         {
                             itemEvent(ItemEvent.SetIsFabOpen(false))
-                            manualDialogState.value = true
+                            addEntryDialogState.value = true
                         },
                         containerColor = backgroundColor,
                         contentColor = foregroundColor,
@@ -194,21 +197,23 @@ fun HomeTabFab(
                             },
                             Modifier.padding(8.dp),
                         )
-                        TextView(
-                            if (isOngoing) {
-                                stringResource(R.string.stop)
-                            } else {
-                                stringResource(R.string.start)
-                            },
-                            Modifier.padding(end = 8.dp),
-                        )
+                        AnimatedVisibility(visible = extended) {
+                            TextView(
+                                if (isOngoing) {
+                                    stringResource(R.string.stop)
+                                } else {
+                                    stringResource(R.string.start)
+                                },
+                                Modifier.padding(end = 8.dp),
+                            )
+                        }
                     }
                 }
             }
         }
     }
 
-    if (manualDialogState.value) {
-        HomeTabManualDialog({ manualDialogState.value = false }, categoryState, itemState, itemEvent)
+    if (addEntryDialogState.value) {
+        AddEntryDialog({ addEntryDialogState.value = false }, categoryState, itemState, itemEvent)
     }
 }

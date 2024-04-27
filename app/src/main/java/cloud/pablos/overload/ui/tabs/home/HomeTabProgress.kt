@@ -39,7 +39,6 @@ fun HomeTabProgress(
     progressData: ProgressData,
     title: String,
     subtitle: String,
-    modifier: Modifier = Modifier,
 ) {
     val backgroundColor = MaterialTheme.colorScheme.surfaceVariant
 
