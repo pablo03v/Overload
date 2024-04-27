@@ -1,4 +1,4 @@
-package cloud.pablos.overload.ui.tabs.home
+package cloud.pablos.overload.ui.tabs.calendar
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -26,7 +26,6 @@ import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.AddEntryDialog
 import cloud.pablos.overload.ui.views.TextView
-import java.time.LocalDate
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -34,7 +33,6 @@ fun CalendarTabFab(
     categoryState: CategoryState,
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
-    date: LocalDate = LocalDate.now(),
     extended: Boolean = true,
 ) {
     val backgroundColor = decideBackground(categoryState)

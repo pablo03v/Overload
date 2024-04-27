@@ -42,7 +42,6 @@ import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.isScrollingUp
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
-import cloud.pablos.overload.ui.tabs.home.CalendarTabFab
 import cloud.pablos.overload.ui.tabs.home.getFormattedDate
 import cloud.pablos.overload.ui.utils.OverloadContentType
 import cloud.pablos.overload.ui.utils.OverloadNavigationType
@@ -84,7 +83,7 @@ fun CalendarTab(
                 enter = if (itemState.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
                 exit = if (itemState.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
             ) {
-                CalendarTabFab(categoryState, itemState, itemEvent, selectedDay, listState.isScrollingUp())
+                CalendarTabFab(categoryState, itemState, itemEvent, listState.isScrollingUp())
             }
         },
     ) { paddingValues ->

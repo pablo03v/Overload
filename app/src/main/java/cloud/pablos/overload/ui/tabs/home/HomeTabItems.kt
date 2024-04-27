@@ -12,7 +12,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-val dateFormat = SimpleDateFormat("EEEE", Locale.getDefault())
+val dateFormat = SimpleDateFormat("EEEE", Locale.ENGLISH)
 val daysBeforeYesterday: Calendar =
     Calendar.getInstance().apply {
         time = Date()
@@ -21,7 +21,7 @@ val daysBeforeYesterday: Calendar =
 
 val dayBeforeYesterday: String = dateFormat.format(daysBeforeYesterday.time)
 
-val dateFormatSymbols: DateFormatSymbols = DateFormatSymbols.getInstance(Locale.getDefault())
+val dateFormatSymbols: DateFormatSymbols = DateFormatSymbols.getInstance(Locale.ENGLISH)
 
 val dayNames: Array<String> = dateFormatSymbols.weekdays
 
