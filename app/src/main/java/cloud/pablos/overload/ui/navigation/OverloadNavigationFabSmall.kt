@@ -169,7 +169,6 @@ fun OverloadNavigationFabSmall(
                             },
                             containerColor = backgroundColor,
                             contentColor = foregroundColor,
-                            interactionSource = interactionSource,
                         ) {
                             Icon(
                                 Icons.Default.Add,
