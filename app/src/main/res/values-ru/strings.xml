@@ -50,7 +50,7 @@
     <string name="calendar">Календарь</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Параметры</string>
-    <string name="categories">Categories</string>
+    <string name="categories">Категории</string>
     <string name="goals">Цели</string>
     <string name="work">Работа</string>
     <string name="work_goal_descr">Задать цель для работы</string>
@@ -111,7 +111,7 @@
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">стрелка вперёд от начала и до конца</string>
     <string name="select_year">Выберите год</string>
-    <string name="select_category">Select Category</string>
+    <string name="select_category">Выбрать категорию</string>
     <string name="translate">Перевод</string>
     <string name="translate_descr">Хотите помочь с переводом приложения? Спасибо!</string>
     <string name="adjust">Скорректировать</string>
@@ -130,14 +130,14 @@
     <string name="talback_pause">Пауза с %s по %s</string>
     <string name="talback_entry_ongoing">Протекающая запись с %s</string>
     <string name="talback_pause_ongoing">Протекающая пауза с %s</string>
-    <string name="add_category">add category</string>
-    <string name="switch_category">Switch Category</string>
-    <string name="delete_category_warning">Are you sure you want to delete %s?</string>
-    <string name="go_back">Go Back</string>
-    <string name="delete_category">Delete Category</string>
-    <string name="set_goal">Set Goal</string>
-    <string name="category">Category</string>
-    <string name="name">Name</string>
-    <string name="color">Color</string>
+    <string name="add_category">добавить категорию</string>
+    <string name="switch_category">Сменить категорию</string>
+    <string name="delete_category_warning">Вы уверены, что хотите удалить %s?</string>
+    <string name="go_back">Назад</string>
+    <string name="delete_category">Удалить категорию</string>
+    <string name="set_goal">Установить цель</string>
+    <string name="category">Категория</string>
+    <string name="name">Название</string>
+    <string name="color">Цвет</string>
     <string name="emoji">Emoji</string>
 </resources>
