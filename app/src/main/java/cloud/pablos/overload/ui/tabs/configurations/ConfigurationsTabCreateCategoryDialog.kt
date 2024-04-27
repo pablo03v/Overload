@@ -161,7 +161,7 @@ fun ConfigurationsTabCreateCategoryDialog(
                     categoryEvent(CategoryEvent.SetEmoji(emoji))
                     categoryEvent(CategoryEvent.SetColor(convertColorToLong(color)))
                     categoryEvent(CategoryEvent.SetIsDefault(false))
-                    categoryEvent(CategoryEvent.SaveCategory)
+                    categoryEvent(CategoryEvent.CreateCategory)
                     onClose()
                 },
                 colors =
