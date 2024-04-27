@@ -69,6 +69,41 @@ class CategoryViewModel(
                 }
             }
 
+            CategoryEvent.CreateCategory -> {
+                val color = _state.value.color
+                val emoji = _state.value.emoji
+                val goal1 = _state.value.goal1
+                val goal2 = _state.value.goal2
+                val isDefault = _state.value.isDefault
+                val name = _state.value.name
+
+                val category =
+                    Category(
+                        color = color,
+                        emoji = emoji,
+                        goal1 = goal1,
+                        goal2 = goal2,
+                        isDefault = isDefault,
+                        name = name,
+                    )
+
+                viewModelScope.launch {
+                    dao.insertCategory(category)
+                }
+
+                _state.update {
+                    it.copy(
+                        id = 0,
+                        color = convertColorToLong(Color.Unspecified),
+                        emoji = "🕣",
+                        goal1 = 0,
+                        goal2 = 0,
+                        isDefault = false,
+                        name = "",
+                    )
+                }
+            }
+
             is CategoryEvent.SetColor -> {
                 _state.update {
                     it.copy(
