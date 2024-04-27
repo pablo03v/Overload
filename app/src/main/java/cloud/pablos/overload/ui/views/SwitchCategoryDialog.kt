@@ -28,6 +28,7 @@ import cloud.pablos.overload.data.category.Category
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun SwitchCategoryDialog(
     categoryState: CategoryState,
@@ -49,6 +50,7 @@ fun SwitchCategoryDialog(
     )
 }
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 private fun CategoryDialogContent(
     categoryState: CategoryState,

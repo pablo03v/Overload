@@ -3,6 +3,10 @@ package cloud.pablos.overload.ui.tabs.calendar
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.requiredSize
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
@@ -34,10 +39,12 @@ import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
+import cloud.pablos.overload.ui.isScrollingUp
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
 import cloud.pablos.overload.ui.tabs.home.getFormattedDate
 import cloud.pablos.overload.ui.utils.OverloadContentType
+import cloud.pablos.overload.ui.utils.OverloadNavigationType
 import cloud.pablos.overload.ui.views.DayScreenDayView
 import cloud.pablos.overload.ui.views.TextView
 import cloud.pablos.overload.ui.views.YearView
@@ -49,6 +56,7 @@ import java.time.temporal.ChronoUnit
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarTab(
+    navigationType: OverloadNavigationType,
     contentType: OverloadContentType,
     categoryState: CategoryState,
     categoryEvent: (CategoryEvent) -> Unit,
@@ -56,6 +64,9 @@ fun CalendarTab(
     itemEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {
+    val listState = rememberLazyListState()
+    val selectedDay = getLocalDate(itemState.selectedDayCalendar)
+
     Scaffold(
         topBar = {
             OverloadTopAppBar(
@@ -66,10 +77,18 @@ fun CalendarTab(
                 itemEvent,
             )
         },
+        floatingActionButton = {
+            AnimatedVisibility(
+                navigationType == OverloadNavigationType.BOTTOM_NAVIGATION,
+                enter = if (itemState.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
+                exit = if (itemState.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
+            ) {
+                CalendarTabFab(categoryState, itemState, itemEvent, listState.isScrollingUp())
+            }
+        },
     ) { paddingValues ->
         Box(Modifier.fillMaxSize()) {
             val selectedYear by remember { mutableIntStateOf(itemState.selectedYearCalendar) }
-            val selectedDay = getLocalDate(itemState.selectedDayCalendar)
             val items = getItems(categoryState, itemState)
 
             LaunchedEffect(selectedYear) {
@@ -177,8 +196,9 @@ fun CalendarTab(
                             itemState.selectedYearCalendar,
                             categoryState,
                             itemEvent,
-                            16.dp,
+                            80.dp,
                             onNavigate = onNavigate,
+                            listState = listState,
                         )
                     }
                 }

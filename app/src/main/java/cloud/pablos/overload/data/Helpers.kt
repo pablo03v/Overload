@@ -75,9 +75,27 @@ class Helpers {
             itemState: ItemState,
             date: LocalDate? = null,
         ): List<Item> {
+            val categoryId = categoryState.selectedCategory
+
             return itemState.items.filter { item ->
                 val startTime = convertStringToLocalDateTime(item.startTime)
-                val categoryId = categoryState.selectedCategory
+
+                if (date != null) {
+                    categoryId == item.categoryId &&
+                        extractDate(startTime) == date
+                } else {
+                    categoryId == item.categoryId
+                }
+            }
+        }
+
+        fun getItems(
+            categoryId: Int,
+            itemState: ItemState,
+            date: LocalDate? = null,
+        ): List<Item> {
+            return itemState.items.filter { item ->
+                val startTime = convertStringToLocalDateTime(item.startTime)
 
                 if (date != null) {
                     categoryId == item.categoryId &&
