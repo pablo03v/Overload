@@ -33,8 +33,8 @@
     <string name="ol_selected">valitud</string>
     <string name="get_out_of_isDeleting">viib teid kustutusrežiimist välja</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabFab -->
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
+    <string name="start">Alusta</string>
+    <string name="stop">Peata</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabDeletePauseDialog -->
     <string name="close">Sulge</string>
     <string name="learn_more">Lisateave…</string>
@@ -42,15 +42,15 @@
     <string name="delete_pause">Kustuta paus</string>
     <string name="delete_pause_descr">Seda käimasolevat pausi ei saa kustutada. See on seal ainult selleks, et näidata, et paus luuakse, kui vajutate nupule start. Kui vajutate start alles homme, on see kadunud ja seda ei arvestata teie eesmärgist maha.</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog -->
-    <string name="start_label">Start</string>
-    <string name="end_label">End</string>
+    <string name="start_label">Alusta</string>
+    <string name="end_label">Lõpeta</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabEditItemDialog -->
-    <string name="edit_entry">Edit Entry</string>
+    <string name="edit_entry">Muuda kirjet</string>
     <!--  cloud.pablos.overload.ui.tabs.calendar.CalendarTab -->
     <string name="calendar">Kalender</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTab -->
     <string name="configurations">Konfiguratsioonid</string>
-    <string name="categories">Categories</string>
+    <string name="categories">Kategooriad</string>
     <string name="goals">Eesmärgid</string>
     <string name="work">Töö</string>
     <string name="work_goal_descr">Seadke tööle eesmärk</string>
@@ -59,7 +59,7 @@
     <string name="storage">ladustamine</string>
     <string name="backup">Varukoopia</string>
     <string name="backup_descr">Varunda kõik andmed regulaarselt turvalisse kohta!</string>
-    <string name="backup_failed">Generating the backup failed</string>
+    <string name="backup_failed">Varukoopia loomine ei õnnestunud</string>
     <string name="import_ol">Impordi</string>
     <string name="import_descr">Impordi varukoopiast</string>
     <string name="import_success">Varukoopia on edukalt imporditud</string>
@@ -106,31 +106,31 @@ Täname kannatlikkuse eest!</string>
     <!--  cloud.pablos.overload.ui.tabs.configurations.ConfigurationsTabPauseGoalDialog -->
     <string name="set_goal_pause">Määra pausi eesmärk</string>
     <!-- cloud.pablos.overload.ui.views.DayView -->
-    <string name="pause_left">Paus vasakule</string>
+    <string name="pause_left">Peata vasakule</string>
     <!-- cloud.pablos.overload.ui.views.DayViewItem -->
     <string name="arrow_forward">nool ettepoole, mis kirjeldab mõlema aja suunda algusest lõpuni</string>
-    <string name="select_year">Valige aasta</string>
-    <string name="select_category">Select Category</string>
+    <string name="select_year">Vali aasta</string>
+    <string name="select_category">Vali kategooria</string>
     <string name="translate">Tõlgi</string>
     <string name="translate_descr">Soovid rakendust tõlkida? Aitäh!</string>
-    <string name="adjust">Reguleeri</string>
-    <string name="adjust_end_time">Reguleeri lõpuaeg</string>
-    <string name="adjust_descr">Kohandage lõpuaeg vastavalt sellele, millal see tegelikult lõppes.</string>
-    <string name="spread_across_days">Jaguneb päevade peale</string>
+    <string name="adjust">Kohenda</string>
+    <string name="adjust_end_time">Kohenda lõpuaega</string>
+    <string name="adjust_descr">Kohenda lõpuaega vastavalt sellele, millal see tegelikult lõppes.</string>
+    <string name="spread_across_days">Jaga päevade peale</string>
     <string name="spans_days">Ajakirje hõlmab mitu päeva</string>
-    <string name="spans_days_descr">Viimane ajakulu hõlmab mitut päeva. Võib-olla unustasite selle peatada. Kas soovite lõppu reguleerida?</string>
+    <string name="spans_days_descr">Viimane kestus hõlmab mitut päeva. Võib-olla unustasid selle peatada. Kas soovid lõppu kohendada?</string>
     <string name="are_you_sure">Oled sa kindel?</string>
     <string name="yes">Jah</string>
     <string name="no">Ei</string>
-    <string name="manual_entry">Manual Entry</string>
-    <string name="acra_mailSubject">Overload Crash</string>
+    <string name="manual_entry">Sisesta käsitsi</string>
+    <string name="acra_mailSubject">Overload jooksis kokku</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Entry from %s to %s</string>
-    <string name="talback_pause">Pause from %s to %s</string>
-    <string name="talback_entry_ongoing">Ongoing entry since %s</string>
-    <string name="talback_pause_ongoing">Ongoing pause since %s</string>
-    <string name="add_category">add category</string>
-    <string name="switch_category">Switch Category</string>
+    <string name="talback_entry">Kirje vahemikus %s kuni %s</string>
+    <string name="talback_pause">Paus vahemikus %s kuni %s</string>
+    <string name="talback_entry_ongoing">Töös olev kirje alates %s</string>
+    <string name="talback_pause_ongoing">Paus alates %s</string>
+    <string name="add_category">lisa kategooria</string>
+    <string name="switch_category">Vaheta kategooriat</string>
     <string name="delete_category_warning">Kas oled kindel, et soovid %s kustutada?</string>
     <string name="go_back">Mine tagasi</string>
     <string name="delete_category">Kustuta kategooria</string>
