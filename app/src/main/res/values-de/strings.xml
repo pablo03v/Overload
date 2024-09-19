@@ -132,11 +132,11 @@ Danke für deine Geduld!</string>
     <string name="add_category">Kategorie hinzufügen</string>
     <string name="switch_category">Kategorie wechseln</string>
     <string name="delete_category_warning">Bist du sicher, dass du %s löschen möchtest?</string>
-    <string name="go_back">Go Back</string>
-    <string name="delete_category">Delete Category</string>
-    <string name="set_goal">Set Goal</string>
-    <string name="category">Category</string>
+    <string name="go_back">Zurück gehen</string>
+    <string name="delete_category">Kategorie löschen</string>
+    <string name="set_goal">Ziel setzen</string>
+    <string name="category">Kategorie</string>
     <string name="name">Name</string>
-    <string name="color">Color</string>
+    <string name="color">Farbe</string>
     <string name="emoji">Emoji</string>
 </resources>
