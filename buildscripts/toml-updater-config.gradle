@@ -16,14 +16,8 @@
 versionCatalogUpdate {
     sortByKey.set(true)
 
-    keep {
-        // keep versions without any library or plugin reference
-        keepUnusedVersions.set(true)
-        // keep all libraries that aren't used in the project
-        keepUnusedLibraries.set(true)
-        // keep all plugins that aren't used in the project
-        keepUnusedPlugins.set(true)
-    }
+    // All libraries, versions and plugins in the catalog are kept by default since version 1.0.0
+
 }
 
 def isNonStable = { String version ->

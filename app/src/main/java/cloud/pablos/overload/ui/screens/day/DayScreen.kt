@@ -88,7 +88,8 @@ fun DayScreen(
             HorizontalPager(
                 pagerState,
                 Modifier.padding(paddingValues),
-                beyondBoundsPageCount = 2,
+                beyondViewportPageCount = 2,
+
             ) { page ->
                 DayScreenDayView(daysCount, page, categoryState, itemState, itemEvent)
             }

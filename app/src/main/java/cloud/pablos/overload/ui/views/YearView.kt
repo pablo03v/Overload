@@ -18,7 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ripple.rememberRipple
+import androidx.compose.material3.ripple
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -187,11 +187,11 @@ fun DayCell(
             .requiredSize(36.dp)
             .background(colors.background, CircleShape)
             .combinedClickable(
-                remember { MutableInteractionSource() },
-                rememberRipple(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = ripple(
                     radius = 18.dp,
                 ),
-                clickable,
+                enabled = clickable,
                 onClick = {
                     itemEvent(ItemEvent.SetSelectedDayCalendar(getFormattedDate(date)))
                     itemEvent(ItemEvent.SetIsSelectedHome(true))

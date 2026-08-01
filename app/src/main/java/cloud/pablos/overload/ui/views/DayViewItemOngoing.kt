@@ -49,6 +49,8 @@ import java.time.Duration
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import kotlin.time.Duration.Companion.milliseconds
+
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -69,7 +71,7 @@ fun DayViewItemOngoing(
 
     LaunchedEffect(blink) {
         while (true) {
-            delay(500)
+            delay(500.milliseconds)
             blink = blink.not()
         }
     }

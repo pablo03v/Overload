@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import cloud.pablos.overload.R
+import androidx.core.content.edit
 
 @Composable
 fun ConfigurationsTabItem(
@@ -136,7 +137,7 @@ fun ConfigurationsTabItem(
                         preferenceKey,
                         switchState,
                     ) { newChecked ->
-                        sharedPreferences.edit().putBoolean(preferenceKey, newChecked).apply()
+                        sharedPreferences.edit { putBoolean(preferenceKey, newChecked) }
                     }
                 }
             }
@@ -160,7 +161,7 @@ fun AcraSwitch(
         { newChecked ->
             state.value = newChecked
             onCheckedChange(newChecked)
-            sharedPreferences.edit().putBoolean(preferenceKey, newChecked).apply()
+            sharedPreferences.edit { putBoolean(preferenceKey, newChecked)}
         },
     )
 }

@@ -48,6 +48,8 @@ import cloud.pablos.overload.ui.views.TextView
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import java.time.LocalDate
+import kotlin.time.Duration.Companion.milliseconds
+
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -79,7 +81,7 @@ fun HomeTabFab(
             when (interaction) {
                 is PressInteraction.Press -> {
                     isLongClick = false
-                    delay(viewConfiguration.longPressTimeoutMillis)
+                    delay(viewConfiguration.longPressTimeoutMillis.milliseconds)
                     isLongClick = true
 
                     itemEvent(ItemEvent.SetIsFabOpen(true))

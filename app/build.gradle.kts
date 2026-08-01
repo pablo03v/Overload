@@ -1,12 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+
+    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.compose)
+
+
 }
 
 android {
-    compileSdk = 34
+    compileSdk = 37
     namespace = "cloud.pablos.overload"
 
     defaultConfig {
@@ -18,12 +20,11 @@ android {
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        kapt {
-            arguments {
-                arg("room.schemaLocation", "$projectDir/schemas")
-                arg("room.exportSchema", "true")
-            }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas")
+            arg("room.exportSchema", "true")
         }
+
     }
 
     signingConfigs {
@@ -47,6 +48,7 @@ android {
 
         named("release") {
             isMinifyEnabled = true
+            isShrinkResources = true
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -68,10 +70,10 @@ android {
     sourceSets {
         val sharedTestDir = "src/sharedTest/java"
         getByName("test") {
-            java.srcDir(sharedTestDir)
+            java.directories += sharedTestDir
         }
         getByName("androidTest") {
-            java.srcDir(sharedTestDir)
+            java.directories += sharedTestDir
         }
     }
 
@@ -80,13 +82,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
+
+
 
     buildFeatures {
         compose = true
         buildConfig = true
+        resValues = true
     }
 }
 
@@ -96,7 +98,8 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+    ksp(libs.androidx.room.compiler)
+
 
     implementation(libs.gson)
 
