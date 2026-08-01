@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Overload" parent="Theme.Material3.DynamicColors.DayNight">
+        <item name="android:navigationBarColor">
+            @android:color/transparent
+        </item>
+    </style>
+
+    <style name="Theme.Overload.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="postSplashScreenTheme">@style/Theme.Overload</item>
+    </style>
+</resources>

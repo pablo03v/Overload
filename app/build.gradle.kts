@@ -105,6 +105,7 @@ dependencies {
     androidTestImplementation(composeBom)
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines.android)
 

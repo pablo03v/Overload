@@ -21,6 +21,7 @@ androidx-test-espresso = "3.5.1"
 androidx-test-ext-junit = "1.1.5"
 androidx-test-ext-truth = "1.5.0"
 androidx-window = "1.2.0"
+androidx-core-splashscreen = "1.0.1"
 androidxHiltNavigationCompose = "1.1.0"
 androix-test-uiautomator = "2.2.0"
 coil = "2.4.0"
@@ -84,6 +85,7 @@ androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "a
 androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test" }
 androidx-test-runner = "androidx.test:runner:1.5.2"
 androidx-window = { module = "androidx.window:window", version.ref = "androidx-window" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-core-splashscreen" }
 google-android-material = { module = "com.google.android.material:material", version.ref = "material" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { module = "junit:junit", version.ref = "junit" }
