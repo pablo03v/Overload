@@ -1,6 +1,7 @@
 package cloud.pablos.overload.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
@@ -20,7 +21,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.room.Room
-import cloud.pablos.overload.R
 import cloud.pablos.overload.data.OverloadDatabase
 import cloud.pablos.overload.data.category.CategoryViewModel
 import cloud.pablos.overload.data.item.ItemViewModel
@@ -82,7 +82,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        setTheme(R.style.Theme_Overload)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -121,5 +120,10 @@ class MainActivity : ComponentActivity() {
 
         handleIntent(intent, lifecycleScope, db, this, contentResolver)
         intent = null
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
     }
 }
