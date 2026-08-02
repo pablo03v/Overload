@@ -9,14 +9,17 @@ plugins {
 
 android {
     compileSdk = 37
+
     namespace = "cloud.pablos.overload"
 
     defaultConfig {
         applicationId = "cloud.pablos.overload"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 172
-        versionName = "0.17.2"
+        targetSdk = 36
+
+
+        versionCode = 173
+        versionName = "0.17.3"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

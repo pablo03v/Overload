@@ -1,6 +1,6 @@
 package cloud.pablos.overload.ui.tabs.home
 
-import android.annotation.SuppressLint
+
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
@@ -47,7 +47,6 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -95,8 +94,13 @@ fun HomeTab(
             }
         },
     ) { paddingValues ->
-        Box(Modifier.fillMaxSize()) {
-            Column(Modifier.padding(paddingValues)) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+        ) {
+            Column {
+
                 Surface(
                     color = MaterialTheme.colorScheme.background,
                     tonalElevation = NavigationBarDefaults.Elevation,

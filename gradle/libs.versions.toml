@@ -20,7 +20,8 @@ gson = "2.14.0"
 acra = "5.13.1"
 
 # @keep
-compileSdk = "37"
+compileSdk = "36"
+
 compose-compiler = "1.5.6"
 coroutines = "1.11.0"
 google-maps = "18.2.0"
@@ -45,7 +46,9 @@ rome = "1.18.0"
 room = "2.8.4"
 secrets = "2.0.1"
 # @keep
-targetSdk = "33"
+targetSdk = "36"
+
+
 version-catalog-update = "1.1.0"
 
 [libraries]
