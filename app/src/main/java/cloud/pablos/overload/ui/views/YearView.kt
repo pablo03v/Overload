@@ -31,9 +31,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cloud.pablos.overload.data.Helpers.Companion.decideBackground
 import cloud.pablos.overload.data.Helpers.Companion.decideForeground
+import cloud.pablos.overload.data.Helpers.Companion.getLastDay
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
+import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.tabs.home.getFormattedDate
+
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.TextStyle
@@ -45,19 +48,26 @@ fun YearView(
     date: LocalDate,
     year: Int,
     categoryState: CategoryState,
+    itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
+
     bottomPadding: Dp = 0.dp,
     highlightSelectedDay: Boolean = false,
     onNavigate: () -> Unit = {},
     listState: LazyListState = rememberLazyListState(),
 ) {
-    val currentYear = LocalDate.now().year
+    val lastDay = getLastDay(itemState)
     val months =
-        if (year == currentYear) {
-            Month.entries.toTypedArray().takeWhile { it <= LocalDate.now().month }.reversed()
-        } else {
+        if (year == lastDay.year) {
+            Month.entries.toTypedArray().takeWhile { it <= lastDay.month }.reversed()
+        } else if (year < lastDay.year) {
             Month.entries.reversed()
+        } else {
+            emptyList()
         }
+
+
+
 
     LazyColumn(
         Modifier
@@ -87,7 +97,8 @@ fun YearView(
                             if (isLastWeekInLastMonth) bottomPadding else 0.dp,
                         ),
                     ) {
-                        WeekRow(month, firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, categoryState, itemEvent, onNavigate)
+                        WeekRow(month, firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, categoryState, itemState, itemEvent, onNavigate)
+
                     }
                 }
             }
@@ -115,6 +126,7 @@ fun WeekRow(
     date: LocalDate,
     highlightSelectedDay: Boolean = false,
     categoryState: CategoryState,
+    itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {

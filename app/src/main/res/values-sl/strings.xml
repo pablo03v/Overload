@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">ustvarjeno s ❤️, ki ga je ustvaril pabloscloud</string>
     <string name="acra_toastText">Odkrita nesreča. Prosimo, pomagajte in pošljite sporočilo!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">Odkrita nesreča. Pomagajte nam izboljšati stanje tako, da nam pošljete to e-poštno sporočilo, da bomo lahko to čim prej odpravili.\n
 Opravičujemo se za povzročene nevšečnosti! Vaš prispevek je bistvenega pomena za odpravo te težave.\n
 \n

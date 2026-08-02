@@ -33,8 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
+
+import cloud.pablos.overload.data.Helpers.Companion.getFirstYear
 import cloud.pablos.overload.data.Helpers.Companion.getItems
+import cloud.pablos.overload.data.Helpers.Companion.getLastDay
+
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -89,7 +92,7 @@ fun CalendarTab(
     ) { paddingValues ->
         Box(Modifier.fillMaxSize()) {
             val selectedYear by remember { mutableIntStateOf(itemState.selectedYearCalendar) }
-            val items = getItems(categoryState, itemState)
+
 
             LaunchedEffect(selectedYear) {
                 if (itemState.selectedYearCalendar != selectedDay.year) {
@@ -99,51 +102,40 @@ fun CalendarTab(
 
             Column(Modifier.padding(paddingValues)) {
                 AnimatedVisibility(contentType == OverloadContentType.DUAL_PANE) {
-                    val firstYear =
-                        if (items.isEmpty()) {
-                            LocalDate.now().year
-                        } else {
-                            items.minByOrNull { it.startTime }
-                                ?.let { convertStringToLocalDateTime(it.startTime).year }
-                                ?: LocalDate.now().year
-                        }
+                    val firstYear = getFirstYear(itemState)
                     val firstDay = LocalDate.of(firstYear, 1, 1)
-                    val lastDay = LocalDate.now()
+                    val lastDay = getLastDay(itemState)
 
-                    val daysCount = ChronoUnit.DAYS.between(firstDay, lastDay).toInt() + 1
 
-                    var scrollToPage = true
+                    val daysCount = maxOf(1, ChronoUnit.DAYS.between(firstDay, lastDay).toInt() + 1)
+
+
+                    val initialPage = ChronoUnit.DAYS.between(firstDay, selectedDay).toInt()
                     val pagerState =
                         rememberPagerState(
-                            daysCount,
-                            0f,
+                            initialPage = if (initialPage in 0 until daysCount) initialPage else maxOf(0, daysCount - 1)
                         ) { daysCount }
 
-                    LaunchedEffect(pagerState.currentPage) {
-                        scrollToPage = false
-                        itemEvent(
-                            ItemEvent.SetSelectedDayCalendar(
-                                LocalDate.now()
-                                    .minusDays((daysCount - pagerState.currentPage - 1).toLong())
-                                    .toString(),
-                            ),
-                        )
+                    // Update state ONLY when the pager settles on a new page
+                    LaunchedEffect(pagerState.settledPage) {
+                        val pageDate = firstDay.plusDays(pagerState.settledPage.toLong()).toString()
+                        if (pageDate != itemState.selectedDayCalendar) {
+                            itemEvent(ItemEvent.SetSelectedDayCalendar(pageDate))
+                        }
                     }
 
-                    LaunchedEffect(itemState.selectedDayCalendar) {
-                        if (scrollToPage) {
-                            val highlightedDay = LocalDate.now().minusDays((daysCount - pagerState.currentPage - 1).toLong())
-                            if (getLocalDate(itemState.selectedDayCalendar) != highlightedDay) {
-                                pagerState.scrollToPage(ChronoUnit.DAYS.between(firstDay, selectedDay).toInt())
-                            }
-                        } else {
-                            scrollToPage = true
+                    // Scroll to page ONLY if changed from outside (and not currently dragging)
+                    LaunchedEffect(itemState.selectedDayCalendar, daysCount) {
+                        val targetPage = ChronoUnit.DAYS.between(firstDay, selectedDay).toInt()
+                        if (targetPage in 0 until daysCount && pagerState.currentPage != targetPage && !pagerState.isScrollInProgress) {
+                            pagerState.scrollToPage(targetPage)
                         }
 
                         if (selectedYear != selectedDay.year) {
                             itemEvent(ItemEvent.SetSelectedYearCalendar(selectedDay.year))
                         }
                     }
+
 
                     Row(Modifier.fillMaxSize()) {
                         Box(Modifier.weight(1f)) {
@@ -159,16 +151,22 @@ fun CalendarTab(
                                     getLocalDate(itemState.selectedDayCalendar),
                                     itemState.selectedYearCalendar,
                                     categoryState,
+                                    itemState,
                                     itemEvent,
                                     0.dp,
                                     true,
                                 )
+
                             }
                         }
 
                         Box(Modifier.weight(1f)) {
-                            HorizontalPager(pagerState) { page ->
+                            HorizontalPager(
+                                state = pagerState,
+                                beyondViewportPageCount = 1
+                            ) { page ->
                                 Column {
+
                                     Surface(
                                         color = MaterialTheme.colorScheme.background,
                                         tonalElevation = NavigationBarDefaults.Elevation,
@@ -195,11 +193,13 @@ fun CalendarTab(
                             getLocalDate(itemState.selectedDayCalendar),
                             itemState.selectedYearCalendar,
                             categoryState,
+                            itemState,
                             itemEvent,
                             80.dp,
                             onNavigate = onNavigate,
                             listState = listState,
                         )
+
                     }
                 }
             }

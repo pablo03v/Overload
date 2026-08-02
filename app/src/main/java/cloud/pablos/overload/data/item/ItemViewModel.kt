@@ -2,19 +2,24 @@ package cloud.pablos.overload.data.item
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
+import javax.inject.Inject
 
-class ItemViewModel(
-    private val dao: ItemDao,
+@HiltViewModel
+class ItemViewModel @Inject constructor(
+    private val repository: ItemRepository,
 ) : ViewModel() {
+
     private val _items =
-        dao.getAllItems().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+        repository.getAllItems().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
     private val _state = MutableStateFlow(ItemState())
     val state =
         combine(_state, _items) { state, items ->
@@ -27,7 +32,7 @@ class ItemViewModel(
         when (event) {
             is ItemEvent.DeleteItems -> {
                 viewModelScope.launch {
-                    dao.deleteItems(event.items)
+                    repository.deleteItems(event.items)
 
                     _state.update {
                         it.copy(
@@ -57,8 +62,9 @@ class ItemViewModel(
                     )
 
                 viewModelScope.launch {
-                    dao.upsertItem(item)
+                    repository.upsertItem(item)
                 }
+
 
                 _state.update {
                     it.copy(

@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">létrehozta a ❤️ által pabloscloud</string>
     <string name="acra_toastText">Összeomlás észlelve. Kérjük, segítsen egy levél elküldésével!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">Ütközés észlelve. Kérjük, segítsen nekünk a javításban, küldje el ezt az e-mailt, hogy minél hamarabb kijavíthassuk a hibát.\n
 Elnézést az okozott kellemetlenségekért! Az Ön hozzájárulása elengedhetetlen a probléma javításához.\n
 \n

@@ -4,31 +4,47 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cloud.pablos.overload.data.Converters.Companion.convertColorToLong
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CategoryViewModel(
-    private val dao: CategoryDao,
+@HiltViewModel
+class CategoryViewModel @Inject constructor(
+    private val repository: CategoryRepository,
 ) : ViewModel() {
+
     private val _categories =
-        dao.getAllCategories().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList())
+        repository.getAllCategories().stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
     private val _state = MutableStateFlow(CategoryState())
     val state =
         combine(_state, _categories) { state, categories ->
-            state.copy(
+            var updatedState = state.copy(
                 categories = categories,
             )
+            // Automatically select first category if none is selected or current selection is invalid
+            if (categories.isNotEmpty()) {
+                if (updatedState.selectedCategory == 0 || categories.none { it.id == updatedState.selectedCategory }) {
+                    updatedState = updatedState.copy(selectedCategory = categories.first().id)
+                }
+                if (updatedState.selectedCategoryConfigurations == 0 || categories.none { it.id == updatedState.selectedCategoryConfigurations }) {
+                    updatedState = updatedState.copy(selectedCategoryConfigurations = categories.first().id)
+                }
+            }
+            updatedState
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), CategoryState())
+
 
     fun categoryEvent(event: CategoryEvent) {
         when (event) {
             is CategoryEvent.DeleteCategory -> {
                 viewModelScope.launch {
-                    dao.deleteCategory(event.category)
+                    repository.deleteCategory(event.category)
                 }
             }
 
@@ -53,7 +69,7 @@ class CategoryViewModel(
                     )
 
                 viewModelScope.launch {
-                    dao.upsertCategory(category)
+                    repository.upsertCategory(category)
                 }
 
                 _state.update {
@@ -88,7 +104,7 @@ class CategoryViewModel(
                     )
 
                 viewModelScope.launch {
-                    dao.insertCategory(category)
+                    repository.insertCategory(category)
                 }
 
                 _state.update {
@@ -103,6 +119,7 @@ class CategoryViewModel(
                     )
                 }
             }
+
 
             is CategoryEvent.SetColor -> {
                 _state.update {

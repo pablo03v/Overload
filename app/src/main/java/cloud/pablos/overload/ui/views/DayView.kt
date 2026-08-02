@@ -49,10 +49,18 @@ fun DayView(
     date: LocalDate,
     listState: LazyListState = rememberLazyListState(),
 ) {
-    val selectedCategory = getSelectedCategory(categoryState)
+    val selectedCategory = remember(categoryState.selectedCategory, categoryState.categories) {
+        getSelectedCategory(categoryState)
+    }
 
-    val items = getItems(categoryState, itemState, date)
-    val itemsDesc = items.sortedByDescending { it.startTime }
+    val items = remember(categoryState.selectedCategory, itemState.items, date) {
+        getItems(categoryState, itemState, date)
+    }
+
+    val itemsDesc = remember(items) {
+        items.sortedByDescending { it.startTime }
+    }
+
 
     val deletePauseDialogState = remember { mutableStateOf(false) }
     val editItemDialogState = remember { mutableStateOf(false) }

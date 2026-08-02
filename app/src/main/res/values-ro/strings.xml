@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">creat cu ❤️ de pabloscloud</string>
     <string name="acra_toastText">S-a detectat un accident. Vă rugăm să ne ajutați trimițând un e-mail!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">S-a detectat un accident. Vă rugăm să ne ajutați să ne îmbunătățim trimițând acest e-mail, astfel încât să putem rezolva problema cât mai curând posibil.\n
 Ne cerem scuze pentru neplăcerile cauzate! Contribuția dvs. este esențială pentru remedierea acestei probleme.\n
 \n

@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">loodud koos ❤️ by pabloscloud</string>
     <string name="acra_toastText">Kokkupõrge tuvastati. Palun aidake, saates meilile!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">Kokkupõrge tuvastatud. Palun aidake meil parandada, saates selle e-kirja, et saaksime selle võimalikult kiiresti parandada.\n
 Vabandame tekitatud ebamugavuste pärast! Teie panus on selle probleemi lahendamiseks väga oluline.\n
 \n

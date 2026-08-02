@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">vytvořeno pomocí ❤️ od pabloscloud</string>
     <string name="acra_toastText">Zjištěna havárie. Pomozte prosím zasláním e-mailu!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">Zjištěna havárie. Pomozte nám prosím zlepšit tento e-mail, abychom mohli co nejdříve provést opravu.\n
 Omlouváme se za způsobené potíže! Váš příspěvek je pro opravu tohoto problému zásadní.\n
 \n

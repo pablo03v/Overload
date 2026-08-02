@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">Utworzone za pomocą ❤️ przez pabloscloud</string>
     <string name="acra_toastText">Wykryto awarię. Prosimy o pomoc poprzez wysłanie wiadomości!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">Wykryto awarię. Prosimy o pomoc w poprawieniu sytuacji poprzez wysłanie tej wiadomości e-mail, abyśmy mogli jak najszybciej to naprawić.\n
 Przepraszamy za spowodowane niedogodności! Twój wkład jest niezbędny do naprawienia tego problemu.\n
 \n

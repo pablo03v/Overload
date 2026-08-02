@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">búið til ❤️ með pabloscloud</string>
     <string name="acra_toastText">Hrun fannst. Hjálpið okkur með því að senda póst!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">Hrun fannst. Vinsamlegast hjálpaðu okkur að bæta með því að senda þennan tölvupóst, svo við getum fengið þetta fastur eins fljótt og auðið er.\n
 Afsakið óþægindin sem urðu! Inntak þitt er nauðsynlegt til að laga þetta mál.\n
 \n

@@ -35,9 +35,6 @@ Feedback and suggestions are more than welcome! Please reach out by creating an 
 [<img src="https://github.com/pabloscloud/Overload/assets/93644977/29308442-e470-4e30-a999-49d884b83b0d"
       alt='Get it on GitHub'
       height="60">](https://github.com/pabloscloud/Overload/releases/latest)
-[<img src="https://github.com/pabloscloud/Overload/assets/93644977/1e47fdfa-a1cc-4754-a9db-050a124d53b8"
-      alt='Get it on Google Play'
-      height="60">](https://play.google.com/store/apps/details?id=cloud.pablos.overload)
 
 ## Authors
 

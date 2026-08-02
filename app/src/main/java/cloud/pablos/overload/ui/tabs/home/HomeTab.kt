@@ -134,8 +134,12 @@ fun HomeTab(
                         }
                     }
                 }
-                HorizontalPager(pagerState) { page ->
+                HorizontalPager(
+                    state = pagerState,
+                    beyondViewportPageCount = 1
+                ) { page ->
                     val item = homeTabItems[page]
+
 
                     item.screen(categoryState, itemState, itemEvent, listState)
                 }

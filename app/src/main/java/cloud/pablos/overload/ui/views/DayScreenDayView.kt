@@ -45,17 +45,26 @@ fun DayScreenDayView(
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
-    val date =
+    val date = remember(page, daysCount) {
         LocalDate.now()
             .minusDays((daysCount - page - 1).toLong())
+    }
 
-    val items = getItems(categoryState, itemState, date)
-    val itemsDesc = items.sortedByDescending { it.startTime }
+    val items = remember(categoryState.selectedCategory, itemState.items, date) {
+        getItems(categoryState, itemState, date)
+    }
+
+    val itemsDesc = remember(items) {
+        items.sortedByDescending { it.startTime }
+    }
 
     val deletePauseDialogState = remember { mutableStateOf(false) }
     val editItemDialogState = remember { mutableStateOf(false) }
 
-    val selectedCategory = getSelectedCategory(categoryState)
+    val selectedCategory = remember(categoryState.selectedCategory, categoryState.categories) {
+        getSelectedCategory(categoryState)
+    }
+
 
     if (itemsDesc.isNotEmpty() && selectedCategory != null) {
         val goal1 = selectedCategory.goal1

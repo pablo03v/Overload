@@ -26,8 +26,9 @@ compose-compiler = "1.5.6"
 coroutines = "1.11.0"
 google-maps = "18.2.0"
 gradle-versions = "0.58.0"
-hilt = "2.43.2"
-hiltExt = "1.1.0"
+hilt = "2.60.1"
+hiltExt = "1.4.0"
+
 # @pin When updating to AGP 7.4.0-alpha10 and up we can update this https://developer.android.com/studio/write/java8-support#library-desugaring-versions
 jdkDesugar = "2.0.4"
 junit = "4.13.2"
@@ -81,7 +82,11 @@ androidx-test-runner = "androidx.test:runner:1.7.0"
 androidx-window = { module = "androidx.window:window", version.ref = "androidx-window" }
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidx-core-splashscreen" }
 google-android-material = { module = "com.google.android.material:material", version.ref = "material" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltExt" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+
 junit = { module = "junit:junit", version.ref = "junit" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -89,7 +94,9 @@ kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-t
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 gradle-versions = { id = "io.github.ben-manes.versions", version.ref = "gradle-versions" }
+
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

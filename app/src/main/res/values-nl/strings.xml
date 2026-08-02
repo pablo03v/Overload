@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">Met ❤️ gemaakt door pabloscloud</string>
     <string name="acra_toastText">Er is een crash geweest. Help ons door een e-mail te versturen!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">Er is een crash geweest. Help ons om de app te verbeteren door deze e-mail te versturen.\n
 Onze excuses voor het ongemak! We waarderen het dat je wilt helpen om dit probleem op te lossen.\n
 \n

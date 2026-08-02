@@ -1,6 +1,6 @@
 package cloud.pablos.overload.ui.tabs.configurations
 
-import android.app.Activity
+
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -359,7 +359,7 @@ private fun importCsvData(
     lifecycleScope.launch(Dispatchers.IO) {
         val itemDao = db.itemDao()
 
-        var allImportsSucceeded = true
+
 
         db.withTransaction {
             parsedData.drop(1).forEach { row ->
@@ -378,22 +378,16 @@ private fun importCsvData(
                             categoryId = 1,
                         )
 
-                    val importResult = itemDao.upsertItem(item)
-                    if (importResult != Unit) {
-                        allImportsSucceeded = false
-                    }
+                    itemDao.upsertItem(item)
+
                 }
             }
         }
 
         withContext(Dispatchers.Main) {
-            if (allImportsSucceeded) {
-                showImportSuccessToast(context)
-                restartApp(context)
-            } else {
-                showImportFailedToast(context)
-            }
+            showImportSuccessToast(context)
         }
+
     }
 }
 
@@ -414,56 +408,43 @@ private fun importJsonData(
                     val itemDao = db.itemDao()
                     val categoryDao = db.categoryDao()
 
-                    var allImportsSucceeded = true
+
 
                     db.withTransaction {
                         Log.d("import", "Importing items")
                         val itemsTable = databaseBackup.data["items"] ?: emptyList()
-                        itemsTable.forEach { itemData ->
-                            val item =
-                                Item(
-                                    (itemData["id"] as? Double)?.toInt() ?: 0,
-                                    itemData["startTime"] as String,
-                                    itemData["endTime"] as String,
-                                    itemData["ongoing"] as Boolean,
-                                    itemData["pause"] as Boolean,
-                                    (itemData["categoryId"] as? Double)?.toInt() ?: 0,
-                                )
-
-                            val importResult = itemDao.upsertItem(item)
-                            if (importResult != Unit) {
-                                allImportsSucceeded = false
-                            }
+                        val itemsToImport = itemsTable.map { itemData ->
+                            Item(
+                                (itemData["id"] as? Double)?.toInt() ?: 0,
+                                itemData["startTime"] as String,
+                                itemData["endTime"] as String,
+                                itemData["ongoing"] as Boolean,
+                                itemData["pause"] as Boolean,
+                                (itemData["categoryId"] as? Double)?.toInt() ?: 0,
+                            )
                         }
+                        itemDao.upsertItems(itemsToImport)
 
+                        Log.d("import", "Importing categories")
                         val categoriesTable = databaseBackup.data["categories"] ?: emptyList()
-                        categoriesTable.forEach { categoriesData ->
-                            val category =
-                                Category(
-                                    (categoriesData["id"] as? Double)?.toInt() ?: 0,
-                                    (categoriesData["color"] as? Double)?.toLong() ?: 0,
-                                    categoriesData["emoji"] as String,
-                                    (categoriesData["goal1"] as? Double)?.toInt() ?: 0,
-                                    (categoriesData["goal2"] as? Double)?.toInt() ?: 0,
-                                    categoriesData["isDefault"] as Boolean,
-                                    categoriesData["name"] as String,
-                                )
-
-                            val importResult = categoryDao.upsertCategory(category)
-                            if (importResult != Unit) {
-                                allImportsSucceeded = false
-                            }
+                        val categoriesToImport = categoriesTable.map { categoriesData ->
+                            Category(
+                                (categoriesData["id"] as? Double)?.toInt() ?: 0,
+                                (categoriesData["color"] as? Double)?.toLong() ?: 0,
+                                categoriesData["emoji"] as String,
+                                (categoriesData["goal1"] as? Double)?.toInt() ?: 0,
+                                (categoriesData["goal2"] as? Double)?.toInt() ?: 0,
+                                categoriesData["isDefault"] as Boolean,
+                                categoriesData["name"] as String,
+                            )
                         }
+                        categoryDao.upsertCategories(categoriesToImport)
                     }
 
                     withContext(Dispatchers.Main) {
-                        if (allImportsSucceeded) {
-                            showImportSuccessToast(context)
-                            restartApp(context)
-                        } else {
-                            showImportFailedToast(context)
-                        }
+                        showImportSuccessToast(context)
                     }
+
                 }
                 else -> {
                     withContext(Dispatchers.Main) {
@@ -570,11 +551,4 @@ fun HoDivider() {
     HorizontalDivider(Modifier.padding(top = 20.dp))
 }
 
-fun restartApp(context: Context) {
-    val intent = Intent(context.applicationContext, MainActivity::class.java)
-    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-    context.startActivity(intent)
-    if (context is Activity) {
-        context.finish()
-    }
-}
+

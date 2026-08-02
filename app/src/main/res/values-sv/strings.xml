@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">skapad med ❤️ av pabloscloud</string>
     <string name="acra_toastText">Krasch upptäckt. Vänligen hjälp till genom att skicka ett mail!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">Krasch upptäckt. Hjälp oss att förbättra genom att skicka det här e-postmeddelandet, så att vi kan åtgärda problemet så snart som möjligt.\n
 Vi beklagar de olägenheter som uppstått! Din input är avgörande för att lösa detta problem.\n
 \n

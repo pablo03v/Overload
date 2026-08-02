@@ -20,14 +20,15 @@ interface ItemDao {
     @Upsert
     suspend fun upsertItem(item: Item)
 
-    /*@Upsert
+    @Upsert
     suspend fun upsertItems(items: List<Item>)
 
     @Delete
-    suspend fun deleteItem(item: Item)*/
-
-    @Delete
     suspend fun deleteItems(items: List<Item>)
+
+    @Query("DELETE FROM items")
+    suspend fun deleteAllItems()
+
 
     @Query("SELECT * FROM items")
     fun getAllItems(): Flow<List<Item>>

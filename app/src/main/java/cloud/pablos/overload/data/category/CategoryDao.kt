@@ -16,14 +16,15 @@ interface CategoryDao {
     @Upsert
     suspend fun upsertCategory(category: Category)
 
-//    @Upsert
-//    suspend fun upsertCategories(items: List<Category>)
+    @Upsert
+    suspend fun upsertCategories(items: List<Category>)
 
     @Delete
     suspend fun deleteCategory(category: Category)
 
-//    @Delete
-//    suspend fun deleteCategories(items: List<Category>)
+    @Query("DELETE FROM categories")
+    suspend fun deleteAllCategories()
+
 
     @Query("SELECT * FROM categories")
     fun getAllCategories(): Flow<List<Category>>

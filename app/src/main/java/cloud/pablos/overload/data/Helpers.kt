@@ -70,6 +70,29 @@ class Helpers {
             return categoryState.categories.find { it.id == categoryState.selectedCategory }
         }
 
+        fun getFirstYear(itemState: ItemState): Int {
+            return if (itemState.items.isEmpty()) {
+                LocalDate.now().year
+            } else {
+                itemState.items.minByOrNull { it.startTime }
+                    ?.let { convertStringToLocalDateTime(it.startTime).year }
+                    ?: LocalDate.now().year
+            }
+        }
+
+        fun getLastDay(itemState: ItemState): LocalDate {
+            val today = LocalDate.now()
+            return if (itemState.items.isEmpty()) {
+                today
+            } else {
+                val furthestItemDate = itemState.items.maxByOrNull { it.startTime }
+                    ?.let { extractDate(convertStringToLocalDateTime(it.startTime)) }
+                    ?: today
+                if (furthestItemDate.isAfter(today)) furthestItemDate else today
+            }
+        }
+
+
         fun getItems(
             categoryState: CategoryState,
             itemState: ItemState,

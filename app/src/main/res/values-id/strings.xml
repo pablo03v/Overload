@@ -78,7 +78,7 @@
     <string name="license_descr">GNU GPL v3</string>
     <string name="footer">dibuat dengan ❤️ oleh pabloscloud</string>
     <string name="acra_toastText">Kecelakaan terdeteksi. Mohon bantuannya dengan mengirimkan email!</string>
-    <string name="acra_mailTo">overloadcrash@pablos.cloud</string>
+
     <string name="acra_mailBody">Kerusakan terdeteksi. Tolong bantu kami memperbaiki dengan mengirimkan email ini, agar kami dapat memperbaikinya sesegera mungkin.\n
 Mohon maaf atas ketidaknyamanan yang terjadi! Masukan Anda sangat penting untuk memperbaiki masalah ini.\n
 \n
