@@ -4,53 +4,43 @@
 #####
 [versions]
 accompanist = "0.37.3"
-androidGradlePlugin = "9.3.1"
+androidGradlePlugin = "9.4.1"
 androidx-activity-compose = "1.13.0"
-androidx-compose-bom = "2026.06.01"
-androidx-corektx = "1.19.0"
+androidx-compose-bom = "2026.09.00"
+androidx-corektx = "1.19.1"
 androidx-lifecycle-compose = "2.11.0"
 androidx-lifecycle-runtime-compose = "2.11.0"
-androidx-navigation = "2.9.8"
+androidx-navigation = "2.10.2"
 androidx-test = "1.7.0"
 androidx-test-espresso = "3.7.0"
 androidx-test-ext-junit = "1.3.0"
 androidx-window = "1.5.1"
 androidx-core-splashscreen = "1.2.0"
 gson = "2.14.0"
-acra = "5.13.1"
+acra = "5.14.2"
 
 # @keep
-compileSdk = "36"
+compileSdk = "37"
 
-compose-compiler = "1.5.6"
 coroutines = "1.11.0"
-google-maps = "18.2.0"
-gradle-versions = "0.58.0"
+gradle-versions = "0.66.0"
 hilt = "2.60.1"
 hiltExt = "1.4.0"
 
 # @pin When updating to AGP 7.4.0-alpha10 and up we can update this https://developer.android.com/studio/write/java8-support#library-desugaring-versions
-jdkDesugar = "2.0.4"
 junit = "4.13.2"
 # @pin Update in conjuction with Compose Compiler
-kotlin = "2.4.10"
-kotlinx_immutable = "0.3.5"
-ksp = "1.9.10-1.0.13"
-maps-compose = "2.5.3"
+kotlin = "2.4.21"
+ksp = "2.3.6"
 material = "1.14.0"
 # @keep
 material3 = "1.4.0"
-minSdk = "21"
-okhttp = "4.11.0"
-robolectric = "4.10.3"
-rome = "1.18.0"
-room = "2.8.4"
-secrets = "2.0.1"
+room = "2.8.5"
 # @keep
-targetSdk = "36"
+targetSdk = "37"
 
 
-version-catalog-update = "1.1.0"
+version-catalog-update = "1.1.1"
 
 [libraries]
 accompanist-adaptive = { module = "com.google.accompanist:accompanist-adaptive", version.ref = "accompanist" }
@@ -98,10 +88,6 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 gradle-versions = { id = "io.github.ben-manes.versions", version.ref = "gradle-versions" }
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "androidGradlePlugin" }
 
 version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
 

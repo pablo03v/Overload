@@ -1,7 +1,5 @@
 package cloud.pablos.overload.ui.tabs.home
 
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -18,10 +16,17 @@ import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
+import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -39,16 +43,17 @@ import cloud.pablos.overload.R
 import cloud.pablos.overload.data.Converters.Companion.convertStringToLocalDateTime
 import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.category.CategoryState
-import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
 import cloud.pablos.overload.ui.views.TextView
 import cloud.pablos.overload.ui.views.getFormattedTime
+import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
-import java.util.Calendar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTabEditItemDialog(
     categoryState: CategoryState,
@@ -56,57 +61,56 @@ fun HomeTabEditItemDialog(
     itemEvent: (ItemEvent) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val context = LocalContext.current
-
     val date = LocalDate.now()
     val dateTime = LocalDateTime.now()
 
-    var selectedStart: LocalDateTime
-    var selectedEnd: LocalDateTime
-    var selectedPause by remember { mutableStateOf(false) }
-
-    var selectedStartDateText by remember { mutableStateOf("") }
-    var selectedStartTimeText by remember { mutableStateOf("") }
-    var selectedEndDateText by remember { mutableStateOf("") }
-    var selectedEndTimeText by remember { mutableStateOf("") }
-
-    var selectedItem: Item? = null
-
-    if (itemState.selectedItemsHome.size == 1) {
-        selectedItem = itemState.selectedItemsHome.first()
-
-        selectedStart = convertStringToLocalDateTime(selectedItem.startTime)
-        selectedEnd = convertStringToLocalDateTime(selectedItem.endTime)
-    } else {
-        val itemsForToday = getItems(categoryState, itemState, date)
-
-        selectedStart =
-            if (itemsForToday.isNotEmpty() && itemsForToday.last().endTime.isNotBlank()) {
-                convertStringToLocalDateTime(itemsForToday.last().endTime)
-            } else {
-                dateTime
-            }
-        selectedEnd = dateTime
+    val selectedItem = remember(itemState.selectedItemsHome) {
+        itemState.selectedItemsHome.firstOrNull()
     }
 
-    selectedStartDateText = getFormattedDate(selectedStart.toLocalDate(), true)
-    selectedStartTimeText = getFormattedTime(selectedStart)
+    val itemsForToday = remember { getItems(categoryState, itemState, date) }
 
-    selectedEndDateText = getFormattedDate(selectedEnd.toLocalDate(), true)
-    selectedEndTimeText = getFormattedTime(selectedEnd)
-
-    selectedPause =
-        when {
-            selectedItem != null -> {
-                selectedItem.pause
-            }
-
-            else -> {
-                true
-            }
+    val initialStart = remember(selectedItem) {
+        if (selectedItem != null && selectedItem.startTime.isNotBlank()) {
+            convertStringToLocalDateTime(selectedItem.startTime)
+        } else if (itemsForToday.isNotEmpty() && itemsForToday.last().endTime.isNotBlank()) {
+            convertStringToLocalDateTime(itemsForToday.last().endTime)
+        } else {
+            dateTime
         }
+    }
 
-    val calendar = Calendar.getInstance()
+    val initialEnd = remember(selectedItem) {
+        if (selectedItem != null && selectedItem.endTime.isNotBlank()) {
+            convertStringToLocalDateTime(selectedItem.endTime)
+        } else {
+            dateTime
+        }
+    }
+
+    val initialPause = remember(selectedItem) {
+        if (selectedItem != null) {
+            selectedItem.pause
+        } else if (itemsForToday.isNotEmpty()) {
+            itemsForToday.last().pause.not()
+        } else {
+            false
+        }
+    }
+
+    var selectedStart by remember(initialStart) { mutableStateOf(initialStart) }
+    var selectedEnd by remember(initialEnd) { mutableStateOf(initialEnd) }
+    var selectedPause by remember(initialPause) { mutableStateOf(initialPause) }
+
+    var selectedStartDateText by remember(selectedStart) { mutableStateOf(getFormattedDate(selectedStart.toLocalDate(), true)) }
+    var selectedStartTimeText by remember(selectedStart) { mutableStateOf(getFormattedTime(selectedStart)) }
+    var selectedEndDateText by remember(selectedEnd) { mutableStateOf(getFormattedDate(selectedEnd.toLocalDate(), true)) }
+    var selectedEndTimeText by remember(selectedEnd) { mutableStateOf(getFormattedTime(selectedEnd)) }
+
+    var showStartDatePicker by remember { mutableStateOf(false) }
+    var showEndDatePicker by remember { mutableStateOf(false) }
+    var showStartTimePicker by remember { mutableStateOf(false) }
+    var showEndTimePicker by remember { mutableStateOf(false) }
 
     fun updateSelectedTime(
         newDateTime: LocalDateTime,
@@ -139,60 +143,159 @@ fun HomeTabEditItemDialog(
         }
     }
 
-    val startDatePicker =
+    if (showStartDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedStart.toLocalDate()
+                .atStartOfDay(ZoneOffset.UTC)
+                .toInstant()
+                .toEpochMilli(),
+        )
+
         DatePickerDialog(
-            context,
-            { _, year: Int, month: Int, day: Int ->
-                val calcMonth = month + 1
-                val newStartDateTime =
-                    selectedStart.withYear(year).withMonth(calcMonth).withDayOfMonth(day)
+            onDismissRequest = { showStartDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val selectedLocalDate = Instant.ofEpochMilli(millis)
+                                .atZone(ZoneOffset.UTC)
+                                .toLocalDate()
+                            val newStartDateTime = selectedStart
+                                .withYear(selectedLocalDate.year)
+                                .withMonth(selectedLocalDate.monthValue)
+                                .withDayOfMonth(selectedLocalDate.dayOfMonth)
 
-                updateSelectedTime(newStartDateTime, true)
+                            updateSelectedTime(newStartDateTime, true)
+                        }
+                        showStartDatePicker = false
+                    },
+                ) {
+                    TextView(stringResource(R.string.save))
+                }
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH),
+            dismissButton = {
+                TextButton(
+                    onClick = { showStartDatePicker = false },
+                ) {
+                    TextView(stringResource(R.string.cancel))
+                }
+            },
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    if (showEndDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = selectedEnd.toLocalDate()
+                .atStartOfDay(ZoneOffset.UTC)
+                .toInstant()
+                .toEpochMilli(),
         )
 
-    val startTimePicker =
-        TimePickerDialog(
-            context,
-            { _, selectedHour: Int, selectedMinute: Int ->
-                val newStartDateTime = selectedStart.withHour(selectedHour).withMinute(selectedMinute)
-
-                updateSelectedTime(newStartDateTime, true)
-            },
-            selectedStart.hour,
-            selectedStart.minute,
-            false,
-        )
-
-    val endDatePicker =
         DatePickerDialog(
-            context,
-            { _, year: Int, month: Int, day: Int ->
-                val calcMonth = month + 1
-                val newEndDateTime = selectedEnd.withYear(year).withMonth(calcMonth).withDayOfMonth(day)
+            onDismissRequest = { showEndDatePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        datePickerState.selectedDateMillis?.let { millis ->
+                            val selectedLocalDate = Instant.ofEpochMilli(millis)
+                                .atZone(ZoneOffset.UTC)
+                                .toLocalDate()
+                            val newEndDateTime = selectedEnd
+                                .withYear(selectedLocalDate.year)
+                                .withMonth(selectedLocalDate.monthValue)
+                                .withDayOfMonth(selectedLocalDate.dayOfMonth)
 
-                updateSelectedTime(newEndDateTime, false)
+                            updateSelectedTime(newEndDateTime, false)
+                        }
+                        showEndDatePicker = false
+                    },
+                ) {
+                    TextView(stringResource(R.string.save))
+                }
             },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH),
+            dismissButton = {
+                TextButton(
+                    onClick = { showEndDatePicker = false },
+                ) {
+                    TextView(stringResource(R.string.cancel))
+                }
+            },
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    if (showStartTimePicker) {
+        val timePickerState = rememberTimePickerState(
+            initialHour = selectedStart.hour,
+            initialMinute = selectedStart.minute,
         )
 
-    val endTimePicker =
-        TimePickerDialog(
-            context,
-            { _, selectedHour: Int, selectedMinute: Int ->
-                val newEndDateTime = selectedEnd.withHour(selectedHour).withMinute(selectedMinute)
+        AlertDialog(
+            onDismissRequest = { showStartTimePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val newStartDateTime = selectedStart
+                            .withHour(timePickerState.hour)
+                            .withMinute(timePickerState.minute)
 
-                updateSelectedTime(newEndDateTime, false)
+                        updateSelectedTime(newStartDateTime, true)
+                        showStartTimePicker = false
+                    },
+                ) {
+                    TextView(stringResource(R.string.save))
+                }
             },
-            selectedEnd.hour,
-            selectedEnd.minute,
-            false,
+            dismissButton = {
+                TextButton(
+                    onClick = { showStartTimePicker = false },
+                ) {
+                    TextView(stringResource(R.string.cancel))
+                }
+            },
+            text = {
+                TimePicker(state = timePickerState)
+            },
         )
+    }
+
+    if (showEndTimePicker) {
+        val timePickerState = rememberTimePickerState(
+            initialHour = selectedEnd.hour,
+            initialMinute = selectedEnd.minute,
+        )
+
+        AlertDialog(
+            onDismissRequest = { showEndTimePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val newEndDateTime = selectedEnd
+                            .withHour(timePickerState.hour)
+                            .withMinute(timePickerState.minute)
+
+                        updateSelectedTime(newEndDateTime, false)
+                        showEndTimePicker = false
+                    },
+                ) {
+                    TextView(stringResource(R.string.save))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showEndTimePicker = false },
+                ) {
+                    TextView(stringResource(R.string.cancel))
+                }
+            },
+            text = {
+                TimePicker(state = timePickerState)
+            },
+        )
+    }
 
     AlertDialog(
         onDismiss,
@@ -268,7 +371,7 @@ fun HomeTabEditItemDialog(
                         Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
-                                startDatePicker.show()
+                                showStartDatePicker = true
                             }
                             .background(MaterialTheme.colorScheme.tertiaryContainer)
                             .padding(horizontal = 10.dp, vertical = 6.dp),
@@ -279,7 +382,7 @@ fun HomeTabEditItemDialog(
                         Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
-                                startTimePicker.show()
+                                showStartTimePicker = true
                             }
                             .background(MaterialTheme.colorScheme.tertiaryContainer)
                             .padding(horizontal = 10.dp, vertical = 6.dp),
@@ -299,7 +402,7 @@ fun HomeTabEditItemDialog(
                         Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
-                                endDatePicker.show()
+                                showEndDatePicker = true
                             }
                             .background(MaterialTheme.colorScheme.tertiaryContainer)
                             .padding(horizontal = 10.dp, vertical = 6.dp),
@@ -310,7 +413,7 @@ fun HomeTabEditItemDialog(
                         Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
-                                endTimePicker.show()
+                                showEndTimePicker = true
                             }
                             .background(MaterialTheme.colorScheme.tertiaryContainer)
                             .padding(horizontal = 10.dp, vertical = 6.dp),

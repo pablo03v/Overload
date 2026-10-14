@@ -43,3 +43,6 @@ project.properties
 
 ##Gradle-based build
 build/
+/.artifacts
+/.kotlin/sessions
+/app/release
