@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import cloud.pablos.overload.R
@@ -36,6 +37,11 @@ fun HomeTabTopAppBar(
             actions = {
                 SwitchCategoryButton(categoryState, categoryEvent)
             },
+            colors =
+                TopAppBarDefaults.topAppBarColors(
+                    MaterialTheme.colorScheme.background,
+                    titleContentColor = MaterialTheme.colorScheme.onBackground,
+                ),
         )
     }
 }
