@@ -1,6 +1,5 @@
 package cloud.pablos.overload.ui.views
 
-import android.app.TimePickerDialog
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,7 +24,9 @@ import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,7 +36,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -65,8 +65,6 @@ fun AddEntryDialog(
 ) {
     val backgroundColor = decideBackground(categoryState)
     val foregroundColor = decideForeground(backgroundColor)
-
-    val context = LocalContext.current
 
     val date = LocalDate.now()
     val dateTime = LocalDateTime.now()
@@ -99,6 +97,8 @@ fun AddEntryDialog(
 
     var showStartDatePicker by remember { mutableStateOf(false) }
     var showEndDatePicker by remember { mutableStateOf(false) }
+    var showStartTimePicker by remember { mutableStateOf(false) }
+    var showEndTimePicker by remember { mutableStateOf(false) }
 
     fun updateSelectedTime(
         newDateTime: LocalDateTime,
@@ -128,32 +128,6 @@ fun AddEntryDialog(
             }
         }
     }
-
-    val startTimePicker =
-        TimePickerDialog(
-            context,
-            { _, selectedHour: Int, selectedMinute: Int ->
-                val newStartDateTime = selectedStart.withHour(selectedHour).withMinute(selectedMinute)
-
-                updateSelectedTime(newStartDateTime, true)
-            },
-            selectedStart.hour,
-            selectedStart.minute,
-            false,
-        )
-
-    val endTimePicker =
-        TimePickerDialog(
-            context,
-            { _, selectedHour: Int, selectedMinute: Int ->
-                val newEndDateTime = selectedEnd.withHour(selectedHour).withMinute(selectedMinute)
-
-                updateSelectedTime(newEndDateTime, false)
-            },
-            selectedEnd.hour,
-            selectedEnd.minute,
-            false,
-        )
 
     if (showStartDatePicker) {
         val datePickerState = rememberDatePickerState(
@@ -239,6 +213,76 @@ fun AddEntryDialog(
         }
     }
 
+    if (showStartTimePicker) {
+        val timePickerState = rememberTimePickerState(
+            initialHour = selectedStart.hour,
+            initialMinute = selectedStart.minute,
+        )
+
+        AlertDialog(
+            onDismissRequest = { showStartTimePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val newStartDateTime = selectedStart
+                            .withHour(timePickerState.hour)
+                            .withMinute(timePickerState.minute)
+
+                        updateSelectedTime(newStartDateTime, true)
+                        showStartTimePicker = false
+                    },
+                ) {
+                    TextView(stringResource(R.string.save))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showStartTimePicker = false },
+                ) {
+                    TextView(stringResource(R.string.cancel))
+                }
+            },
+            text = {
+                TimePicker(state = timePickerState)
+            },
+        )
+    }
+
+    if (showEndTimePicker) {
+        val timePickerState = rememberTimePickerState(
+            initialHour = selectedEnd.hour,
+            initialMinute = selectedEnd.minute,
+        )
+
+        AlertDialog(
+            onDismissRequest = { showEndTimePicker = false },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        val newEndDateTime = selectedEnd
+                            .withHour(timePickerState.hour)
+                            .withMinute(timePickerState.minute)
+
+                        updateSelectedTime(newEndDateTime, false)
+                        showEndTimePicker = false
+                    },
+                ) {
+                    TextView(stringResource(R.string.save))
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = { showEndTimePicker = false },
+                ) {
+                    TextView(stringResource(R.string.cancel))
+                }
+            },
+            text = {
+                TimePicker(state = timePickerState)
+            },
+        )
+    }
+
     AlertDialog(
         onDismiss,
         {
@@ -316,7 +360,7 @@ fun AddEntryDialog(
                         Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
-                                startTimePicker.show()
+                                showStartTimePicker = true
                             }
                             .background(backgroundColor)
                             .padding(horizontal = 10.dp, vertical = 6.dp),
@@ -347,7 +391,7 @@ fun AddEntryDialog(
                         Modifier
                             .clip(RoundedCornerShape(12.dp))
                             .clickable {
-                                endTimePicker.show()
+                                showEndTimePicker = true
                             }
                             .background(backgroundColor)
                             .padding(horizontal = 10.dp, vertical = 6.dp),
