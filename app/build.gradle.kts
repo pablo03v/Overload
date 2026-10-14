@@ -1,12 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.compose)
-
-
-
 }
 
 android {
@@ -17,11 +13,11 @@ android {
     defaultConfig {
         applicationId = "cloud.pablos.overload"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = 37
 
 
-        versionCode = 1731
-        versionName = "0.17.31"
+        versionCode = 1740
+        versionName = "0.17.4"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 

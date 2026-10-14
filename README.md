@@ -17,7 +17,7 @@ Just create issues and pull requests in the dev-branch or help [translating](htt
 - create and manage categories with colors, emojis and goals
 - create time spans
 - automatically creates pauses in between
-- delete time spans - on-by-one or all-together
+- delete time spans - one-by-one or all-together
 - scroll through days with ease
 - backup your data
 - import backups
@@ -31,14 +31,14 @@ Feedback and suggestions are more than welcome! Please reach out by creating an 
 ## Installation
 [<img src="https://github.com/pabloscloud/Overload/assets/93644977/4f38fb5e-afe1-4473-a9b9-81293fb41270"
       alt='Get it on Obtainium'
-      height="60">](http://apps.obtainium.imranr.dev/redirect.html?r=obtainium://app/%7B%22id%22%3A%22cloud.pablos.overload%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fpabloscloud%2FOverload%22%2C%22author%22%3A%22github.com%22%2C%22name%22%3A%22Overload%22%7D)
+      height="60">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22cloud.pablos.overload%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fpablo03v%2FOverload%22%2C%22author%22%3A%22pablo03v%22%2C%22name%22%3A%22Overload"})
 [<img src="https://github.com/pabloscloud/Overload/assets/93644977/29308442-e470-4e30-a999-49d884b83b0d"
       alt='Get it on GitHub'
       height="60">](https://github.com/pabloscloud/Overload/releases/latest)
 
 ## Authors
 
-- [@pabloscloud](https://github.com/pabloscloud)
+- [@pablo03v](https://github.com/pablo03v)
 
 ### Kudos
 
