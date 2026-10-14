@@ -45,3 +45,4 @@ project.properties
 build/
 /.artifacts
 /.kotlin/sessions
+/app/release
