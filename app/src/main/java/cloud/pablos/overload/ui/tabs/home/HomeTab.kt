@@ -1,6 +1,5 @@
 package cloud.pablos.overload.ui.tabs.home
 
-
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
@@ -57,7 +56,7 @@ fun HomeTab(
     itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
 ) {
-    val listState = rememberLazyListState()
+    val listStates = List(homeTabItems.size) { rememberLazyListState() }
 
     val backgroundColor = decideBackground(categoryState)
 
@@ -83,6 +82,7 @@ fun HomeTab(
     Scaffold(
         topBar = { OverloadTopAppBar(OverloadRoute.HOME, categoryState, categoryEvent, itemState, itemEvent) },
         floatingActionButton = {
+            val fabListState = listStates.getOrElse(pagerState.currentPage) { listStates.last() }
             AnimatedVisibility(
                 navigationType == OverloadNavigationType.BOTTOM_NAVIGATION &&
                     itemState.selectedDayCalendar == LocalDate.now().toString() &&
@@ -90,7 +90,7 @@ fun HomeTab(
                 enter = if (itemState.isFabOpen) slideInHorizontally(initialOffsetX = { w -> w }) else scaleIn(),
                 exit = if (itemState.isFabOpen) slideOutHorizontally(targetOffsetX = { w -> w }) else scaleOut(),
             ) {
-                HomeTabFab(categoryEvent, categoryState, itemState, itemEvent, listState.isScrollingUp())
+                HomeTabFab(categoryEvent, categoryState, itemState, itemEvent, fabListState.isScrollingUp())
             }
         },
     ) { paddingValues ->
@@ -139,9 +139,9 @@ fun HomeTab(
                     beyondViewportPageCount = 1
                 ) { page ->
                     val item = homeTabItems[page]
+                    val pageListState = listStates.getOrElse(page) { rememberLazyListState() }
 
-
-                    item.screen(categoryState, itemState, itemEvent, listState)
+                    item.screen(categoryState, itemState, itemEvent, pageListState)
                 }
             }
         }
