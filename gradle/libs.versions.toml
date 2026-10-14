@@ -89,8 +89,6 @@ gradle-versions = { id = "io.github.ben-manes.versions", version.ref = "gradle-v
 
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
-legacy-kapt = { id = "com.android.legacy-kapt", version.ref = "androidGradlePlugin" }
-
 version-catalog-update = { id = "nl.littlerobots.version-catalog-update", version.ref = "version-catalog-update" }
 
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
