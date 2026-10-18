@@ -16,7 +16,7 @@ This Privacy Policy governs the manner in which the "Overload" app operates and 
 
 ## Contact
 
-For any inquiries regarding this Privacy Policy or the app's data practices, please contact the operator at contact[at]pablos.cloud.
+For any inquiries regarding this Privacy Policy or the app's data practices, please contact the operator at overload.privacy[at]pablo03v.de.
 
 ## Changes to This Privacy Policy
 
