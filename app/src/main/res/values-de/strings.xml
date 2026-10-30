@@ -60,6 +60,9 @@
     <string name="backup">Sichern</string>
     <string name="backup_descr">Speichere regelmäßig Sicherheitskopien an einem sicheren Ort!</string>
     <string name="backup_failed">Erstellen des Backups fehlgeschlagen</string>
+    <string name="backup_success">Backup erfolgreich erstellt</string>
+    <string name="backup_save_to_device">Auf dem Gerät speichern</string>
+    <string name="backup_share">Teilen</string>
     <string name="import_ol">Wiederherstellen</string>
     <string name="import_descr">Stelle Daten aus einer Sicherung her</string>
     <string name="import_success">Sicherung erfolgreich wiederhergestellt</string>
