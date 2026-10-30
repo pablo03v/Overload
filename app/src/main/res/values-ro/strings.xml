@@ -76,7 +76,7 @@
     <string name="issue_reports_descr">Ați observat ceva ciudat? Vă rugăm să raportați!</string>
     <string name="license">Licență</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">creat cu ❤️ de pabloscloud</string>
+    <string name="footer">creat cu ❤️ de pablo03v</string>
     <string name="acra_toastText">S-a detectat un accident. Vă rugăm să ne ajutați trimițând un e-mail!</string>
 
     <string name="acra_mailBody">S-a detectat un accident. Vă rugăm să ne ajutați să ne îmbunătățim trimițând acest e-mail, astfel încât să putem rezolva problema cât mai curând posibil.\n
@@ -125,10 +125,10 @@ Vă mulțumim pentru răbdare!</string>
     <string name="manual_entry">Introducere manuală</string>
     <string name="acra_mailSubject">Overload Crash</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Entry from %s to %s</string>
-    <string name="talback_pause">Pause from %s to %s</string>
-    <string name="talback_entry_ongoing">Ongoing entry since %s</string>
-    <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="talkback_entry">Entry from %s to %s</string>
+    <string name="talkback_pause">Pause from %s to %s</string>
+    <string name="talkback_entry_ongoing">Ongoing entry since %s</string>
+    <string name="talkback_pause_ongoing">Ongoing pause since %s</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>

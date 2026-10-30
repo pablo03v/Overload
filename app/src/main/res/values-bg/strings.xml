@@ -76,7 +76,7 @@
     <string name="issue_reports_descr">Забелязвате ли нещо странно? Моля, докладвайте за това!</string>
     <string name="license">Лиценз</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">създаден с ❤️ от pabloscloud</string>
+    <string name="footer">създаден с ❤️ от pablo03v</string>
     <string name="acra_toastText">Открит е срив. Моля, помогнете, като изпратите имейл!</string>
 
     <string name="acra_mailBody">Открит е срив. Моля, помогнете ни да се подобрим, като изпратите този имейл, за да можем да поправим проблема възможно най-скоро.\n
@@ -125,10 +125,10 @@
     <string name="manual_entry">Manual Entry</string>
     <string name="acra_mailSubject">Overload Crash</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Entry from %s to %s</string>
-    <string name="talback_pause">Pause from %s to %s</string>
-    <string name="talback_entry_ongoing">Ongoing entry since %s</string>
-    <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="talkback_entry">Entry from %s to %s</string>
+    <string name="talkback_pause">Pause from %s to %s</string>
+    <string name="talkback_entry_ongoing">Ongoing entry since %s</string>
+    <string name="talkback_pause_ongoing">Ongoing pause since %s</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>

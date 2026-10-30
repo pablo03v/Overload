@@ -76,7 +76,7 @@
     <string name="issue_reports_descr">Zauważyłeś coś dziwnego? Zgłoś to!</string>
     <string name="license">Licencja</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">Utworzone za pomocą ❤️ przez pabloscloud</string>
+    <string name="footer">Utworzone za pomocą ❤️ przez pablo03v</string>
     <string name="acra_toastText">Wykryto awarię. Prosimy o pomoc poprzez wysłanie wiadomości!</string>
 
     <string name="acra_mailBody">Wykryto awarię. Prosimy o pomoc w poprawieniu sytuacji poprzez wysłanie tej wiadomości e-mail, abyśmy mogli jak najszybciej to naprawić.\n
@@ -125,10 +125,10 @@ Dziękujemy za cierpliwość!</string>
     <string name="manual_entry">Wpis ręczny</string>
     <string name="acra_mailSubject">Overload Crash</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Entry from %s to %s</string>
-    <string name="talback_pause">Pause from %s to %s</string>
-    <string name="talback_entry_ongoing">Ongoing entry since %s</string>
-    <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="talkback_entry">Entry from %s to %s</string>
+    <string name="talkback_pause">Pause from %s to %s</string>
+    <string name="talkback_entry_ongoing">Ongoing entry since %s</string>
+    <string name="talkback_pause_ongoing">Ongoing pause since %s</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>

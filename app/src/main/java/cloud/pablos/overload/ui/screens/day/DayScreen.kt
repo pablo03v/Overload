@@ -2,7 +2,6 @@ package cloud.pablos.overload.ui.screens.day
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,16 +11,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import cloud.pablos.overload.data.Helpers.Companion.getFirstYear
-import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.Helpers.Companion.getLastDay
-
 import cloud.pablos.overload.data.category.CategoryEvent
-
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
@@ -32,7 +25,6 @@ import cloud.pablos.overload.ui.views.getLocalDate
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
-@OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DayScreen(

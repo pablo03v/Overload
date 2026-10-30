@@ -76,7 +76,7 @@
     <string name="issue_reports_descr">Heb je iets vreemds ontdekt? Meld dit dan!</string>
     <string name="license">Licentie</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">Met ❤️ gemaakt door pabloscloud</string>
+    <string name="footer">Met ❤️ gemaakt door pablo03v</string>
     <string name="acra_toastText">Er is een crash geweest. Help ons door een e-mail te versturen!</string>
 
     <string name="acra_mailBody">Er is een crash geweest. Help ons om de app te verbeteren door deze e-mail te versturen.\n
@@ -125,10 +125,10 @@ Bedankt voor je geduld!</string>
     <string name="manual_entry">Zelf inplannen</string>
     <string name="acra_mailSubject">Overload Crash</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Entry from %s to %s</string>
-    <string name="talback_pause">Pause from %s to %s</string>
-    <string name="talback_entry_ongoing">Ongoing entry since %s</string>
-    <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="talkback_entry">Entry from %s to %s</string>
+    <string name="talkback_pause">Pause from %s to %s</string>
+    <string name="talkback_entry_ongoing">Ongoing entry since %s</string>
+    <string name="talkback_pause_ongoing">Ongoing pause since %s</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>

@@ -76,7 +76,7 @@
     <string name="issue_reports_descr">Помітили щось дивне? Будь ласка, повідомте про це!</string>
     <string name="license">Ліцензія</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">з ❤️ створив pabloscloud</string>
+    <string name="footer">з ❤️ створив pablo03v</string>
     <string name="acra_toastText">Виявлено збій. Будь ласка, допоможіть, надіславши листа!</string>
 
     <string name="acra_mailBody">Виявлено збій. Будь ласка, допоможіть нам покращити програму, надіславши цей лист, щоб ми могли виправити це якнайшвидше.\n
@@ -125,10 +125,10 @@
     <string name="manual_entry">Введення вручну</string>
     <string name="acra_mailSubject">Збій Overload</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Введення з %s до %s</string>
-    <string name="talback_pause">Пауза з %s до %s</string>
-    <string name="talback_entry_ongoing">Триває введення з %s</string>
-    <string name="talback_pause_ongoing">Триває пауза з %s</string>
+    <string name="talkback_entry">Введення з %s до %s</string>
+    <string name="talkback_pause">Пауза з %s до %s</string>
+    <string name="talkback_entry_ongoing">Триває введення з %s</string>
+    <string name="talkback_pause_ongoing">Триває пауза з %s</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>

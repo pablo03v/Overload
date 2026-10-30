@@ -60,6 +60,9 @@
     <string name="backup">Sichern</string>
     <string name="backup_descr">Speichere regelmäßig Sicherheitskopien an einem sicheren Ort!</string>
     <string name="backup_failed">Erstellen des Backups fehlgeschlagen</string>
+    <string name="backup_success">Backup erfolgreich erstellt</string>
+    <string name="backup_save_to_device">Auf dem Gerät speichern</string>
+    <string name="backup_share">Teilen</string>
     <string name="import_ol">Wiederherstellen</string>
     <string name="import_descr">Stelle Daten aus einer Sicherung her</string>
     <string name="import_success">Sicherung erfolgreich wiederhergestellt</string>
@@ -76,7 +79,7 @@
     <string name="issue_reports_descr">Ist etwas komisch? Melde es!</string>
     <string name="license">Lizenz</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">mit ❤️ von pabloscloud erstellt</string>
+    <string name="footer">mit ❤️ von pablo03v erstellt</string>
     <string name="acra_toastText">Absturz erkannt. Bitte helfe mit dem Senden einer E-Mail!</string>
 
     <string name="acra_mailBody">Absturz erkannt. Bitte helfe uns, uns zu verbessern, indem du diese E-Mail sendest, damit wir das Problem so schnell wie möglich beheben können.\n
@@ -125,10 +128,10 @@ Danke für deine Geduld!</string>
     <string name="manual_entry">Manueller Eintrag</string>
     <string name="acra_mailSubject">Overload Absturz</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Eintrag von %s bis %s</string>
-    <string name="talback_pause">Pause von %s bis %s</string>
-    <string name="talback_entry_ongoing">Laufender Eintrag seit %s</string>
-    <string name="talback_pause_ongoing">Laufende Pause seit %s</string>
+    <string name="talkback_entry">Eintrag von %s bis %s</string>
+    <string name="talkback_pause">Pause von %s bis %s</string>
+    <string name="talkback_entry_ongoing">Laufender Eintrag seit %s</string>
+    <string name="talkback_pause_ongoing">Laufende Pause seit %s</string>
     <string name="add_category">Kategorie hinzufügen</string>
     <string name="switch_category">Kategorie wechseln</string>
     <string name="delete_category_warning">Bist du sicher, dass du %s löschen möchtest?</string>

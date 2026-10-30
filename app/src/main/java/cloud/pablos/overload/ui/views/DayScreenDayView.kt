@@ -3,7 +3,6 @@ package cloud.pablos.overload.ui.views
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -35,7 +34,6 @@ import cloud.pablos.overload.ui.tabs.home.HomeTabEditItemDialog
 import java.time.LocalDate
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
-@OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DayScreenDayView(

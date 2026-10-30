@@ -89,13 +89,8 @@ fun HomeTabEditItemDialog(
     }
 
     val initialPause = remember(selectedItem) {
-        if (selectedItem != null) {
-            selectedItem.pause
-        } else if (itemsForToday.isNotEmpty()) {
-            itemsForToday.last().pause.not()
-        } else {
-            false
-        }
+        selectedItem?.pause
+            ?: (itemsForToday.isNotEmpty() && itemsForToday.last().pause.not())
     }
 
     var selectedStart by remember(initialStart) { mutableStateOf(initialStart) }
