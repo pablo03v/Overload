@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.core.content.IntentCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavHostController
@@ -320,30 +321,23 @@ fun handleIntent(
     contentResolver: ContentResolver,
 ) {
     if (intent != null && intent.action == Intent.ACTION_SEND && intent.type == "text/comma-separated-values") {
-        if (intent.getStringExtra(Intent.EXTRA_TEXT)?.isBlank() == false) {
-            val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
-            if (sharedText != null) {
-                importCsvData(
-                    sharedText,
-                    lifecycleScope,
-                    db,
-                    context,
-                )
-            }
-        } else if (intent.getStringExtra(Intent.EXTRA_STREAM)?.isBlank() == false) {
-            val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            uri?.let {
-                importCsvFile(uri, contentResolver, context, db, lifecycleScope)
-            }
-        } else if (intent.clipData != null) {
-            val uri = intent.clipData?.getItemAt(0)?.uri
+        val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+        if (!sharedText.isNullOrBlank()) {
+            importCsvData(
+                sharedText,
+                lifecycleScope,
+                db,
+                context,
+            )
+        } else {
+            val streamUri = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
+            val clipUri = intent.clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
+            val uri = streamUri ?: clipUri
             if (uri != null) {
                 importCsvFile(uri, contentResolver, context, db, lifecycleScope)
             } else {
                 showImportFailedToast(context)
             }
-        } else {
-            showImportFailedToast(context)
         }
     }
 }
@@ -490,12 +484,38 @@ fun importCsvFile(
     db: OverloadDatabase,
     lifecycleScope: LifecycleCoroutineScope,
 ) {
-    uri.let {
+    val path = uri.path
+    if (path != null) {
+        try {
+            val normalized = java.nio.file.FileSystems.getDefault().getPath(path).normalize()
+            if (normalized.startsWith("/data")) {
+                showImportFailedToast(context)
+                return
+            }
+        } catch (e: Exception) {
+            Log.w("import", "Failed to normalize path for URI: $uri", e)
+            showImportFailedToast(context)
+            return
+        }
+    }
+
+    val appFileProvider = context.getString(R.string.app_fileprovider)
+    if (uri.authority.equals(appFileProvider, ignoreCase = true)) {
+        showImportFailedToast(context)
+        return
+    }
+
+    try {
         contentResolver.openInputStream(uri)?.use { inputStream ->
             val sharedData = inputStream.bufferedReader().readText()
 
             importCsvData(sharedData, lifecycleScope, db, context)
+        } ?: run {
+            showImportFailedToast(context)
         }
+    } catch (e: Exception) {
+        Log.e("import", "Failed to open input stream for URI: $uri", e)
+        showImportFailedToast(context)
     }
 }
 
@@ -506,12 +526,38 @@ fun importJsonFile(
     db: OverloadDatabase,
     lifecycleScope: LifecycleCoroutineScope,
 ) {
-    uri.let {
+    val path = uri.path
+    if (path != null) {
+        try {
+            val normalized = java.nio.file.FileSystems.getDefault().getPath(path).normalize()
+            if (normalized.startsWith("/data")) {
+                showImportFailedToast(context)
+                return
+            }
+        } catch (e: Exception) {
+            Log.w("import", "Failed to normalize path for URI: $uri", e)
+            showImportFailedToast(context)
+            return
+        }
+    }
+
+    val appFileProvider = context.getString(R.string.app_fileprovider)
+    if (uri.authority.equals(appFileProvider, ignoreCase = true)) {
+        showImportFailedToast(context)
+        return
+    }
+
+    try {
         contentResolver.openInputStream(uri)?.use { inputStream ->
             val sharedData = inputStream.bufferedReader().readText()
 
             importJsonData(sharedData, lifecycleScope, db, context)
+        } ?: run {
+            showImportFailedToast(context)
         }
+    } catch (e: Exception) {
+        Log.e("import", "Failed to open input stream for URI: $uri", e)
+        showImportFailedToast(context)
     }
 }
 
