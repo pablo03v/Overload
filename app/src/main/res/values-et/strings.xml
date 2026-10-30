@@ -76,7 +76,7 @@
     <string name="issue_reports_descr">Märkad midagi kummalist? Palun teatage sellest!</string>
     <string name="license">Litsents</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">loodud koos ❤️ by pabloscloud</string>
+    <string name="footer">loodud koos ❤️ by pablo03v</string>
     <string name="acra_toastText">Kokkupõrge tuvastati. Palun aidake, saates meilile!</string>
 
     <string name="acra_mailBody">Kokkupõrge tuvastatud. Palun aidake meil parandada, saates selle e-kirja, et saaksime selle võimalikult kiiresti parandada.\n
@@ -125,10 +125,10 @@ Täname kannatlikkuse eest!</string>
     <string name="manual_entry">Manual Entry</string>
     <string name="acra_mailSubject">Overload Crash</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Entry from %s to %s</string>
-    <string name="talback_pause">Pause from %s to %s</string>
-    <string name="talback_entry_ongoing">Ongoing entry since %s</string>
-    <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="talkback_entry">Entry from %s to %s</string>
+    <string name="talkback_pause">Pause from %s to %s</string>
+    <string name="talkback_entry_ongoing">Ongoing entry since %s</string>
+    <string name="talkback_pause_ongoing">Ongoing pause since %s</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>

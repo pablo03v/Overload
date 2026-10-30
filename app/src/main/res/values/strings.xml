@@ -40,7 +40,7 @@
     <string name="learn_more">Learn more…</string>
     <string name="open_link_with">Open link with</string>
     <string name="delete_pause">Delete Pause</string>
-    <string name="delete_pause_descr">You cannot delete this ongoing pause. It is only there to indicate a pause will be created once you hit start. If you will not hit start until tomorrow it will be gone and will not count against your goal.</string>
+    <string name="delete_pause_descr">You cannot delete this ongoing pause. It is only there to indicate a pause will be created once you hit start. If you do not hit start until tomorrow it will be gone and will not count against your goal.</string>
     <!--  cloud.pablos.overload.ui.tabs.home.HomeTabManualDialog -->
     <string name="start_label">Start</string>
     <string name="end_label">End</string>
@@ -79,7 +79,7 @@
     <string name="issue_reports_descr">Notice something strange? Please report it!</string>
     <string name="license">License</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">created with ❤️ by pabloscloud</string>
+    <string name="footer">created with ❤️ by pablo03v</string>
     <string name="acra_toastText">Crash detected. Please help by sending an email!</string>
     <string name="acra_mailTo" translatable="false">overloadcrash@pablo03v.de</string>
     <string name="acra_mailBody">Crash detected. Please help us improve by sending this email, so we can get this fixed as soon as possible.\n
@@ -128,10 +128,10 @@ Thanks for patience!</string>
     <string name="manual_entry">Manual Entry</string>
     <string name="acra_mailSubject">Overload Crash</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Entry from %s to %s</string>
-    <string name="talback_pause">Pause from %s to %s</string>
-    <string name="talback_entry_ongoing">Ongoing entry since %s</string>
-    <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="talkback_entry">Entry from %s to %s</string>
+    <string name="talkback_pause">Pause from %s to %s</string>
+    <string name="talkback_entry_ongoing">Ongoing entry since %s</string>
+    <string name="talkback_pause_ongoing">Ongoing pause since %s</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>

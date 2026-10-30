@@ -76,7 +76,7 @@
     <string name="issue_reports_descr">Melihat sesuatu yang aneh? Tolong laporkan!</string>
     <string name="license">Lisensi</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">dibuat dengan ❤️ oleh pabloscloud</string>
+    <string name="footer">dibuat dengan ❤️ oleh pablo03v</string>
     <string name="acra_toastText">Kecelakaan terdeteksi. Mohon bantuannya dengan mengirimkan email!</string>
 
     <string name="acra_mailBody">Kerusakan terdeteksi. Tolong bantu kami memperbaiki dengan mengirimkan email ini, agar kami dapat memperbaikinya sesegera mungkin.\n
@@ -125,10 +125,10 @@ Terima kasih atas kesabaran Anda!</string>
     <string name="manual_entry">Manual Entry</string>
     <string name="acra_mailSubject">Overload Crash</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Entry from %s to %s</string>
-    <string name="talback_pause">Pause from %s to %s</string>
-    <string name="talback_entry_ongoing">Ongoing entry since %s</string>
-    <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="talkback_entry">Entry from %s to %s</string>
+    <string name="talkback_pause">Pause from %s to %s</string>
+    <string name="talkback_entry_ongoing">Ongoing entry since %s</string>
+    <string name="talkback_pause_ongoing">Ongoing pause since %s</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>

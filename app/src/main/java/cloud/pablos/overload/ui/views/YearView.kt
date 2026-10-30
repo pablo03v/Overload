@@ -2,7 +2,6 @@ package cloud.pablos.overload.ui.views
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
@@ -40,7 +39,7 @@ import cloud.pablos.overload.ui.tabs.home.getFormattedDate
 import java.time.LocalDate
 import java.time.Month
 import java.time.format.TextStyle
-import java.util.Locale
+import androidx.compose.ui.platform.LocalLocale
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -97,8 +96,7 @@ fun YearView(
                             if (isLastWeekInLastMonth) bottomPadding else 0.dp,
                         ),
                     ) {
-                        WeekRow(month, firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, categoryState, itemState, itemEvent, onNavigate)
-
+                        WeekRow(month, firstDayOfMonth, weekOfMonth, date, highlightSelectedDay, categoryState, itemEvent, onNavigate)
                     }
                 }
             }
@@ -109,7 +107,7 @@ fun YearView(
 @Composable
 fun MonthNameHeader(month: Month) {
     TextView(
-        month.getDisplayName(TextStyle.FULL_STANDALONE, Locale.getDefault()),
+        month.getDisplayName(TextStyle.FULL_STANDALONE, LocalLocale.current.platformLocale),
         Modifier
             .fillMaxWidth()
             .padding(vertical = 16.dp),
@@ -126,7 +124,6 @@ fun WeekRow(
     date: LocalDate,
     highlightSelectedDay: Boolean = false,
     categoryState: CategoryState,
-    itemState: ItemState,
     itemEvent: (ItemEvent) -> Unit,
     onNavigate: () -> Unit,
 ) {
@@ -182,7 +179,6 @@ fun WeekRow(
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DayCell(

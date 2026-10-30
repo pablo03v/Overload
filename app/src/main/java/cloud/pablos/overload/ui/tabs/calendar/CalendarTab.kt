@@ -7,7 +7,6 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,9 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import cloud.pablos.overload.data.Helpers.Companion.getFirstYear
-import cloud.pablos.overload.data.Helpers.Companion.getItems
 import cloud.pablos.overload.data.Helpers.Companion.getLastDay
-
 import cloud.pablos.overload.data.category.CategoryEvent
 import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.ItemEvent
@@ -56,7 +53,6 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 
 @RequiresApi(Build.VERSION_CODES.S)
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CalendarTab(
     navigationType: OverloadNavigationType,

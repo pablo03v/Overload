@@ -29,12 +29,12 @@ Feedback and suggestions are more than welcome! Please reach out by creating an 
 
 
 ## Installation
-[<img src="https://github.com/pabloscloud/Overload/assets/93644977/4f38fb5e-afe1-4473-a9b9-81293fb41270"
+[<img src="https://github.com/pablo03v/Overload/assets/93644977/4f38fb5e-afe1-4473-a9b9-81293fb41270"
       alt='Get it on Obtainium'
       height="60">](https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22cloud.pablos.overload%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2Fpablo03v%2FOverload%22%2C%22author%22%3A%22pablo03v%22%2C%22name%22%3A%22Overload"})
-[<img src="https://github.com/pabloscloud/Overload/assets/93644977/29308442-e470-4e30-a999-49d884b83b0d"
+[<img src="https://github.com/pablo03v/Overload/assets/93644977/29308442-e470-4e30-a999-49d884b83b0d"
       alt='Get it on GitHub'
-      height="60">](https://github.com/pabloscloud/Overload/releases/latest)
+      height="60">](https://github.com/pablo03v/Overload/releases/latest)
 
 ## Authors
 
@@ -59,22 +59,22 @@ I used portions of the code of the lovely material you style RSS reader [ReadYou
 
 <table>
   <tr>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/1.png" alt="Screenshot 1"></td>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/2.png" alt="Screenshot 2"></td>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/3.png" alt="Screenshot 3"></td>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/4.png" alt="Screenshot 4"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/1.png" alt="Screenshot 1"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/2.png" alt="Screenshot 2"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/3.png" alt="Screenshot 3"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/4.png" alt="Screenshot 4"></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/5.png" alt="Screenshot 1"></td>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/6.png" alt="Screenshot 2"></td>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/7.png" alt="Screenshot 3"></td>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/8.png" alt="Screenshot 4"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/5.png" alt="Screenshot 1"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/6.png" alt="Screenshot 2"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/7.png" alt="Screenshot 3"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/8.png" alt="Screenshot 4"></td>
   </tr>
   <tr>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/9.png" alt="Screenshot 1"></td>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/10.png" alt="Screenshot 2"></td>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/11.png" alt="Screenshot 3"></td>
-    <td><img src="https://github.com/pabloscloud/Overload/raw/main/screenshots/12.png" alt="Screenshot 4"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/9.png" alt="Screenshot 1"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/10.png" alt="Screenshot 2"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/11.png" alt="Screenshot 3"></td>
+    <td><img src="https://github.com/pablo03v/Overload/raw/main/screenshots/12.png" alt="Screenshot 4"></td>
   </tr>
 </table>
 
@@ -88,8 +88,8 @@ Open your files app, choose the backup file, and locate the share icon or text. 
 By showing the duration between the last item and the current time you can determine how long you stopped or paused working since then. You can plan how much longer your pause is at any given moment as the duration updates in real time.
 
 ### Why can't I delete an ongoing pause?
-You cannot delete ongoing pauses as they are only there to indicate a pause will be created once you hit start again. If you will not hit start until the next day it will be gone and will not count against your goal. By deleting items that occurred beforehand, you can hide the pause.
+You cannot delete ongoing pauses as they are only there to indicate a pause will be created once you hit start again. If you do not hit start until the next day it will be gone and will not count against your goal. By deleting items that occurred beforehand, you can hide the pause.
 Imagine you're using the app to track your work hours. You take a break, and an ongoing pause is created. If you get ill during the day or decide not to work on the day for any other reason, the ongoing pause will vanish without affecting your work-time goal.
 
 ### Why does the app annoy me with a popup to adjust the end?
-Sometimes we forget stuff. Sometimes we do stuff across days - like sleeping. Nevertheless when an item is still ongoing from yesterday or days before yesterday, you need to set an end or confirm you want to spread the item across multiple days. The popup will be gone once there are no more ongoing items from the past days ;)
+Sometimes we forget stuff. Sometimes we do stuff across days - like sleeping. Nevertheless, when an item is still ongoing from yesterday or days before yesterday, you need to set an end or confirm you want to spread the item across multiple days. The popup will be gone once there are no more ongoing items from the past days ;)

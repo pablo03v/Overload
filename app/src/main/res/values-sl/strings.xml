@@ -76,7 +76,7 @@
     <string name="issue_reports_descr">Ste opazili kaj nenavadnega? Prosimo, sporočite to!</string>
     <string name="license">Licenca</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">ustvarjeno s ❤️, ki ga je ustvaril pabloscloud</string>
+    <string name="footer">ustvarjeno s ❤️, ki ga je ustvaril pablo03v</string>
     <string name="acra_toastText">Odkrita nesreča. Prosimo, pomagajte in pošljite sporočilo!</string>
 
     <string name="acra_mailBody">Odkrita nesreča. Pomagajte nam izboljšati stanje tako, da nam pošljete to e-poštno sporočilo, da bomo lahko to čim prej odpravili.\n
@@ -125,10 +125,10 @@ Hvala za potrpežljivost!</string>
     <string name="manual_entry">Manual Entry</string>
     <string name="acra_mailSubject">Overload Crash</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Entry from %s to %s</string>
-    <string name="talback_pause">Pause from %s to %s</string>
-    <string name="talback_entry_ongoing">Ongoing entry since %s</string>
-    <string name="talback_pause_ongoing">Ongoing pause since %s</string>
+    <string name="talkback_entry">Entry from %s to %s</string>
+    <string name="talkback_pause">Pause from %s to %s</string>
+    <string name="talkback_entry_ongoing">Ongoing entry since %s</string>
+    <string name="talkback_pause_ongoing">Ongoing pause since %s</string>
     <string name="add_category">add category</string>
     <string name="switch_category">Switch Category</string>
     <string name="delete_category_warning">Are you sure you want to delete %s?</string>

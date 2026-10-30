@@ -125,7 +125,7 @@ fun DayViewItemOngoing(
 
     val itemLabel: String =
         stringResource(
-            if (item.pause) R.string.talback_pause_ongoing else R.string.talback_entry_ongoing,
+            if (item.pause) R.string.talkback_pause_ongoing else R.string.talkback_entry_ongoing,
             startTimeString,
         )
 

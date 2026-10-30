@@ -76,7 +76,7 @@
     <string name="issue_reports_descr">Заметили что-то странное? Пожалуйста, сообщите об этом!</string>
     <string name="license">Лицензия</string>
     <string name="license_descr">GNU GPL v3</string>
-    <string name="footer">создано pabloscloud с ❤️</string>
+    <string name="footer">создано pablo03v с ❤️</string>
     <string name="acra_toastText">Замечен вылет. Пожалуйста, отправьте письмо, чтобы помочь исправить приложение!</string>
 
     <string name="acra_mailBody">Замечен вылет. Пожалуйста, помогите нам улучшить приложение, отправив это письмо, чтобы мы могли исправить эту ошибку как можно скорее.\n
@@ -126,10 +126,10 @@
     <string name="manual_entry">Ручное добавление</string>
     <string name="acra_mailSubject">Вылет Overload</string>
     <!-- accessibility strings -->
-    <string name="talback_entry">Запись с %s по %s</string>
-    <string name="talback_pause">Пауза с %s по %s</string>
-    <string name="talback_entry_ongoing">Протекающая запись с %s</string>
-    <string name="talback_pause_ongoing">Протекающая пауза с %s</string>
+    <string name="talkback_entry">Запись с %s по %s</string>
+    <string name="talkback_pause">Пауза с %s по %s</string>
+    <string name="talkback_entry_ongoing">Протекающая запись с %s</string>
+    <string name="talkback_pause_ongoing">Протекающая пауза с %s</string>
     <string name="add_category">добавить категорию</string>
     <string name="switch_category">Сменить категорию</string>
     <string name="delete_category_warning">Вы уверены, что хотите удалить %s?</string>

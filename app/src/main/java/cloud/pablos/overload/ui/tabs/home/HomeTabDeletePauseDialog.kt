@@ -33,7 +33,7 @@ import cloud.pablos.overload.ui.views.TextView
 @Composable
 fun HomeTabDeletePauseDialog(onDismiss: () -> Unit) {
     val context = LocalContext.current
-    val learnMoreLink = "https://github.com/pabloscloud/Overload?tab=readme-ov-file#why-cant-i-delete-an-ongoing-pause".toUri()
+    val learnMoreLink = "https://github.com/pablo03v/Overload?tab=readme-ov-file#why-cant-i-delete-an-ongoing-pause".toUri()
 
     AlertDialog(
         onDismiss,

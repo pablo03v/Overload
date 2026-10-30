@@ -79,11 +79,7 @@ fun AddEntryDialog(
         }
     }
     val initialPause = remember {
-        if (itemsForToday.isNotEmpty()) {
-            itemsForToday.last().pause.not()
-        } else {
-            false
-        }
+        itemsForToday.isNotEmpty() && itemsForToday.last().pause.not()
     }
 
     var selectedStart by remember { mutableStateOf(initialStart) }

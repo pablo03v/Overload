@@ -59,7 +59,6 @@ import cloud.pablos.overload.data.category.CategoryState
 import cloud.pablos.overload.data.item.Item
 import cloud.pablos.overload.data.item.ItemEvent
 import cloud.pablos.overload.data.item.ItemState
-import cloud.pablos.overload.ui.MainActivity
 import cloud.pablos.overload.ui.navigation.OverloadRoute
 import cloud.pablos.overload.ui.navigation.OverloadTopAppBar
 import cloud.pablos.overload.ui.views.AddCategoryButton
@@ -225,7 +224,7 @@ fun ConfigurationsTab(
                     stringResource(R.string.sourcecode),
                     stringResource(R.string.sourcecode_descr),
                     Icons.Rounded.Code,
-                    "https://github.com/pabloscloud/Overload".toUri(),
+                    "https://github.com/pablo03v/Overload".toUri(),
                 )
             }
 
@@ -235,7 +234,7 @@ fun ConfigurationsTab(
                     stringResource(R.string.issue_reports),
                     stringResource(R.string.issue_reports_descr),
                     Icons.Rounded.EmojiNature,
-                    "https://github.com/pabloscloud/Overload/issues".toUri(),
+                    "https://github.com/pablo03v/Overload/issues".toUri(),
                 )
             }
 
@@ -255,7 +254,7 @@ fun ConfigurationsTab(
                     stringResource(R.string.license),
                     stringResource(R.string.license_descr),
                     Icons.Rounded.Copyright,
-                    "https://github.com/pabloscloud/Overload/blob/main/LICENSE".toUri(),
+                    "https://github.com/pablo03v/Overload/blob/main/LICENSE".toUri(),
                 )
             }
 

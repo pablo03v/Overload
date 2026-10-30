@@ -3,7 +3,6 @@ package cloud.pablos.overload.ui.views
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +38,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @SuppressLint("UnusedTransitionTargetStateParameter")
-@OptIn(ExperimentalFoundationApi::class)
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun DayView(
@@ -134,9 +132,9 @@ fun DayView(
                                 -1,
                                 items.last().endTime,
                                 LocalDate.now().toString(),
-                                true,
-                                true,
-                                categoryState.selectedCategory,
+                                ongoing = true,
+                                pause = true,
+                                categoryId = categoryState.selectedCategory,
                             ),
                             categoryState,
                             itemState,
