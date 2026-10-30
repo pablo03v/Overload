@@ -60,6 +60,9 @@
     <string name="backup">Backup</string>
     <string name="backup_descr">Backup all data regularly to a save place!</string>
     <string name="backup_failed">Generating the backup failed</string>
+    <string name="backup_success">Backup saved successfully</string>
+    <string name="backup_save_to_device">Save to device</string>
+    <string name="backup_share">Share</string>
     <string name="import_ol">Import</string>
     <string name="import_descr">Import from a backup</string>
     <string name="import_success">Backup successfully imported</string>

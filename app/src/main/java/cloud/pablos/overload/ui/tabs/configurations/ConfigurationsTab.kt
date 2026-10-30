@@ -1,6 +1,7 @@
 package cloud.pablos.overload.ui.tabs.configurations
 
 
+import android.content.ClipData
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
@@ -9,7 +10,9 @@ import android.os.Build
 import android.preference.PreferenceManager
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandIn
@@ -42,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.FileProvider
+import androidx.core.content.IntentCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.navigation.NavHostController
@@ -96,6 +100,16 @@ fun ConfigurationsTab(
         }
 
     val createCategoryDialog = remember { mutableStateOf(false) }
+    val backupDialog = remember { mutableStateOf(false) }
+
+    val saveFileLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.CreateDocument("application/json"),
+        ) { uri: Uri? ->
+            uri?.let {
+                saveBackupToUri(it, context, categoryState, itemState)
+            }
+        }
 
     Scaffold(
         topBar = { OverloadTopAppBar(OverloadRoute.CONFIGURATIONS, categoryState, categoryEvent, itemState, itemEvent) },
@@ -182,7 +196,7 @@ fun ConfigurationsTab(
                     stringResource(R.string.backup),
                     stringResource(R.string.backup_descr),
                     Icons.Rounded.Archive,
-                    action = { backup(categoryState, itemState, context) },
+                    action = { backupDialog.value = true },
                 )
             }
 
@@ -266,6 +280,14 @@ fun ConfigurationsTab(
         if (createCategoryDialog.value) {
             ConfigurationsTabCreateCategoryDialog({ createCategoryDialog.value = false }, categoryEvent)
         }
+
+        if (backupDialog.value) {
+            ConfigurationsTabBackupDialog(
+                onDismiss = { backupDialog.value = false },
+                onSaveToDevice = { saveFileLauncher.launch("backup.json") },
+                onShare = { backup(categoryState, itemState, context) },
+            )
+        }
     }
 }
 
@@ -287,19 +309,62 @@ fun backup(
                 cachePath,
             )
 
-        val sendIntent: Intent =
-            Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_STREAM, contentUri)
+        val sendIntent =
+            Intent(Intent.ACTION_SEND).apply {
                 type = "application/json"
+                putExtra(Intent.EXTRA_STREAM, contentUri)
+                putExtra(Intent.EXTRA_TITLE, "backup.json")
+                clipData = ClipData.newUri(context.contentResolver, "backup.json", contentUri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
 
-        val shareIntent = Intent.createChooser(sendIntent, null)
+        val shareIntent =
+            Intent.createChooser(sendIntent, context.getString(R.string.backup)).apply {
+                putExtra("android.intent.extra.AUTO_LAUNCH_SINGLE_CHOICE", false)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
         context.startActivity(shareIntent)
     } catch (e: Exception) {
         Toast.makeText(context, context.getString(R.string.backup_failed), Toast.LENGTH_SHORT)
             .show()
         e.printStackTrace()
+    }
+}
+
+fun saveBackupToUri(
+    uri: Uri,
+    context: Context,
+    categoryState: CategoryState,
+    itemState: ItemState,
+) {
+    val path = uri.path
+    if (path != null) {
+        try {
+            val normalized = java.nio.file.FileSystems.getDefault().getPath(path).normalize()
+            if (normalized.startsWith("/data")) {
+                Toast.makeText(context, context.getString(R.string.backup_failed), Toast.LENGTH_SHORT).show()
+                return
+            }
+        } catch (e: Exception) {
+            Log.w("backup", "Failed to normalize path for URI: $uri", e)
+            Toast.makeText(context, context.getString(R.string.backup_failed), Toast.LENGTH_SHORT).show()
+            return
+        }
+    }
+
+    try {
+        val exportedData = Backup.backupToJson(categoryState, itemState)
+        context.contentResolver.openOutputStream(uri)?.use { outputStream ->
+            outputStream.bufferedWriter().use { writer ->
+                writer.write(exportedData)
+            }
+            Toast.makeText(context, context.getString(R.string.backup_success), Toast.LENGTH_SHORT).show()
+        } ?: run {
+            Toast.makeText(context, context.getString(R.string.backup_failed), Toast.LENGTH_SHORT).show()
+        }
+    } catch (e: Exception) {
+        Log.e("backup", "Failed to save backup to URI: $uri", e)
+        Toast.makeText(context, context.getString(R.string.backup_failed), Toast.LENGTH_SHORT).show()
     }
 }
 
@@ -320,30 +385,23 @@ fun handleIntent(
     contentResolver: ContentResolver,
 ) {
     if (intent != null && intent.action == Intent.ACTION_SEND && intent.type == "text/comma-separated-values") {
-        if (intent.getStringExtra(Intent.EXTRA_TEXT)?.isBlank() == false) {
-            val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
-            if (sharedText != null) {
-                importCsvData(
-                    sharedText,
-                    lifecycleScope,
-                    db,
-                    context,
-                )
-            }
-        } else if (intent.getStringExtra(Intent.EXTRA_STREAM)?.isBlank() == false) {
-            val uri = intent.getParcelableExtra<Uri>(Intent.EXTRA_STREAM)
-            uri?.let {
-                importCsvFile(uri, contentResolver, context, db, lifecycleScope)
-            }
-        } else if (intent.clipData != null) {
-            val uri = intent.clipData?.getItemAt(0)?.uri
+        val sharedText = intent.getStringExtra(Intent.EXTRA_TEXT)
+        if (!sharedText.isNullOrBlank()) {
+            importCsvData(
+                sharedText,
+                lifecycleScope,
+                db,
+                context,
+            )
+        } else {
+            val streamUri = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
+            val clipUri = intent.clipData?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.uri
+            val uri = streamUri ?: clipUri
             if (uri != null) {
                 importCsvFile(uri, contentResolver, context, db, lifecycleScope)
             } else {
                 showImportFailedToast(context)
             }
-        } else {
-            showImportFailedToast(context)
         }
     }
 }
@@ -490,12 +548,38 @@ fun importCsvFile(
     db: OverloadDatabase,
     lifecycleScope: LifecycleCoroutineScope,
 ) {
-    uri.let {
+    val path = uri.path
+    if (path != null) {
+        try {
+            val normalized = java.nio.file.FileSystems.getDefault().getPath(path).normalize()
+            if (normalized.startsWith("/data")) {
+                showImportFailedToast(context)
+                return
+            }
+        } catch (e: Exception) {
+            Log.w("import", "Failed to normalize path for URI: $uri", e)
+            showImportFailedToast(context)
+            return
+        }
+    }
+
+    val appFileProvider = context.getString(R.string.app_fileprovider)
+    if (uri.authority.equals(appFileProvider, ignoreCase = true)) {
+        showImportFailedToast(context)
+        return
+    }
+
+    try {
         contentResolver.openInputStream(uri)?.use { inputStream ->
             val sharedData = inputStream.bufferedReader().readText()
 
             importCsvData(sharedData, lifecycleScope, db, context)
+        } ?: run {
+            showImportFailedToast(context)
         }
+    } catch (e: Exception) {
+        Log.e("import", "Failed to open input stream for URI: $uri", e)
+        showImportFailedToast(context)
     }
 }
 
@@ -506,12 +590,38 @@ fun importJsonFile(
     db: OverloadDatabase,
     lifecycleScope: LifecycleCoroutineScope,
 ) {
-    uri.let {
+    val path = uri.path
+    if (path != null) {
+        try {
+            val normalized = java.nio.file.FileSystems.getDefault().getPath(path).normalize()
+            if (normalized.startsWith("/data")) {
+                showImportFailedToast(context)
+                return
+            }
+        } catch (e: Exception) {
+            Log.w("import", "Failed to normalize path for URI: $uri", e)
+            showImportFailedToast(context)
+            return
+        }
+    }
+
+    val appFileProvider = context.getString(R.string.app_fileprovider)
+    if (uri.authority.equals(appFileProvider, ignoreCase = true)) {
+        showImportFailedToast(context)
+        return
+    }
+
+    try {
         contentResolver.openInputStream(uri)?.use { inputStream ->
             val sharedData = inputStream.bufferedReader().readText()
 
             importJsonData(sharedData, lifecycleScope, db, context)
+        } ?: run {
+            showImportFailedToast(context)
         }
+    } catch (e: Exception) {
+        Log.e("import", "Failed to open input stream for URI: $uri", e)
+        showImportFailedToast(context)
     }
 }
 
